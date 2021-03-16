@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\MunicipioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('data', [ClienteController::class, 'index']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::get('municipio/show/{id_municipio}', [MunicipioController::class, 'show']);
-
+require __DIR__.'/auth.php';
