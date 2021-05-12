@@ -20,7 +20,7 @@ use App\Http\Controllers\ObraController;
 use App\Http\Controllers\ObraModalidadEjecucionController;
 use App\Http\Controllers\ParteSocialTecnicaController;
 use App\Http\Controllers\ProveedorController;
-
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,7 +38,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('cliente', ClienteController::class)->except(['getCliente']);
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard')->middleware(['auth']);
+//->middleware(['auth'])
+Route::get('/clientes', function(){
+    return view('clientes.index');
+});
+
+Route::resource('users', UsersController::class)->names('admin.users')->middleware(['auth', 'can:dashboard']);
+require __DIR__.'/auth.php';
+
+Route::resource('clientes', ClienteController::class)->except(['getCliente']);
 Route::resource('contratista', ContratistaController::class);
 Route::resource('contratoArre', ContratoArrendamientoController::class);
 Route::resource('contraroFa', ContratoFacturasController::class);

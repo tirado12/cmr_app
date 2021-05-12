@@ -35,3 +35,5 @@ Route::get('getFuentesCliente/{municipio},{anio}', [FuenteClienteController::cla
 Route::get('getObrasCliente/{municipio},{anio}', [ObraController::class, 'getObrasCliente']);
 
 Route::get('getObraExpediente/{obra}',[ObraModalidadEjecucionController::class, 'getObraExpediente']);
+
+Route::post('/prueba', [ClienteController::class, 'getUser']);

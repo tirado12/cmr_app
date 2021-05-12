@@ -28,12 +28,7 @@ class RegionSeeder extends Seeder
         $region7 = new Region();$region7->nombre = 'Sierra Sur';$region7->estado_id = 20;$region7->save();
         $region8 = new Region();$region8->nombre = 'Valles Centrales';$region8->estado_id = 20;$region8->save();
         
-        $user = new User();
-        $user->name = "Juan";
-        $user->email = "josese@gmail.com";
-        $user->password = Crypt::encrypt('1020');
-        $user->remember_token = Str::random(100);
-        $user->save();
+        
 
     }
 }
