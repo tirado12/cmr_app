@@ -90,15 +90,24 @@ class UsersController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $user->roles()->sync($request->roles);
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
         $data=$request->all();
-        $data['password'] = bcrypt($data['password']);
-        $user->update($data);
+        $user->roles()->sync($request->roles);
+        if(empty($data['password'])){
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required'
+            ]);
+            $data['password'] = $user->password;
+            $user->update($data);
+        }else{
+            $request->validate([
+                'name' => 'required',
+                'email' => 'required',
+                'password' => 'required'
+            ]);
+            $data['password'] = bcrypt($data['password']);
+            $user->update($data);
+        }
         return redirect()->route('admin.users.index');
     }
 

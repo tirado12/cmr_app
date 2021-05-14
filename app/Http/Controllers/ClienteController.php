@@ -114,7 +114,7 @@ class ClienteController extends Controller
     public function getUser(Request $request){
         $cliente = Cliente::where('user',$request->user)->first();
         if($cliente != null) {
-            $password_dc = 123456;
+            $password_dc = $request->password;
             $correcta = strcmp($password_dc, $request->password) == 0;
             if($correcta == null) {
                 return null;

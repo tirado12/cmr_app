@@ -6,9 +6,9 @@
 <div class="mt-8">
 </div>
 
-<div class="flex items-center justify-center border-2 rounded-xl p-3">
+<div class="flex items-center justify-center border-2 rounded-xl p-8">
         
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 p-4">
         
         <!-- 1 card -->
         <div class="bg-white py-6 px-6 rounded-3xl w-64 my-4 shadow-lg hover:shadow-xl border-transparent border-2 hover:border-gray-100">
