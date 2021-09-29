@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\FuentesCliente;
+use App\Models\GastosIndirectos;
 use App\Models\GastosIndirectosFuentes;
 use App\Models\Municipio;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class GastosIndirectosFuentesController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -68,9 +69,20 @@ class GastosIndirectosFuentesController extends Controller
      * @param  User  $users
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit($id)
     {
-       return view('fuentes_gastos.edit');
+        $gastoIndirecto = GastosIndirectosFuentes::join('fuentes_clientes','fuente_cliente_id','id_fuente_financ_cliente')
+        ->join('gastos_indirectos','indirectos_id','id_indirectos')
+        ->join('fuentes_financiamientos','fuente_financiamiento_id','id_fuente_financiamiento')
+        ->join('clientes','cliente_id','id_cliente')
+        ->join('municipios','municipio_id','id_municipio')
+        ->select('fuentes_gastos_indirectos.*','fuentes_clientes.ejercicio','gastos_indirectos.nombre as nombre_indirectos','clientes.anio_inicio','clientes.anio_fin','municipios.nombre','fuentes_financiamientos.nombre_corto')
+        ->where('id_fuentes_gastos_indirectos', $id)
+        ->first();
+
+        $indirectos = GastosIndirectos::all();
+        //return $gastoIndirecto;
+       return view('fuentes_gastos.edit',compact('gastoIndirecto','indirectos'));
     }
 
     /**
@@ -80,9 +92,16 @@ class GastosIndirectosFuentesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-       
+        $gasto= GastosIndirectosFuentes::find($id);
+        $request->validate([
+            'indirectos_id' => 'required',
+            'monto' => 'required',
+        ]);
+        
+        $gasto->update($request->all());
+        return redirect()->route('gastosIndirectosFuentes.index');
     }
 
     /**
@@ -91,9 +110,11 @@ class GastosIndirectosFuentesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy($id)
     {
-        
+        $gasto= GastosIndirectosFuentes::find($id);
+        $gasto->delete();
+        return redirect()->route('gastosIndirectosFuentes.index')->with('eliminar','ok');
     }
     // ================= Funciones API ====================== //
     public function getDesgloseGI($cliente_id, $anio){

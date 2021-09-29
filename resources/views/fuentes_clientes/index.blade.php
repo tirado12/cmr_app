@@ -468,7 +468,7 @@ $(".btn-AddDate").on("click",function() {
       $(id).html('Terminado');
       $(id).removeClass();
       $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800');
-      //console.log(valor);
+      console.log(valor);
     }else if(valor == 2){
       $(id).html('Pendiente');
       $(id).removeClass();

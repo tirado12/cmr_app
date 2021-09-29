@@ -106,7 +106,6 @@ class FuenteClienteController extends Controller
     public function update(Request $request,FuentesCliente $fuenteCliente)
     {
         $request->validate([
-            
             'monto_proyectado' => 'required',
             'monto_comprometido' => 'required',
             'acta_integracion_consejo' => 'required',

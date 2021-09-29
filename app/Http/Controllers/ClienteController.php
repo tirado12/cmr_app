@@ -174,7 +174,6 @@ class ClienteController extends Controller
     public function userCliente(Request $request)
     {
         $cliente = Cliente::where('user', $request->user)->count();  
-        
         return $cliente;
     }
 
