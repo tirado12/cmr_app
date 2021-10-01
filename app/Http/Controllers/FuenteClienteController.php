@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\FuentesCliente;
+use App\Models\AnexosFondoIII;
 use App\Models\FuentesFinanciamiento;
 use App\Models\Municipio;
 use Illuminate\Http\Request;
@@ -48,6 +49,8 @@ class FuenteClienteController extends Controller
     public function store(Request $request)
     {
         //return $request;
+        
+
         $request->validate([
             'monto_proyectado' => 'required',
             'monto_comprometido' => 'required',
@@ -55,19 +58,38 @@ class FuenteClienteController extends Controller
             'cliente_id' =>'required',
             'fuente_financiamiento_id'=> 'required'
         ]);
-        FuentesCliente::create([
-            'monto_proyectado' => $request->monto_proyectado,
+        $fuenteCliente = FuentesCliente::create([
+            'monto_proyectado' => str_replace(",", '', $request->monto_proyectado),
             'monto_comprometido' => $request->monto_comprometido,
-            'acta_integracion_consejo' => $request->acta_integracion_consejo,
-            'acta_priorizacion' => $request->acta_priorizacion,
-            'adendum_priorizacion' => $request->adendum_priorizacion,
-            'prodim' => $request->prodim,
-            'gastos_indirectos' => $request->gastos_indirectos,
             'ejercicio' => $request->ejercicio,
             'cliente_id' => $request->cliente_id,
             'fuente_financiamiento_id' => $request->fuente_financiamiento_id
         ]);
-        return redirect()->route('fuenteCliente.index');
+        if($request->fuente_financiamiento_id == 2){
+            if($request->prodim == null){
+                $request->prodim = false;
+            }else{
+                $request->prodim = true;
+            }
+            if($request->gastos_indirectos == null){
+                $request->gastos_indirectos = false;
+            }else{
+                $request->gastos_indirectos = true;
+            }
+            AnexosFondoIII::create([
+                'acta_integracion_consejo' => $request->acta_integracion_consejo,
+                'acta_priorizacion' => $request->acta_priorizacion,
+                'adendum_priorizacion' => $request->adendum_priorizacion,
+                'prodim' => $request->prodim,
+                'gastos_indirectos' => $request->gastos_indirectos,
+                'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
+            ]);
+        }
+
+        if(auth()->user()->getRoleNames()[0] == 'Administrador')
+            return redirect()->route('fuenteCliente.index');
+        else
+            return redirect()->route('cliente.ejercicio', ['id' => $request->cliente_id, 'anio' => $request->ejercicio]);
     }
     /**
      * Display the specified resource.
@@ -88,11 +110,13 @@ class FuenteClienteController extends Controller
     public function edit(FuentesCliente $fuenteCliente)
     {
         $fuentes = FuentesFinanciamiento::all();
-
-        $cliente = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id')->where('id_cliente',$fuenteCliente->cliente_id)
+        
+        $cliente = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id')
+        ->where('id_cliente',$fuenteCliente->cliente_id)
         ->select('clientes.id_cliente', 'municipios.nombre')
         ->get();
-        //return $fuentes;
+
+        //return $fuenteCliente;
        return view('fuentes_clientes.edit',compact('fuenteCliente','cliente','fuentes'));
     }
 
@@ -103,9 +127,11 @@ class FuenteClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,FuentesCliente $fuenteCliente)
+    public function update(Request $request)
     {
+
         $request->validate([
+<<<<<<< HEAD
             'monto_proyectado' => 'required',
             'monto_comprometido' => 'required',
             'acta_integracion_consejo' => 'required',
@@ -114,11 +140,45 @@ class FuenteClienteController extends Controller
             'prodim' => 'required',
             'gastos_indirectos' => 'required',
             'fuente_financiamiento_id' => 'required'
+=======
+            'monto_proyectado_edit' => 'required',
+            'monto_comprometido_edit' => 'required',
+            'acta_integracion_consejo_edit' => 'required',
+            'acta_priorizacion_edit' => 'required',
+            'fuente_financiamiento_id_edit' => 'required'
+>>>>>>> 1a0ea23df2b7d5eec3b1a506afe34a726e3df8bf
         ]);
+        $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
+        $fuenteCliente->monto_proyectado = str_replace(",", '', $request->monto_proyectado_edit);
+        if($request->fuente_financiamiento_id_edit == 2){
+            $anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $request->fuente_id_edit)->first();
+            $anexos_fondo3->acta_integracion_consejo = $request->acta_integracion_consejo_edit;
+            $anexos_fondo3->acta_priorizacion = $request->acta_priorizacion_edit;
+            $anexos_fondo3->adendum_priorizacion = $request->adendum_priorizacion_edit;
+            
+            if($request->prodim_edit == null){
+                $anexos_fondo3->prodim = false;
+            }else{
+                $anexos_fondo3->prodim = true;
+            }
+            if($request->gastos_indirectos_edit == null){
+                $anexos_fondo3->gastos_indirectos = false;
+            }else{
+                $anexos_fondo3->gastos_indirectos = true;
+            }
+            
+            $anexos_fondo3->update();
+        }
+        
+        
         //return $request;
-        $fuenteCliente->update($request->all());
+        $fuenteCliente->update();
         //return $fuenteCliente;
-       return redirect()->route('fuenteCliente.index');
+
+        if(auth()->user()->getRoleNames()[0] == 'Administrador')
+            return redirect()->route('fuenteCliente.index');
+        else
+            return redirect()->route('cliente.ejercicio', ['id' => $fuenteCliente->cliente_id, 'anio' => $fuenteCliente->ejercicio]);
     }
 
     /**
