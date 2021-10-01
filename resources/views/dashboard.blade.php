@@ -19,6 +19,7 @@
         Bienvenido
     @endif {{Auth::user()->name}}</h2>
 
+    
         
 <div class="mt-8">
 </div>
