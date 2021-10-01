@@ -17,11 +17,6 @@ class CreateFuentesClientesTable extends Migration
             $table->id('id_fuente_financ_cliente');
             $table->double('monto_proyectado');
             $table->double('monto_comprometido');
-            $table->date('acta_integracion_consejo')->nullable();
-            $table->date('acta_priorizacion')->nullable();
-            $table->date('adendum_priorizacion')->nullable();
-            $table->boolean('prodim')->nullable();
-            $table->boolean('gastos_indirectos')->nullable();
             $table->string('ejercicio', 4);
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id_cliente')->on('clientes');

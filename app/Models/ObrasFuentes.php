@@ -9,6 +9,8 @@ class ObrasFuentes extends Model
 {
     use HasFactory;
 
+    protected $table = "obras_fuentes";
+
     public function fuentes(){
         return $this->hasMany(FuentesCliente::class, 'id_fuente_financ_cliente', 'fuente_financiamiento_cliente_id'); //arg1 - Model, arg2 - foreign key
     }

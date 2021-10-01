@@ -87,6 +87,16 @@ Route::resource('prodimComprometido', ProdimComprometidoController::class)->name
 Route::resource('prodim', ProdimController::class)->except(['getDesgloseProdim'])->names('prodim');
 Route::resource('proveedor', ProveedorController::class)->names('proveedor');
 Route::resource('rft', RftController::class)->names('rft');
+//Route::resource('sisplade', SispladeController::class)->names('sisplade');
+
+//Rutas independientes para el sistema
+Route::get('inicio', [GeneralController::class, 'inicio'])->name('inicio');
+Route::get('cliente/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
+Route::get('cliente/ejercicio/{id},{anio}', [GeneralController::class, 'ejercicio'])->name('cliente.ejercicio');
+Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
+
+
+
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');
 Route::resource('perfil', PerfilController::class)->names('perfil');
 

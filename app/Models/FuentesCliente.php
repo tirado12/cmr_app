@@ -14,11 +14,6 @@ class FuentesCliente extends Model
     protected $fillable = [
         'monto_proyectado',
         'monto_comprometido',
-        'acta_integracion_consejo',
-        'acta_priorizacion',
-        'adendum_priorizacion',
-        'prodim',
-        'gastos_indirectos',
         'ejercicio',
         'cliente_id',
         'fuente_financiamiento_id'
@@ -37,6 +32,13 @@ class FuentesCliente extends Model
 
     public function gastosIndirectos(){
         return $this->hasMany(GastosIndirectosFuentes::class,'id_fuentes_gastos_indirectos','id_fuente_financ_cliente');
+    }
+
+    public function obrasFuente(){
+        return $this->hasMany(ObrasFuentes::class,'fuente_financiamiento_cliente_id','id_fuente_financ_cliente');
+    }
+    public function obras(){
+        return $this->hasMany(Obra::class,'id_obra','obras_fuente.obra_id');
     }
 
    
