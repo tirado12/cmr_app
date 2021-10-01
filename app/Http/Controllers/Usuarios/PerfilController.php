@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Usuarios;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PerfilController extends Controller
@@ -14,7 +15,9 @@ class PerfilController extends Controller
      */
     public function index()
     {
-        return view('perfil.index');
+        $user= User::find(1);
+        //return $users;
+        return view('perfil.index', compact('user'));
     }
 
     /**
