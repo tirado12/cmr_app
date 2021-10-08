@@ -33,6 +33,8 @@ use App\Http\Controllers\ProveedorController;
 use App\Http\Controllers\RftController;
 use App\Http\Controllers\SispladeController;
 use App\Http\Controllers\Usuarios\PerfilController;
+use App\Http\Controllers\GeneralController;
+
 
 /*
 |--------------------------------------------------------------------------

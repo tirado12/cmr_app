@@ -22,31 +22,31 @@
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
                   <label for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                  <input type="text" name="nombre" id="nombre" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->nombre }}">
+                  <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->nombre }}">
                   <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Introduzca un nombre</label>
                 </div>
   
                 <div class="col-span-6 sm:col-span-3">
                   <label for="cargo" class="block text-sm font-medium text-gray-700">Cargo *</label>
-                  <input type="text" name="cargo" id="cargo" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->cargo }}">
+                  <input type="text" name="cargo" id="cargo" autocomplete="email" placeholder="Presidente" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->cargo }}">
                   <label id="error_cargo" name="error_cargo" class="hidden text-base font-normal text-red-500" >Introduzca un cargo</label>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
-                    <label for="telefono" class="block text-sm font-medium text-gray-700">Telefono *</label>
-                    <input type="tel" name="telefono" id="telefono"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->telefono }}">
-                    <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Introduzca un telefono</label>
+                    <label for="eti_telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
+                    <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->telefono }}">
+                    
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                     <label for="Correo" class="block text-sm font-medium text-gray-700">Correo *</label>
-                    <input type="email" name="correo" id="correo" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->correo }}">
+                    <input type="email" name="correo" id="correo" autocomplete="email" placeholder="usuario@ejemplo.com" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->correo }}">
                     <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Introduzca un correo valido</label>
                 </div>
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                    <input type="text" name="rfc" id="rfc"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
+                    <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
                     <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 5 caracteres</label>
                   </div>
                 
@@ -56,8 +56,8 @@
                   <select id="municipio" name="municipio" onchange="validarMunicipio()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="">Elija una opción</option>
                     @foreach($municipios as $municipio)
-                    <option value="{{ $municipio->id_municipio }}" {{ ($municipio->id_municipio == $integrante->municipio_id) ? 'selected' : '' }}> {{ $municipio->nombre }}</option>
-                  @endforeach
+                    <option value="{{ $municipio->id_municipio }}" {{ ($municipio->id_municipio == $municipioCliente->municipio_id) ? 'selected' : '' }}> {{ $municipio->nombre }}</option>
+                    @endforeach
                   </select>
                   <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Elija un municipio</label>
                 </div>
@@ -122,6 +122,10 @@ $(document).ready(function() {
       }
     
     });
+
+    $("input[name='telefono']").keyup(function() {
+    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+      });
   });
 
     //validacion del formulario con el btn guardar
@@ -132,9 +136,9 @@ $().ready(function() {
 		rules: {
       nombre: { required: true},
 			cargo: { required: true},
-      telefono: { required: true},
+      
       correo: { required: true, email: true},
-      rfc: { required: true, minlength: 5},
+      rfc: { required: true, minlength: 5, maxlength: 13},
       municipio: { required: true},
 		},
     errorPlacement: function(error, element) {

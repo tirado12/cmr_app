@@ -17,10 +17,10 @@ class IntegrantesCabildoController extends Controller
      */
     public function index()
     {
-        $integrantes = IntegrantesCabildo::join('municipios','municipios.id_municipio','=','integrantes_cabildo.municipio_id')
-        ->select('integrantes_cabildo.*','municipios.nombre as nombre_municipio')
-        ->orderBy('nombre_municipio')
+        $integrantes = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
+        ->select('integrantes_cabildo.*','clientes.municipio_id')
         ->get();
+        
         $municipios = Municipio::all();
         
        return view('cabildo.index',compact('integrantes','municipios'));
@@ -47,7 +47,7 @@ class IntegrantesCabildoController extends Controller
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            'telefono' => 'required',
+            
             'correo' => 'required',
             'rfc' => 'required',
             'municipio' => 'required'
@@ -80,8 +80,14 @@ class IntegrantesCabildoController extends Controller
      */
     public function edit(IntegrantesCabildo $integrante)
     {
+       $municipioCliente = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
+        ->select('clientes.municipio_id')
+        ->where('id_integrante', $integrante->id_integrante)
+        ->first();
+
+        //return $municipioCliente;
         $municipios = Municipio::all();
-       return view('cabildo.edit',compact('integrante','municipios'));
+       return view('cabildo.edit',compact('integrante','municipios','municipioCliente'));
         
     }
 
@@ -98,7 +104,7 @@ class IntegrantesCabildoController extends Controller
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            'telefono' => 'required',
+            
             'correo' => 'required',
             'rfc' => 'required',
             'municipio' => 'required'

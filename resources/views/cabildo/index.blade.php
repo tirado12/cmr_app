@@ -72,7 +72,7 @@
           </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $integrante->nombre_municipio }}
+            {{ $municipios->find($integrante->municipio_id)->nombre }}
             </div>
             
           </td>
@@ -80,7 +80,7 @@
             <div class="flex justify-center">
             <form action="{{ route('cabildo.destroy', $integrante->id_integrante) }}" method="POST" class="form-eliminar" >
               <div>
-              <a type="button"  href="{{ route('cabildo.edit', $integrante->id_integrante)}}" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
+              <a type="button"  href="{{ route('cabildo.edit', $integrante)}}" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
               
               @csrf
               @method('DELETE')
@@ -127,28 +127,27 @@
             <div class="grid grid-cols-8 gap-8">
               <div class="col-span-8 ">
                 <label id="label_nombre" for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                <input type="text" name="nombre" id="nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required maxlength="13">
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required >
                 <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Porfavor ingresa un nombre</label>
               </div>
               <div class="col-span-8">
                 <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                <input type="text" name="rfc" id="rfc" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required>
                 <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Porfavor ingresa al menos un RFC generico con 5 caracteres</label>
               </div>
               <div class="col-span-8">
                 <label id="label_cargo" for="cargo" class="block text-sm font-medium text-gray-700">Cargo *</label>
-                <input type="text" name="cargo" id="cargo" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                <input type="text" name="cargo" id="cargo" placeholder="Presidente" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                 <label id="error_cargo" name="error_cargo" class="hidden text-base font-normal text-red-500" >Porfavor ingresa un cargo</label>
               </div>
               <div class="col-span-8">
-                  <label id="label_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono *</label>
-                  <input type="tel" name="telefono" id="telefono" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                  <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un telefono</label>
-                </div>
+                  <label id="eti_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
+                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required>   
+              </div>
               
               <div class="col-span-8">
                   <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo *</label>
-                  <input type="email" name="correo" id="correo" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                   <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo</label>
                 </div>
               <div class="col-span-8" >
@@ -250,6 +249,10 @@ $(document).ready(function() {
       }
     
     });
+
+    $("input[name='telefono']").keyup(function() {
+    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+      });
 });
 
 //Validacion de select municipio
@@ -274,10 +277,10 @@ $().ready(function() {
     onclick: false,
 		rules: {
       nombre: { required: true},
-			rfc: { required: true, minlength: 5},
+			rfc: { required: true, minlength: 5, maxLength: 13},
       cargo: { required: true},
-      telefono: { required: true},
-      correo: { required: true},
+      
+      correo: { required: true,email: true},
       municipio: { required: true}
 		},
     errorPlacement: function(error, element) {

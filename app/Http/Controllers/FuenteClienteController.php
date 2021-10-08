@@ -131,7 +131,6 @@ class FuenteClienteController extends Controller
     {
 
         $request->validate([
-<<<<<<< HEAD
             'monto_proyectado' => 'required',
             'monto_comprometido' => 'required',
             'acta_integracion_consejo' => 'required',
@@ -140,13 +139,6 @@ class FuenteClienteController extends Controller
             'prodim' => 'required',
             'gastos_indirectos' => 'required',
             'fuente_financiamiento_id' => 'required'
-=======
-            'monto_proyectado_edit' => 'required',
-            'monto_comprometido_edit' => 'required',
-            'acta_integracion_consejo_edit' => 'required',
-            'acta_priorizacion_edit' => 'required',
-            'fuente_financiamiento_id_edit' => 'required'
->>>>>>> 1a0ea23df2b7d5eec3b1a506afe34a726e3df8bf
         ]);
         $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
         $fuenteCliente->monto_proyectado = str_replace(",", '', $request->monto_proyectado_edit);

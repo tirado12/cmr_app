@@ -41,7 +41,7 @@ class ContratistaController extends Controller
             'razon_social' => 'required',
             'representante_legal' => 'required',
             'domicilio' => 'required',
-            'telefono' => 'required',
+            
             'correo' => 'required',
             'numero_padron_contratista' => 'required' 
         ]);
@@ -93,7 +93,6 @@ class ContratistaController extends Controller
             'razon_social' => 'required',
             'representante_legal' => 'required',
             'domicilio' => 'required',
-            'telefono' => 'required',
             'correo' => 'required',
             'numero_padron_contratista' => 'required'
         ]);

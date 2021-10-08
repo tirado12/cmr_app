@@ -31,18 +31,21 @@
       
 
     <div class="grid grid-cols-8 gap-4">
-          <div class="col-span-3 ">
+
+          <div class="col-span-4 ">
             <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
             <select id="cliente_id" name="cliente_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
                 @foreach ($fuenteClientes as $item)
-                <option value="{{$item->cliente_id}}"> {{$clientes->find($item->cliente_id)->nombre}} </option>
+                 
+                <option value="{{$item->cliente_id}}"> {{$item->nombre}} </option>
+
                 @endforeach
             </select>
             <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
           </div>
 
-          <div class="col-span-2">
+          <div class="col-span-4">
             <label id="label_ejercicio" for="label_ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
               <select id="ejercicio" name="ejercicio" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija un cliente </option>
@@ -50,23 +53,17 @@
             <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un año de ejercicio</label>  
           </div>
         
-          <div class="col-span-3">
-              <label id="label_fuente" for="fuente" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
-              <select id="fuente" name="fuente" class="select2 mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                  <option value=""> Elija un cliente  y ejercicio</option>
-                </select>
-              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un año de ejercicio</label>  
-          </div>
+          
       </div>
       
-      <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow">
+      <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow hidden" id="titulo_sisplade">
         <div class="alert-content ml-4">
           <p class="font-bold sm:text-sm">Nuevo Sisplade</p>
         </div>
       </div>
 
   
-      <div class="mt-5 md:mt-0 md:col-span-2">
+      <div class="mt-5 md:mt-0 md:col-span-2 hidden" id="form_sisplade">
         <form id="formulario" name="formulario">
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
@@ -78,7 +75,7 @@
                         <div class="flex items-center ">
                           
                           <div class="mr-3 text-sm">
-                            <input id="fecha_capturado" name="fecha_capturado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" disabled>
+                            <input id="fecha_capturado" name="fecha_capturado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" >
                             
                           </div>
                           <div class="flex items-center h-5">
@@ -91,7 +88,7 @@
                           
                           <div class="mr-3 text-sm">
                             
-                            <input id="fecha_validado" name="fecha_validado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" disabled>
+                            <input id="fecha_validado" name="fecha_validado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" >
                           </div>
                           <div class="flex items-center h-5">
                             <label for="fecha_validado" class=" block font-medium text-gray-700">Fecha de validación</label>
@@ -134,7 +131,7 @@
               <a type="button" href="{{route('sisplade.index')}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Regresar
               </a>
-              <button type="buttom" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800" disabled>
+              <button type="buttom" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
                 Guardar
               </button>
             </div>
@@ -158,31 +155,34 @@
   //metodo ajax obtener el registro fuenteCliente exacto
   $(document).ready(function() {
     var fuente,ejercicio,cliente;
-    $("#fuente").on('change', function () {
+
+   /* $("#fuente").on('change', function () {
       
-        $('#guardar').prop( "disabled", false ); //validacion de formulario
-        $("#fecha_capturado").prop( "disabled", false );
-        $("#fecha_validado").prop( "disabled", false );
+       // $('#guardar').prop( "disabled", false ); //validacion de formulario
+        //$("#fecha_capturado").prop( "disabled", false );
+        //$("#fecha_validado").prop( "disabled", false );
         $('#guardar').removeClass('bg-orange-800  focus:ring-orange-800');
         $('#guardar').addClass('bg-blue-600 hover:bg-blue-700 focus:ring-blue-500');
      
       fuente= $(this).val();
       ejercicio=$('#ejercicio').val();
       cliente=$('#cliente_id').val();
-      
+
+       
       var link='{{ url("/fuentesClientes")}}/'+ejercicio+','+cliente+','+fuente; 
       $.ajax({
         url: link,
         dataType:'json',
         type: 'get',
         success: function(data){
+          console.log(data);
           $.each(data,function(key, item) {
              //console.log('id '+item.id_fuente_financ_cliente);
              $("#fuenteCliente_id").val(item.id_fuente_financ_cliente);
           });
         }
       });
-    });
+    });*/
     
     //guardar registro sisplade
     $("#guardar").on('click', function () {
@@ -197,8 +197,8 @@
       {validado= 1;}
       else
       {validado=0;}
-      console.log("capturado "+capturado);
-      console.log("validado "+validado);
+      //console.log("capturado "+capturado);
+      //console.log("validado "+validado);
       var fecha_validado= $('#fecha_validado').val();
       var direccion= '{{ route("sisplade.store") }}';
       var token = '{{ csrf_token() }}';
@@ -230,6 +230,8 @@
          $("#fuente").empty();
          $("#ejercicio").append('<option value="">Elija un cliente</option>');
          $("#fuente").append('<option value="">Elija un cliente y ejercicio</option>');
+          $('#fuenteCliente_id').val(cliente);
+          
          var link = '{{ url("/selectEjercicio")}}/'+cliente;
          $.ajax({
           url: link,
@@ -242,17 +244,21 @@
           },
           cache: false
         });
+
     });
   
       //select fuentes de financiamiento disponibles por cliente
       $("#ejercicio, #cliente_id").on('change', function () {
         
         if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
-        $('#guardar').prop( "disabled", true ); //validacion de formulario
-        $("#fecha_capturado").prop( "disabled", true );
-        $("#fecha_validado").prop( "disabled", true );
-        $('#guardar').removeClass('bg-blue-600 hover:bg-blue-700 focus:ring-blue-500');
-        $('#guardar').addClass('bg-orange-800  focus:ring-orange-800');
+        console.log('hola');
+        $('#titulo_sisplade').addClass('hidden');
+        $('#form_sisplade').addClass('hidden');
+        
+        
+      }else{
+      $('#titulo_sisplade').removeClass('hidden'); //mostrar el formulario de sisplade
+       $('#form_sisplade').removeClass('hidden');
       }
         ejercicio=$('#ejercicio').val();
         cliente=$('#cliente_id').val();
@@ -261,6 +267,8 @@
         if(cliente.length>0 && ejercicio.length>0){  
           var direccion = '{{ url("/autocomplete")}}/'+ejercicio+','+cliente;
           consulta(direccion);
+         
+
         }
         //ejercicio
       }); 

@@ -139,19 +139,7 @@
               <label for="ver_monto_comprometido" class=" text-base font-medium text-gray-700">Monto comprometido: </label>
               <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 myDIV"></label>
             </div>
-            <div class="col-span-8">
-              <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
-              <label id="ver_acta_integracion_consejo" class="text-base font-bold text-gray-900"></label>
-            </div>
-
-            <div class="col-span-8">
-              <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta priorización: </label>
-              <label id="ver_acta_priorizacion" class="text-base font-bold text-gray-900"></label>
-            </div>
-            <div class="col-span-8">
-                <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
-                <label id="ver_adendum_priorizacion" class="text-base font-bold text-gray-900"></label>
-              </div>
+           
             <div class="col-span-8">
                 <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Ejercicio: </label>
                 <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
@@ -222,7 +210,7 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0">
+                <input type="number" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0">
               </div>
                 <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>
             </div>
@@ -234,26 +222,12 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0" >
+                <input type="number" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" >
               </div>
               <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>  
               <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
             </div>
-            <div class="col-span-4">
-                <label id="label_acta_integracion_consejo" for="acta_integracion_consejo" class="block text-sm font-medium text-gray-700">Acta integracion *</label>
-                <input type="date" name="acta_integracion_consejo" id="acta_integracion_consejo" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_acta_integracion_consejo" name="error_acta_integracion_consejo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
-            </div>
-            <div class="col-span-4">
-                <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización *</label>
-                <input type="date" name="acta_priorizacion" id="acta_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_acta_priorizacion" name="error_acta_priorizacion" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
-            </div>
-            <div class="col-span-4">
-                <label for="adendum_priorizacion" class="block text-sm font-medium text-gray-700">Adendum priorización *</label>
-                <input type="date" name="adendum_priorizacion" id="adendum_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_adendum_priorizacion" name="error_adendum_priorizacion" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
-            </div>
+            
             <div class="col-span-4">
               <label for="fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
               <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
@@ -264,23 +238,25 @@
               </select>
           </div>
 
-            <div class="col-span-4">
-                <label for="prodim" class="block text-sm font-medium text-gray-700">Prodim *</label>
-                <select id="prodim" name="prodim" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                  <option value="0"> Elija una opción </option>
-                  <option value="1"> Terminado </option>
-                  <option value="2"> Pendiente </option>
-                </select>
-            </div>
-            <div class="col-span-4">
-              <label for="gastos_indirectos" class="block text-sm font-medium text-gray-700">Gastos indirectos *</label>
-              <select id="gastos_indirectos" name="gastos_indirectos" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                <option value="0"> Elija una opción </option>
-                      <option value="1"> Terminado </option>
-                      <option value="2"> Pendiente </option>
-                      <option value="3"> No aplica </option>
-              </select>
-          </div>
+         <div class="col-span-4 p-2">
+              <div class="grid grid-cols-2">
+                <div class="grid-col">
+                   <p>Prodim:</p>
+                   <input type="radio" id="prodim" name="prodim" value="1">
+                   <label for="prodim">Si</label><br>
+                   <input type="radio" id="prodim" name="prodim" value="2">
+                   <label for="prodim">No</label><br>
+                </div>
+                <div class="grid-col">
+                  <p>Gastos Indirectos:</p>
+                  <input type="radio" id="gastos_indirectos" name="gastos_indirectos" value="1">
+                  <label for="gastos_indirectos">Si</label><br>
+                  <input type="radio" id="gastos_indirectos" name="gastos_indirectos" value="2">
+                  <label for="gastos_indirectos">No</label><br>
+               </div>
+              </div>
+          </div> 
+
           
         </div>
         
@@ -388,6 +364,27 @@ function validarCliente() {
 $(document).ready(function() {
    $("#modal input").keyup(function() {
   //console.log($(this).attr('id'));
+
+  if($(this).attr('id') == 'monto_proyectado' || $(this).attr('id') == 'monto_comprometido'){
+      var proyectado = parseInt($('#monto_proyectado').val());
+      var comprometido = parseInt($('#monto_comprometido').val());
+      
+    if(proyectado < comprometido){
+      $('#error_monto_menor').fadeIn();
+      $('#guardar').attr("disabled", true);
+      $("#guardar").removeClass('bg-green-500');
+      $("#guardar").addClass('bg-gray-700');
+
+    }else{
+      $('#error_monto_menor').fadeOut();
+      $('#guardar').removeAttr("disabled");
+      $("#guardar").removeClass('bg-gray-700');
+      $("#guardar").addClass('bg-green-500');
+      
+    }
+
+  } 
+
       var monto = $(this).val();
       
       if(monto != ''){
@@ -407,20 +404,21 @@ $(document).ready(function() {
 });
 
 //validacion del formulario con el btn guardar
-$().ready(function() {
-  $("#formulario").validate({
+$().ready(function($) {
+ 
+
+  $('#formulario').validate({
     onfocusout: false,
     onclick: false,
-		rules: {
-      cliente_id: { required: true},
-			ejercicio: { required: true},
-			monto_proyectado: { required:true},
-			monto_comprometido: { required: true},
-			acta_integracion_consejo: { required:true},
-			acta_priorizacion: { required:true},
-      adendum_priorizacion: { required:true},
-      fuente_financiamiento_id: { required:true}
-		},
+    rules: {
+      cliente_id: { required: true },
+      ejercicio: { required: true },
+      monto_proyectado: { required: true },
+      monto_comprometido: { required: true},
+      fuente_financiamiento_id: { required: true },
+      prodim: { required: true },
+      gastos_indirectos: { required: true }
+    },
     errorPlacement: function(error, element) {
       if(error != null){
       $('#error_'+element.attr('id')).fadeIn();
@@ -429,7 +427,9 @@ $().ready(function() {
       }
      // console.log(element.attr('id'));
     },
-	}); 
+  });
+
+
   
 });
 

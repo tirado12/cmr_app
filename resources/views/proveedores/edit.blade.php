@@ -34,20 +34,22 @@
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
       <div class="mt-5 md:mt-0 md:col-span-2">
-        <form action="{{ route('proveedor.update', $proveedor) }}" method="POST">
+        <form action="{{ route('proveedor.update', $proveedor) }}" method="POST" id="formulario" name="formulario">
           @csrf
           @method('PUT')
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                  <input type="text" name="rfc" id="rfc" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->rfc }}" required>
+                  <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
+                  <input type="text" name="rfc" id="rfc" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->rfc }}" required>
+                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 5 caracteres</label>
                 </div>
   
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-                  <input type="text" name="razon_social" id="razon_social" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->razon_social }}" required>
+                  <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
+                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->razon_social }}" required>
+                  <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Introduzca una razon social</label>
                 </div>
 
                 
@@ -56,6 +58,9 @@
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
               <span class="block text-xs">Porfavor verifique que todos los campos marcados con ( * ) esten rellenados</span>
               <div class="text-right">
+                <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Regresar
+                </a>
               <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Guardar
               </button>
@@ -67,5 +72,50 @@
       </div>
     
   </div>
-  
+
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
+ <script>
+   //validacion de campos del form
+  $(document).ready(function() {
+   $("#formulario input").keyup(function() {
+    //console.log($(this).attr('id'));
+      var cadena = $(this).val();
+      
+      if(cadena != ''){
+      $('#error_'+$(this).attr('id')).fadeOut();
+      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+      //$('#guardar').removeAttr("disabled");
+      }
+      else{
+      //$("#guardar").attr("disabled", true);
+      $('#error_'+$(this).attr('id')).fadeIn();
+      $("#label_"+$(this).attr('id')).addClass('text-red-500');
+      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+      }
+    
+    });
+  });
+
+  //validacion del formulario con el btn guardar
+  $().ready(function() {
+    $("#formulario").validate({
+      onfocusout: false,
+      onclick: false,
+      rules: {
+        rfc: { required: true, minlength: 5, maxlength: 13},
+        razon_social: { required: true} 
+      },
+      errorPlacement: function(error, element) {
+        if(error != null){
+        $('#error_'+element.attr('id')).fadeIn();
+        }else{
+          $('#error_'+element.attr('id')).fadeOut();
+        }
+      // console.log(element.attr('id'));
+      },
+    }); 
+  });
+ </script>
 @endsection

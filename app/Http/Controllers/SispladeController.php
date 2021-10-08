@@ -41,13 +41,23 @@ class SispladeController extends Controller
     public function create()
     {
         $clientes = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
+       
        ->select('clientes.id_cliente', 'municipios.nombre')
        ->get();
+
        
-       $fuenteClientes = FuentesCliente::with('clientes','fuente')->get(); //tabla fuenteClientes segun existentes 
+       
+       $fuenteClientes = FuentesCliente::join('clientes','cliente_id','id_cliente')
+       ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+       ->where('fuente_financiamiento_id', 2)
+       ->select('cliente_id','nombre','id_fuente_financ_cliente')
+       ->get(); //tabla fuenteClientes segun existentes 
+       
        $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //$cli = Cliente::has('municipio')->get();
        //return $clientes->find($fuenteClientes[0]->cliente_id)->nombre;
+       
+       //return $fuenteClientes;
         return view('sisplade.add_sisplade',compact('clientes','fuenteClientes','fuentes'));
     }
 
@@ -149,11 +159,15 @@ class SispladeController extends Controller
     //========== funciones para select dinamico =================
     public function selectSearch($ejercicio,$cliente){
         //super explicacion, obtenemos las fuentes de financiamiento de las relacion Fuentesclientes existentes, a su vez filtramos segun el cliente elegido
-        $fuenteCli = FuentesFinanciamiento::whereHas('fuentesClientes', function(Builder $query) use($ejercicio,$cliente){ 
-            $query->where('ejercicio', $ejercicio)->where('cliente_id',$cliente);
-        })
+        $fuenteCli = FuentesCliente::join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
+        ->where('cliente_id', $cliente)
+        ->where('ejercicio', $ejercicio)
+        ->select('id_fuente_financ_cliente','nombre_corto')
         ->get();        
         return response()->json($fuenteCli);
+
+        //$fuenteCli= FuentesCliente::with('fuente')->get();
+        //return $fuenteCli;
     }
 
     public function selectEjercicio($cliente){
