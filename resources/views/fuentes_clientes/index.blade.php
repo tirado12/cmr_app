@@ -28,7 +28,7 @@
       <!-- div de tabla -->
   </div>
 </div>
-<!-- fin tabla tailwind, inicio data table -->
+<!-- inicio data table -->
 <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
 
 <table id="example" class="table table-striped bg-white" style="width:100%;">
@@ -199,9 +199,10 @@
             </div>
             <div class="col-span-4">
               <label id="label_ejercicio" for="label_ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
-              <input type="number" name="ejercicio" id="ejercicio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
-              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un año de ejercicio</label>  
-          </div>
+              <input type="text" name="ejercicio" id="ejercicio" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
+              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
+                
+            </div>
             <div class="col-span-4">
               <label id="label_monto_proyectado" for="label_monto_proyectado" class="block text-sm font-medium text-gray-700">Monto proyectado *</label>
               <div class="relative ">
@@ -210,9 +211,9 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0">
+                <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0">
               </div>
-                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>
+                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
             </div>
             <div class="col-span-4">
               <label id="label_monto_comprometido" for="label_monto_comprometido" class="block text-sm font-medium text-gray-700">Monto comprometido *</label>
@@ -222,45 +223,68 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" >
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" >
               </div>
-              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>  
+              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>  
               <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
             </div>
             
-            <div class="col-span-4">
-              <label for="fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
-              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                <option value="0" selected> Elija una opción </option>
+            <div class="col-span-8 mb-4">
+              <label for="fuente_financiamiento_id" id="label_fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
+              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" onchange="validarFuente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value="" selected> Elija una opción </option>
                 @foreach($fuentes as $fuente)
                 <option value="{{ $fuente->id_fuente_financiamiento }}"> {{ $fuente->nombre_corto }} </option>
                 @endforeach
               </select>
+              <label id="error_fuente_financiamiento_id" name="error_fuente_financiamiento_id" class="hidden text-base font-normal text-red-500" >Por favor elija una opción</label>  
+            </div> 
+                  
+          
+         </div>
+
+          <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
+            <div class="alert-content ml-4">
+            <p class="font-bold sm:text-sm">Anexos</p>
+            </div>
           </div>
 
-         <div class="col-span-4 p-2">
-              <div class="grid grid-cols-2">
-                <div class="grid-col">
-                   <p>Prodim:</p>
-                   <input type="radio" id="prodim" name="prodim" value="1">
-                   <label for="prodim">Si</label><br>
-                   <input type="radio" id="prodim" name="prodim" value="2">
-                   <label for="prodim">No</label><br>
-                </div>
-                <div class="grid-col">
-                  <p>Gastos Indirectos:</p>
-                  <input type="radio" id="gastos_indirectos" name="gastos_indirectos" value="1">
-                  <label for="gastos_indirectos">Si</label><br>
-                  <input type="radio" id="gastos_indirectos" name="gastos_indirectos" value="2">
-                  <label for="gastos_indirectos">No</label><br>
-               </div>
-              </div>
-          </div> 
+          <div class="flex flex-col-2 justify-center ">
+            <div class="flex flex-row  p-2">
+                <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim *</label>
+                <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+            </div>
+            <div class="flex flex-row  p-2">
+              <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos *</label>
+              <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+            </div>
+         </div>
 
+         <div id="error_existe" class="hidden alert flex flex-row items-center bg-red-200 p-2 rounded-lg border-b-2 border-red-300 mb-4 shadow">
+           <div class="alert-icon flex items-center bg-red-100 border-2 border-red-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+            <span class="text-red-500">
+              <svg fill="currentColor"
+                 viewBox="0 0 20 20"
+                 class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+              </svg>
+            </span>
+          </div>
+        
+          <div class="alert-content ml-4">
+            <div class="alert-title font-semibold text-lg text-red-800">
+              Aviso
+            </div>
+            <div class="alert-description text-sm text-red-600">
+              <strong>YA</strong> existe un registro con el mismo cliente, fuente y ejercicio.
+            </div>
+          </div>
           
         </div>
-        
-      </div>
+
+    </div>
       <!--footer-->
       <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
         
@@ -269,7 +293,7 @@
         <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal')">
           Cancelar
         </button>
-        <button type="submit" id="guardar" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
+        <button type="submit" id="guardar" class="bg-gray-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" disabled>
           Guardar
         </button>
         </div>
@@ -314,6 +338,8 @@
     }
 </script>
 <script>
+
+
   //Mensaje de advertencia
 $(".form-eliminar").submit(function(e){
     e.preventDefault();
@@ -347,6 +373,20 @@ function toggleMod(modal, fuente){
 }
 
 //validar selected del cliente
+function validarFuente() {
+  var valor = document.getElementById("fuente_financiamiento_id").value;
+  if(valor != ''){
+    $('#error_fuente_financiamiento_id').fadeOut();
+    $("#label_fuente_financiamiento_id").removeClass('text-red-500');
+    $("#label_fuente_financiamiento_id").addClass('text-gray-700');
+  }else{
+    $('#error_fuente_financiamiento_id').fadeIn();
+    $("#label_fuente_financiamiento_id").addClass('text-red-500');
+    $("#label_fuente_financiamiento_id").removeClass('text-gray-700');
+  }
+}
+
+//validar selected del fuente
 function validarCliente() {
   var valor = document.getElementById("cliente_id").value;
   if(valor != ''){
@@ -362,29 +402,94 @@ function validarCliente() {
 
 //validacion de campos del modal
 $(document).ready(function() {
-   $("#modal input").keyup(function() {
-  //console.log($(this).attr('id'));
+ 
 
-  if($(this).attr('id') == 'monto_proyectado' || $(this).attr('id') == 'monto_comprometido'){
-      var proyectado = parseInt($('#monto_proyectado').val());
-      var comprometido = parseInt($('#monto_comprometido').val());
-      
-    if(proyectado < comprometido){
-      $('#error_monto_menor').fadeIn();
-      $('#guardar').attr("disabled", true);
-      $("#guardar").removeClass('bg-green-500');
-      $("#guardar").addClass('bg-gray-700');
 
-    }else{
-      $('#error_monto_menor').fadeOut();
-      $('#guardar').removeAttr("disabled");
-      $("#guardar").removeClass('bg-gray-700');
-      $("#guardar").addClass('bg-green-500');
-      
+  $('#ejercicio').attr('maxlength','4');
+
+  $('#fuente_financiamiento_id, #ejercicio').on('keyup change',function(){
+    cliente = $('#cliente_id').val();
+    fuente= $('#fuente_financiamiento_id').val();
+    ejercicio= $('#ejercicio').val();
+    
+    var link = '{{ url("/ejercicioDisponible")}}/'+cliente+','+ejercicio+','+fuente;
+    if(cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data== 1){
+                  $('#error_existe').removeClass('hidden');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-500');
+                  $("#guardar").addClass('bg-gray-700');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-700');
+                  $("#guardar").addClass('bg-green-500');
+                }
+              },
+              cache: false
+            });
     }
+  });
+   $("#modal input").keyup(function() {
 
-  } 
+     $("#ejercicio").on({ //validacion de solo numeros
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+              
+                $(event.target).val(function(index, value) { //formato montos
+                  
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'');
+                        //.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                });
+            }
+        });
+        var proyectado;
+        var comprometido;
+        $("#monto_proyectado, #monto_comprometido").on({
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                  //
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                        
+                });
+                //obtener el monto para eliminar formato y pasar a float
+                proyectado=   $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+                proyectado = parseFloat(proyectado) || 0;
+                
+                comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+                comprometido = parseFloat(comprometido) || 0;
+                
 
+                if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
+                  $('#error_monto_menor').fadeIn();
+                  //$('#guardar').attr("disabled", true);
+                 
+
+                }else{
+                  $('#error_monto_menor').fadeOut();
+                  //$('#guardar').removeAttr("disabled");
+                  
+                  
+                }
+
+            }
+        });
+
+        //validacion de campo vacio
       var monto = $(this).val();
       
       if(monto != ''){
@@ -401,12 +506,11 @@ $(document).ready(function() {
       }
     
     });
+    
 });
 
 //validacion del formulario con el btn guardar
 $().ready(function($) {
- 
-
   $('#formulario').validate({
     onfocusout: false,
     onclick: false,
@@ -416,8 +520,6 @@ $().ready(function($) {
       monto_proyectado: { required: true },
       monto_comprometido: { required: true},
       fuente_financiamiento_id: { required: true },
-      prodim: { required: true },
-      gastos_indirectos: { required: true }
     },
     errorPlacement: function(error, element) {
       if(error != null){
@@ -425,7 +527,7 @@ $().ready(function($) {
       }else{
         $('#error_'+element.attr('id')).fadeOut();
       }
-     // console.log(element.attr('id'));
+     
     },
   });
 
@@ -436,17 +538,17 @@ $().ready(function($) {
 
 //Codigo de Modal detalles
 $(".btn-AddDate").on("click",function() {
-  alert("Modal Mostrada");
+  //alert("Modal Mostrada");
   document.getElementById('modal-id').classList.toggle("hidden");
   document.getElementById('modal-id' + "-backdrop").classList.toggle("hidden");
     
 });
   function toggleModal(modalID, index, cliente, fuente, key){
       cliente.forEach(function(municipio) {
-        if(index.cliente_id == municipio.id_cliente){
-        //console.log( municipio.id_cliente + " " +  municipio.nombre);
-        $('#nombre_municipio').html(municipio.nombre); 
-        }
+          if(index.cliente_id == municipio.id_cliente){
+          //console.log( municipio.id_cliente + " " +  municipio.nombre);
+          $('#nombre_municipio').html(municipio.nombre); 
+          }
         });
         
     $('#ver_monto_proyectado').html(index.monto_proyectado); 

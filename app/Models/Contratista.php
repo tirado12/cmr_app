@@ -14,6 +14,7 @@ class Contratista extends Model
 
     protected $fillable = [
         'rfc',
+        'tipo_rfc',
         'razon_social',
         'representante_legal',
         'domicilio',

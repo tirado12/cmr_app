@@ -17,9 +17,9 @@
 
 <div class="flex flex-col mt-6">
     <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
-      Agregar
-      </button> 
+      <a href="{{route('gastosIndirectosFuentes.create')}}"><button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" >
+        Agregar
+        </button></a>
         <!-- div de tabla -->
     </div>
 </div>
@@ -90,80 +90,13 @@
         </tr>
     </tfoot>-->
   </table>
+
+  
 </div>
 
-<!-- inicio modal -->
-<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-id">
-  <div class="relative w-auto my-6 mx-auto max-w-3xl">
-    <!--content-->
-    <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-      <!--header-->
-      <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-        <h4 class="text-xl font-semibold">
-          Fuentes - gastos indirectos
-        </h4>
-        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('modal-id')">
-          <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
-            ×
-          </span>
-        </button>
-      </div>
-      <!--body-->
-      
-      <div class="relative p-6 flex-auto">
-        
-          <div class="grid grid-cols-8 gap-8">
-            <div class="col-span-8 ">
-              <label for="first_name" class="text-base font-medium text-gray-700">Municipio: </label>
-              <input type="text" name="monto_proyectado" id="monto_proyectado" class=" mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="">
-            </div>
-            <div class="col-span-8">
-              <label for="ver_monto_proyectado" class=" text-base font-medium text-gray-700">Monto proyectado: </label>
-              <label id="ver_monto_proyectado" class="text-base font-bold text-gray-900 myDIV"></label>
-            </div>
-            <div class="col-span-8">
-              <label for="ver_monto_comprometido" class=" text-base font-medium text-gray-700">Monto comprometido: </label>
-              <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 myDIV"></label>
-            </div>
-            <div class="col-span-8">
-              <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
-              <label id="ver_acta_integracion_consejo" class="text-base font-bold text-gray-900"></label>
-            </div>
 
-            <div class="col-span-8">
-              <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta priorización: </label>
-              <label id="ver_acta_priorizacion" class="text-base font-bold text-gray-900"></label>
-            </div>
-            <div class="col-span-8">
-                <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
-                <label id="ver_adendum_priorizacion" class="text-base font-bold text-gray-900"></label>
-              </div>
-            <div class="col-span-8">
-                <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Ejercicio: </label>
-                <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
-              </div>
-            <div class="col-span-8">
-                <label for="fuente_financiamiento" class="text-base font-medium text-gray-700">Fuente de financiamiento: </label>
-                <label id="ver_fuente_financiamiento" class="text-base font-bold text-gray-900"></label>
-              </div>
-              <div class="col-span-8">
-                <label for="prodim" class="text-base font-medium text-gray-700">Prodim: </label>
-                <span id="ver_prodim" class=" "></span>
-              </div>
-              <div class="col-span-8">
-                <label for="gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
-                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">Pendiente</span>
-              </div>
-             
-          </div>
-        
-      </div>
-      <!--footer-->
-    </div>
-  </div>
-</div>
 
-<div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-backdrop"></div>
+
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
@@ -182,10 +115,6 @@
 @endif
 
 <script>
-function toggleModal(modal, fuente){
-    document.getElementById(modal).classList.toggle("hidden");
-    document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
-}
 
   //Mensaje de advertencia
 $(".form-eliminar").submit(function(e){
@@ -214,7 +143,7 @@ $(".form-eliminar").submit(function(e){
 
 <script>
   //ejecucion del datatable
-$(document).ready(function() {
+
     $('#example').DataTable({
         "autoWidth" : true,
         "responsive" : true,
@@ -230,6 +159,6 @@ $(document).ready(function() {
       }
     )
     .columns.adjust();
-});
+
 </script>
 @endsection

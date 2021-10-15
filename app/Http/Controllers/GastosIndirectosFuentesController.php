@@ -28,9 +28,18 @@ class GastosIndirectosFuentesController extends Controller
         ->join('municipios','municipio_id','id_municipio')
         ->select('fuentes_gastos_indirectos.*','fuentes_clientes.ejercicio','gastos_indirectos.nombre as nombre_indirectos','clientes.anio_inicio','clientes.anio_fin','municipios.nombre','fuentes_financiamientos.nombre_corto')
         ->get();
-        
+
+        $fuenteCliente= FuentesCliente::join('clientes','id_cliente','cliente_id')
+        ->join('municipios','id_municipio','municipio_id')
+        ->join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
+        ->where('id_fuente_financiamiento',2)
+        ->select('clientes.id_cliente','municipios.nombre','ejercicio','fuentes_financiamientos.nombre_corto')
+        ->get();   
+
+        $gastos = GastosIndirectos::all();        
       
-        return view('fuentes_gastos.index',compact('gastosIndirectos'));
+        //return $fuenteCliente;
+        return view('fuentes_gastos.index',compact('gastosIndirectos','fuenteCliente'));
     }
 
     /**
@@ -40,7 +49,17 @@ class GastosIndirectosFuentesController extends Controller
      */
     public function create()
     {
-        
+        $fuenteCliente= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->select('cliente_id','nombre')
+        ->get(); //tabla fuenteClientes segun existentes           
+        $clientes = $fuenteCliente->unique('cliente_id');
+
+        $indirectos = GastosIndirectos::all();
+
+         //return $indirectos;
+         return view('fuentes_gastos.add_fuentes_gastos',compact('clientes','indirectos'));
     }
 
     /**
@@ -51,7 +70,17 @@ class GastosIndirectosFuentesController extends Controller
      */
     public function store(Request $request)
     {
-      
+        $request->validate([
+            'gasto_indirecto' => 'required',
+            'fuenteCliente_id' => 'required',
+            'monto' => 'required',
+        ]);
+        GastosIndirectosFuentes::create([
+            'indirectos_id' => $request->gasto_indirecto,
+            'fuente_cliente_id' => $request->fuenteCliente_id,
+            'monto' => $request->monto
+        ]);
+        return redirect()->route('gastosIndirectosFuentes.index');
     }
     /**
      * Display the specified resource.

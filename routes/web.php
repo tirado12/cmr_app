@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\AnexosFondoIIIController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ComprometidoDesgloseController;
 use App\Http\Controllers\ContratistaController;
@@ -89,7 +90,7 @@ Route::resource('prodimComprometido', ProdimComprometidoController::class)->name
 Route::resource('prodim', ProdimController::class)->except(['getDesgloseProdim'])->names('prodim');
 Route::resource('proveedor', ProveedorController::class)->names('proveedor');
 Route::resource('rft', RftController::class)->names('rft');
-//Route::resource('sisplade', SispladeController::class)->names('sisplade');
+Route::resource('anexos', AnexosFondoIIIController::class)->names('anexos');
 
 //Rutas independientes para el sistema
 Route::get('inicio', [GeneralController::class, 'inicio'])->name('inicio');
@@ -102,6 +103,7 @@ Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ve
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');
 Route::resource('perfil', PerfilController::class)->names('perfil');
 
-Route::get('/autocomplete/{ejercicio},{cliente}',[SispladeController::class,'selectSearch']);
+Route::get('/obtClienteFuente/{ejercicio},{cliente}',[SispladeController::class,'obtenerFuenteCliente']);
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
-Route::get('/fuentesClientes/{ejercicio},{cliente},{fuente}',[SispladeController::class,'fuentesClientes']);
+Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']);
+//Route::get('/fuentesClientes/{ejercicio},{cliente},{fuente}',[SispladeController::class,'fuentesClientes']);

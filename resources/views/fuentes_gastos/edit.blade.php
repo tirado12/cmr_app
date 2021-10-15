@@ -38,22 +38,27 @@
                 </div>
                   
                 <div class="col-span-6 sm:col-span-3">
-                    <label id="label_indirectos_id" for="indirectos_id" class="block text-sm font-medium text-gray-700">Gasto *</label>
-                    <select id="indirectos_id" name="indirectos_id" class="clickable mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
-                      <option value="0"> Elija una opción </option>
+                    <label id="label_gasto_indirecto" for="gasto_indirecto" class="block text-sm font-medium text-gray-700">Gasto Indirecto *</label>
+                    <select id="gasto_indirecto" name="gasto_indirecto" onchange="validarSelect()" class="clickable mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
+                      <option value=""> Elija una opción </option>
                       @foreach($indirectos as $item)  
-                      <option value='{{ $item->id_indirectos }}' {{ ($gastoIndirecto->indirectos_id == $item->id_indirectos) ? 'selected' : '' }}>
+                        <option value='{{ $item->id_indirectos }}' {{ ($gastoIndirecto->indirectos_id == $item->id_indirectos) ? 'selected' : '' }}>
                           {{$item->nombre}}
                         </option>
                         @endforeach
                     </select>
-                    <label id="error_indirectos_id" name="error_indirectos_id" class="hidden text-base font-normal text-red-500" >Introduzca un gasto</label>
+                    <label id="error_gasto_indirecto" name="error_gasto_indirecto" class="hidden text-base font-normal text-red-500" >Introduzca un gasto</label>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto *</label>
-                    <input type="number" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastoIndirecto->monto}}">
-                    <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Introduzca una monto</label>
+                    <label class="relative flex w-full flex-wrap items-stretch mb-3 ">
+                      <span class="z-10  text-gray-500 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
+                        <i class="fas fa-dollar-sign"></i>
+                      </span>
+                    <input type="text" name="monto" id="monto" placeholder="0.00"  class="mt-1 focus:ring-indigo-500 pl-8 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    </label>
+                    <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Introduzca un monto</label>
                 </div>
                 
               </div>
@@ -78,76 +83,84 @@
   </div>
 
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>    
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+  
   <script>
     
 
 //validacion de campos del formulario
 $(document).ready(function() {
-   $("#formulario input").keyup(function() {
-  //console.log($(this).attr('id'));
-      var monto = $(this).val();
-      
-      if(monto != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
-      //$('#guardar').removeAttr("disabled");
-      }
-      else{
-      //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
-      }
-    
-    });
 
-//validacion de los selected
-    $('.clickable').click(function() {
-      var valor = $(this).val();
-      
-      if(valor != 0){
+  $("#formulario input").keyup(function() {
+    var monto = $(this).val();
+    if(monto != ''){
       $('#error_'+$(this).attr('id')).fadeOut();
       $("#label_"+$(this).attr('id')).removeClass('text-red-500');
       $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       //$('#guardar').removeAttr("disabled");
-      }else{
+    }
+    else{
       //$("#guardar").attr("disabled", true);
       $('#error_'+$(this).attr('id')).fadeIn();
       $("#label_"+$(this).attr('id')).addClass('text-red-500');
       $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
-      }
+    }
   });
+
+  $("#formulario").validate({ //validacion con el btn guardar
+            onfocusout: false,
+            onclick: false,
+            rules: {
+              monto: { required: true, minlength: 2 },
+              gasto_indirecto: { required: true},
+            
+            },
+            errorPlacement: function(error, element) {
+              if(error != null){
+              $('#error_'+element.attr('id')).fadeIn();
+              }else{
+                $('#error_'+element.attr('id')).fadeOut();
+              }
+            
+            },
+          }); 
+
 });
 
-//validacion del formulario con el btn guardar
-$().ready(function() {
-  $("#formulario").validate({
-    onfocusout: false,
-    onclick: false,
-		rules: {
-      municipio: { required: true},
-			monto_proyectado: { required: true},
-      monto_comprometido: { required: true},
-      ejercicio: { required: true},
-      acta_integracion_consejo: { required: true},
-      acta_priorizacion: { required: true},
-      adendum_priorizacion: { required: true},
-      fuente_financiamiento_id: { required: true},
-      prodim: { required: true},
-      gastos_indirectos: { required: true},
-		},
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-        $('#error_'+element.attr('id')).fadeOut();
-      }
-     // console.log(element.attr('id'));
-    },
-	}); 
-});
+const formato = new Intl.NumberFormat('es-MX', { //dar formato a la cantidad 
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  $("#monto").val(formato.format('{{ $gastoIndirecto->monto}}').replace(/\D00(?=\D*$)/, ''));  
+
+$("#monto").on({
+            "focus": function(event) {
+                $(event.target).select(); //formato al escribir el monto
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) {
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                });
+            }
+        });
+
+
+      //validar selected del cliente
+function validarSelect() {
+    var valor = document.getElementById("gasto_indirecto").value;
+    if(valor != ''){
+      $('#error_gasto_indirecto').fadeOut();
+      $("#label_gasto_indirecto").removeClass('text-red-500');
+      $("#label_gasto_indirecto").addClass('text-gray-700');
+    }else{
+      $('#error_gasto_indirecto').fadeIn();
+      $("#label_gasto_indirecto").addClass('text-red-500');
+      $("#label_gasto_indirecto").removeClass('text-gray-700');
+    }
+}
   </script>
   
   

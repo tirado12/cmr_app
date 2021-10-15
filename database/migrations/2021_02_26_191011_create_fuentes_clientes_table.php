@@ -19,9 +19,9 @@ class CreateFuentesClientesTable extends Migration
             $table->double('monto_comprometido');
             $table->string('ejercicio', 4);
             $table->unsignedBigInteger('cliente_id');
-            $table->foreign('cliente_id')->references('id_cliente')->on('clientes');
+            $table->foreign('cliente_id')->references('id_cliente')->on('clientes')->onDelete('cascade');
             $table->unsignedBigInteger('fuente_financiamiento_id');
-            $table->foreign('fuente_financiamiento_id')->references('id_fuente_financiamiento')->on('fuentes_financiamientos');
+            $table->foreign('fuente_financiamiento_id')->references('id_fuente_financiamiento')->on('fuentes_financiamientos')->onDelete('cascade');
             $table->timestamps();
         });
     }

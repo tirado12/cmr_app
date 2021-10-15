@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PhpParser\Node\Expr\FuncCall;
 
 class FuentesCliente extends Model
 {
@@ -39,6 +40,9 @@ class FuentesCliente extends Model
     }
     public function obras(){
         return $this->hasMany(Obra::class,'id_obra','obras_fuente.obra_id');
+    }
+    public function anexosFondo(){
+        return $this->hasMany(AnexosFondoIII::class,'fuente_financiamiento_cliente_id','id_fuente_financ_cliente');
     }
 
    

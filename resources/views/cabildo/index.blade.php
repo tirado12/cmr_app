@@ -72,7 +72,7 @@
           </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $municipios->find($integrante->municipio_id)->nombre }}
+            {{ $clientes->find($integrante->cliente_id)->nombre}}
             </div>
             
           </td>
@@ -127,7 +127,7 @@
             <div class="grid grid-cols-8 gap-8">
               <div class="col-span-8 ">
                 <label id="label_nombre" for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required >
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" maxlength="50" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required >
                 <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Porfavor ingresa un nombre</label>
               </div>
               <div class="col-span-8">
@@ -137,25 +137,25 @@
               </div>
               <div class="col-span-8">
                 <label id="label_cargo" for="cargo" class="block text-sm font-medium text-gray-700">Cargo *</label>
-                <input type="text" name="cargo" id="cargo" placeholder="Presidente" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                <input type="text" name="cargo" id="cargo" placeholder="Presidente" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                 <label id="error_cargo" name="error_cargo" class="hidden text-base font-normal text-red-500" >Porfavor ingresa un cargo</label>
               </div>
               <div class="col-span-8">
                   <label id="eti_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
-                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required>   
+                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required>   
               </div>
               
               <div class="col-span-8">
-                  <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo *</label>
-                  <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                  <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo</label>
+                  <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo </label>
+                  <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo valido</label>
                 </div>
               <div class="col-span-8" >
-                <label id="label_municipio" for="municipio" class="block text-sm font-medium text-gray-700">Municipio *</label>
-                <select id="municipio" name="municipio" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                <label id="label_cliente" for="cliente" class="block text-sm font-medium text-gray-700">Cliente *</label>
+                <select id="cliente" name="cliente" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="">Elija una opción</option>
-                    @foreach($municipios as $municipio)
-                    <option value="{{ $municipio->id_municipio }}">{{ $municipio->nombre }}</option>
+                    @foreach($clientes as $cliente)
+                    <option value="{{ $cliente->id_cliente }}">{{ $cliente->nombre }}</option>
                      @endforeach
                 </select>
                 <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
@@ -189,7 +189,7 @@
 <!--Alerta de confirmacion-->
 @if(session('eliminar')=='ok')
   <script>
-    Swal.fire(
+    Swal.fire( //metodo para llamar el mensaje despues de eliminar dato
       '¡Eliminado!',
       'El integrante de cabildo ha sido eliminado.',
       'success'
@@ -198,7 +198,7 @@
 @endif
 
 <script>
-  $(".form-eliminar").submit(function(e){
+  $(".form-eliminar").submit(function(e){ //propiedades mensaje de confirmacion de eliminar 
     e.preventDefault();
     Swal.fire({
       customClass: {
@@ -224,7 +224,7 @@
 
 
 <script type="text/javascript">
-  function toggleModal(modalID){
+  function toggleModal(modalID){ //mostrar y ocultar modal
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
@@ -232,7 +232,7 @@
 //validacion de campos del modal
 $(document).ready(function() {
    $("#modal-id input").keyup(function() {
-  //console.log($(this).attr('id'));
+  
       var monto = $(this).val();
       
       if(monto != ''){
@@ -250,22 +250,22 @@ $(document).ready(function() {
     
     });
 
-    $("input[name='telefono']").keyup(function() {
+    $("input[name='telefono']").keyup(function() { //dar formato al input telefono
     $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
       });
 });
 
 //Validacion de select municipio
 function validarCliente() {
-  var valor = document.getElementById("municipio").value;
+  var valor = document.getElementById("cliente").value;
   if(valor != ''){
-    $('#error_municipio').fadeOut();
-    $("#label_municipio").removeClass('text-red-500');
-    $("#label_municipio").addClass('text-gray-700');
+    $('#error_cliente').fadeOut();
+    $("#label_cliente").removeClass('text-red-500');
+    $("#label_cliente").addClass('text-gray-700');
   }else{
-    $('#error_municipio').fadeIn();
-    $("#label_municipio").addClass('text-red-500');
-    $("#label_municipio").removeClass('text-gray-700');
+    $('#error_cliente').fadeIn();
+    $("#label_cliente").addClass('text-red-500');
+    $("#label_cliente").removeClass('text-gray-700');
   }
 }
 
@@ -280,7 +280,7 @@ $().ready(function() {
 			rfc: { required: true, minlength: 5, maxLength: 13},
       cargo: { required: true},
       
-      correo: { required: true,email: true},
+      correo: { email: true},
       municipio: { required: true}
 		},
     errorPlacement: function(error, element) {
@@ -289,7 +289,7 @@ $().ready(function() {
       }else{
       $('#error_'+element.attr('id')).fadeOut();
       }
-     // console.log(element.attr('id'));
+     
     },
 	}); 
   
@@ -305,7 +305,7 @@ $().ready(function() {
 
 <script>
   
-  $(document).ready(function() {
+  $(document).ready(function() { //llamar datatable
     
     $('#example').DataTable({
         "autoWidth" : true,

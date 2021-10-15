@@ -45,10 +45,22 @@
                   <input type="text" name="rfc" id="rfc" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->rfc }}" required>
                   <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 5 caracteres</label>
                 </div>
+
+                <div class="col-span-8">
+                  <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
+                  <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                  <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
+                </div>
   
                 <div class="col-span-6 sm:col-span-3">
+                  <label id="label_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
+                  <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{( $proveedor->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}" disabled>
+                  
+                </div>
+
+                <div class="col-span-6 sm:col-span-3">
                   <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->razon_social }}" required>
+                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->razon_social }}" required>
                   <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Introduzca una razon social</label>
                 </div>
 
@@ -78,8 +90,22 @@
  <script>
    //validacion de campos del form
   $(document).ready(function() {
-   $("#formulario input").keyup(function() {
-    //console.log($(this).attr('id'));
+
+
+   $("#formulario input").keyup(function() {// validacion de rfc y representante legal
+
+    if($('#rfc').val().length <= 12){
+      $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Moral');
+        $('#label_representante_legal').removeClass('hidden');
+        $('#representante_legal').removeClass('hidden');
+     }else{
+      $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Física');
+        $('#label_representante_legal').addClass('hidden');
+        $('#representante_legal').addClass('hidden');
+     }
+    
       var cadena = $(this).val();
       
       if(cadena != ''){

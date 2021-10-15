@@ -36,6 +36,14 @@ class ContratistaController extends Controller
      */
     public function store(Request $request)
     {
+        $rfc = $request->rfc;
+        $tipo_rfc="";
+        if(strlen($rfc)<=12 ){
+            $tipo_rfc=true; //persona moral
+        }else{
+            $tipo_rfc=false; //persona fisica
+        }
+
         $request->validate([
             'rfc' => 'required',
             'razon_social' => 'required',
@@ -49,6 +57,7 @@ class ContratistaController extends Controller
          
         Contratista::create([
             'rfc' => $request->rfc,
+            'tipo_rfc' => $tipo_rfc,
             'razon_social' => $request->razon_social,
             'representante_legal' => $request->representante_legal,
             'domicilio' => $request->domicilio,
@@ -88,6 +97,14 @@ class ContratistaController extends Controller
      */
     public function update(Request $request, Contratista $contratista)
     {
+        $rfc = $request->rfc;
+        $tipo_rfc="";
+        if(strlen($rfc)<=12 ){
+            $tipo_rfc=true; //persona moral
+        }else{
+            $tipo_rfc=false; //persona fisica
+        }
+
         $request->validate([
             'rfc' => 'required',
             'razon_social' => 'required',
@@ -96,7 +113,18 @@ class ContratistaController extends Controller
             'correo' => 'required',
             'numero_padron_contratista' => 'required'
         ]);
-        $contratista->update($request->all());
+
+        $contratista->rfc = $request->rfc;
+        $contratista->tipo_rfc = $tipo_rfc;
+        $contratista->razon_social = $request->razon_social;
+        $contratista->representante_legal = $request->representante_legal;
+        $contratista->domicilio = $request->domicilio;
+        $contratista->telefono = $request->telefono;
+        $contratista->correo = $request->correo;
+        $contratista->numero_padron_contratista = $request->numero_padron_contratista;
+        $contratista->save();
+
+        //$contratista->update($request->all());
         return redirect()->route('contratistas.index');
     }
 

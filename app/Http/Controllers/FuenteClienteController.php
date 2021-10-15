@@ -7,8 +7,13 @@ use App\Models\FuentesCliente;
 use App\Models\AnexosFondoIII;
 use App\Models\FuentesFinanciamiento;
 use App\Models\Municipio;
+use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
+
+
+
 
 class FuenteClienteController extends Controller
 {
@@ -38,6 +43,7 @@ class FuenteClienteController extends Controller
     public function create()
     {
         //
+        //return FuentesCliente::with('anexosFondo')->get();
     }
 
     /**
@@ -60,7 +66,7 @@ class FuenteClienteController extends Controller
         ]);
         $fuenteCliente = FuentesCliente::create([
             'monto_proyectado' => str_replace(",", '', $request->monto_proyectado),
-            'monto_comprometido' => $request->monto_comprometido,
+            'monto_comprometido' => str_replace(",", '',$request->monto_comprometido),
             'ejercicio' => $request->ejercicio,
             'cliente_id' => $request->cliente_id,
             'fuente_financiamiento_id' => $request->fuente_financiamiento_id
@@ -85,7 +91,7 @@ class FuenteClienteController extends Controller
                 'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
             ]);
         }
-
+            
         if(auth()->user()->getRoleNames()[0] == 'Administrador')
             return redirect()->route('fuenteCliente.index');
         else
@@ -140,6 +146,7 @@ class FuenteClienteController extends Controller
             'gastos_indirectos' => 'required',
             'fuente_financiamiento_id' => 'required'
         ]);
+
         $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
         $fuenteCliente->monto_proyectado = str_replace(",", '', $request->monto_proyectado_edit);
         if($request->fuente_financiamiento_id_edit == 2){
@@ -194,6 +201,20 @@ class FuenteClienteController extends Controller
             })
             ->get();
         return $users;
+    }
+
+    //======================================================================
+
+    public function getEjercicioDisponible($cliente_id, $ejercicio,$fuente){
+        $existe = FuentesCliente::where('cliente_id',$cliente_id)
+        ->where('ejercicio',$ejercicio)
+        ->where('fuente_financiamiento_id',$fuente)
+        ->exists();
+
+        if($existe == 1)
+        return $existe;
+        else
+        return 0;
     }
 
 }

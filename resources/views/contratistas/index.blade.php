@@ -33,6 +33,7 @@
           <th>Contratista</th>
           <th>Telefono</th>
           <th>Correo</th>
+          <th>Tipo de contribuyente</th>
           <th class="flex justify-center">Acción</th>
           
       </tr>
@@ -61,6 +62,13 @@
             </div>
             
           </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900">
+                {{($contratista->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}
+            </div>
+            
+          </td>
+
           <td>
             <div class="flex justify-center">
             <form action="{{ route('contratistas.destroy', $contratista->id_contratista) }}" method="POST" class="form-eliminar" >
@@ -112,32 +120,37 @@
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
               <label id="label_rfc" for="first_name" class="block text-sm font-medium text-gray-700">RFC *</label>
-              <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Porfavor ingresar al menos un RFC generico con 5 caracteres</label>
+              <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" minlength="12" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Porfavor ingresar al menos un RFC generico con 12 caracteres</label>
+            </div>
+            <div class="col-span-6 sm:col-span-3">
+              <label id="label_tipo_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
+              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
+              
             </div>
             <div class="col-span-8">
               <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
               <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una razón social</label>
             </div>
             <div class="col-span-8">
-              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
-              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
+              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
               <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
             </div>
             <div class="col-span-8">
                 <label id="label_domicilio" for="domicilio" class="block text-sm font-medium text-gray-700">Domicilio *</label>
-                <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                 <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un domicilio</label>
               </div>
             <div class="col-span-8">
                 <label id="label_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
-                <input type="tel" name="telefono" id="telefono" placeholder="9519999999" pattern="/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/" maxlength = "13" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="text" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                 <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un telefono</label>
               </div>
             <div class="col-span-8">
                 <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700" >Correo *</label>
-                <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                 <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo valido</label>
               </div>
             <div class="col-span-8">
@@ -182,7 +195,7 @@
 @endif
 
 <script>
-  $(".form-eliminar").submit(function(e){
+  $(".form-eliminar").submit(function(e){ //mensaje advertencia de eliminacion
     e.preventDefault();
     Swal.fire({
       customClass: {
@@ -208,7 +221,7 @@
 
 
 <script type="text/javascript">
-  function toggleModal(modalID){
+  function toggleModal(modalID){ //mostrar y ocultar modal
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
@@ -216,7 +229,19 @@
 //validacion de campos del modal
 $(document).ready(function() {
    $("#modal-id input").keyup(function() {
-  //console.log($(this).attr('id'));
+
+    if($('#rfc').val().length <= 12){ //validacion de rfc y representante legal
+        $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Moral');
+        $('#label_representante_legal').removeClass('hidden');
+        $('#representante_legal').removeClass('hidden');
+     }else{
+        $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Física');
+        $('#label_representante_legal').addClass('hidden');
+        $('#representante_legal').addClass('hidden');
+     }
+
       var monto = $(this).val();
       
       if(monto != ''){
@@ -234,7 +259,7 @@ $(document).ready(function() {
     
     });
 
-    $("input[name='telefono']").keyup(function() {
+    $("input[name='telefono']").keyup(function() { //validacion de telefono
     $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
       });
 });
@@ -245,9 +270,9 @@ $().ready(function() {
     onfocusout: false,
     onclick: false,
 		rules: {
-			rfc: { required: true, minlength: 5, maxlength: 13},
+			rfc: { required: true, minlength: 12, maxlength: 13},
       razon_social: { required: true},
-      representante_legal: { required: true},
+      
       domicilio: { required: true},
       
       correo: { required: true, email: true},
@@ -273,7 +298,7 @@ $().ready(function() {
 
 <script>
   
-  $(document).ready(function() {
+  $(document).ready(function() { //llamada al datatable
     
     $('#example').DataTable({
         "autoWidth" : true,

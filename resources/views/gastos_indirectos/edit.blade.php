@@ -20,13 +20,13 @@
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-6 sm:col-span-3">
                 <label for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                <input type="text" name="clave" id="clave" placeholder="100" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->clave }}">
+                <input type="text" name="clave" id="clave" placeholder="100" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->clave }}">
                 <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Introduzca una clave</label>
               </div>
 
               <div class="col-span-6 sm:col-span-3">
                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->nombre }}">
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->nombre }}">
                 <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Introduzca un nombre</label>
               </div>         
               
@@ -70,12 +70,12 @@ $(document).ready(function() {
       }else{
         $('#error_'+element.attr('id')).fadeOut();
       }
-     // console.log(element.attr('id'));
+     
     },
 	}); 
 
-   $("#formulario input").keyup(function() {
-  //console.log($(this).attr('id'));
+   $("#formulario input").keyup(function() { //validacion para lanzar mensajes
+  
       var dato = $(this).val();
       
       if(dato != ''){

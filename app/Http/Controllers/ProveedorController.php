@@ -38,13 +38,22 @@ class ProveedorController extends Controller
      */
     public function store(Request $request)
     {
+        $rfc = $request->rfc;
+        $tipo_rfc="";
+        if(strlen($rfc)<=12 ){
+            $tipo_rfc=true; //persona moral
+        }else{
+            $tipo_rfc=false; //persona fisica
+        }
+
         $request->validate([
             'rfc' => 'required',
             'razon_social' => 'required'
         ]);
         Proveedor::create([
             'rfc' => $request->rfc,
-            'razon_social'=>$request->razon_social
+            'razon_social'=>$request->razon_social,
+            'tipo_rfc'=>$tipo_rfc
         ]);
         return redirect()->route('proveedor.index');
     }
@@ -66,6 +75,7 @@ class ProveedorController extends Controller
      */
     public function edit(Proveedor $proveedor)
     {
+        //return $proveedor;
        return view('proveedores.edit',compact('proveedor'));
        //return $proveedor;
     }
@@ -79,11 +89,26 @@ class ProveedorController extends Controller
      */
     public function update(Request $request, Proveedor $proveedor)
     {
+        $rfc = $request->rfc;
+        $tipo_rfc="";
+        if(strlen($rfc)<=12 ){
+            $tipo_rfc=true; //persona moral
+        }else{
+            $tipo_rfc=false; //persona fisica
+        }
+
+        //return $request;
         $request->validate([
             'rfc' => 'required',
             'razon_social' => 'required'
         ]);
-        $proveedor->update($request->all());
+
+        $proveedor->rfc = $request->rfc;
+        $proveedor->razon_social = $request->razon_social;
+        $proveedor->tipo_rfc = $tipo_rfc;
+        $proveedor->save();
+
+        //$proveedor->update($request->all());
         return redirect()->route('proveedor.index');
     }
 

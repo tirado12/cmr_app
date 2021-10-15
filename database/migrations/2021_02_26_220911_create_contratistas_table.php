@@ -19,7 +19,7 @@ class CreateContratistasTable extends Migration
             $table->text('razon_social');
             $table->string('representante_legal')->nullable();
             $table->text('domicilio')->nullable();
-            $table->string('telefono',10)->nullable();
+            $table->string('telefono',13)->nullable();
             $table->string('correo',255)->nullable();
             $table->string('numero_padron_contratista')->nullable();
             $table->timestamps();

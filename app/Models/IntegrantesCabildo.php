@@ -18,6 +18,6 @@ class IntegrantesCabildo extends Model
         'telefono',
         'correo',
         'rfc',
-        'municipio_id'
+        'cliente_id'
     ];
 }

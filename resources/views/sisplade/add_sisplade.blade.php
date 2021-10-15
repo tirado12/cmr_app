@@ -36,10 +36,8 @@
             <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
             <select id="cliente_id" name="cliente_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
-                @foreach ($fuenteClientes as $item)
-                 
+                @foreach ($clientes as $item)
                 <option value="{{$item->cliente_id}}"> {{$item->nombre}} </option>
-
                 @endforeach
             </select>
             <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
@@ -50,7 +48,7 @@
               <select id="ejercicio" name="ejercicio" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija un cliente </option>
               </select>
-            <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un año de ejercicio</label>  
+            <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
           </div>
         
           
@@ -69,35 +67,7 @@
             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
               <fieldset class="grid grid-cols-8 gap-4 p-5">
 
-                <div class="col-span-4">
-                  <legend class="text-base font-medium text-gray-900 ">Registrado</legend>
-                      <div class="mt-4 space-y-4">
-                        <div class="flex items-center ">
-                          
-                          <div class="mr-3 text-sm">
-                            <input id="fecha_capturado" name="fecha_capturado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" >
-                            
-                          </div>
-                          <div class="flex items-center h-5">
-                            <label for="fecha_capturado" class="font-medium text-gray-700">Fecha de captura</label>
-                            
-                          </div>
-                        </div>
-
-                        <div class="flex items-center ">
-                          
-                          <div class="mr-3 text-sm">
-                            
-                            <input id="fecha_validado" name="fecha_validado" type="date" class="focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" >
-                          </div>
-                          <div class="flex items-center h-5">
-                            <label for="fecha_validado" class=" block font-medium text-gray-700">Fecha de validación</label>
-                            
-                          </div>
-                          
-                        </div>
-                      </div>
-                </div>
+                
 
                 <div class="col-span-4">
                   <legend class="text-base font-medium text-gray-900 ">Estado</legend>
@@ -124,11 +94,42 @@
                         </div>
                       </div>
                 </div>
+
+                <div class="col-span-4">
+                  <legend class="text-base font-medium text-gray-900 ">Registrado</legend>
+                      <div class="mt-4 space-y-4">
+                        <div class="flex items-center ">
+                          
+                          <div class="mr-3 text-sm">
+                            <input id="fecha_capturado" name="fecha_capturado" type="date" class="focus:ring-gray-500 bg-gray-100 text-gray-600 border-gray-300 rounded w-full" disabled>
+                            
+                          </div>
+                          <div class="flex items-center h-5">
+                            <label for="fecha_capturado" class="font-medium text-gray-700">Fecha de captura</label>
+                            
+                          </div>
+                        </div>
+
+                        <div class="flex items-center ">
+                          
+                          <div class="mr-3 text-sm">
+                            
+                            <input id="fecha_validado" name="fecha_validado" type="date" class="focus:ring-gray-500 bg-gray-100 text-gray-600 border-gray-300 rounded w-full" disabled>
+                          </div>
+                          <div class="flex items-center h-5">
+                            <label for="fecha_validado" class=" block font-medium text-gray-700">Fecha de validación</label>
+                            
+                          </div>
+                          
+                        </div>
+                      </div>
+                </div>
+
               </fieldset>
               
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <a type="button" href="{{route('sisplade.index')}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Regresar
               </a>
               <button type="buttom" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
@@ -148,6 +149,8 @@
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/sl-1.3.3/datatables.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+
 
 
 <script>
@@ -155,34 +158,6 @@
   //metodo ajax obtener el registro fuenteCliente exacto
   $(document).ready(function() {
     var fuente,ejercicio,cliente;
-
-   /* $("#fuente").on('change', function () {
-      
-       // $('#guardar').prop( "disabled", false ); //validacion de formulario
-        //$("#fecha_capturado").prop( "disabled", false );
-        //$("#fecha_validado").prop( "disabled", false );
-        $('#guardar').removeClass('bg-orange-800  focus:ring-orange-800');
-        $('#guardar').addClass('bg-blue-600 hover:bg-blue-700 focus:ring-blue-500');
-     
-      fuente= $(this).val();
-      ejercicio=$('#ejercicio').val();
-      cliente=$('#cliente_id').val();
-
-       
-      var link='{{ url("/fuentesClientes")}}/'+ejercicio+','+cliente+','+fuente; 
-      $.ajax({
-        url: link,
-        dataType:'json',
-        type: 'get',
-        success: function(data){
-          console.log(data);
-          $.each(data,function(key, item) {
-             //console.log('id '+item.id_fuente_financ_cliente);
-             $("#fuenteCliente_id").val(item.id_fuente_financ_cliente);
-          });
-        }
-      });
-    });*/
     
     //guardar registro sisplade
     $("#guardar").on('click', function () {
@@ -197,8 +172,7 @@
       {validado= 1;}
       else
       {validado=0;}
-      //console.log("capturado "+capturado);
-      //console.log("validado "+validado);
+      
       var fecha_validado= $('#fecha_validado').val();
       var direccion= '{{ route("sisplade.store") }}';
       var token = '{{ csrf_token() }}';
@@ -222,15 +196,38 @@
         });
     });
 
+    //evento de los checkbox
+    $('#capturado').on('click',function(){
+            if($(this).prop("checked")) {
+                
+                $('#fecha_capturado').removeAttr('disabled');
+                $('#fecha_capturado').removeClass('bg-gray-100');
+            }else{
+                $('#fecha_capturado').attr('disabled', true);
+                $('#fecha_capturado').addClass('bg-gray-100');
+            }
+        });
+
+        $('#validado').on('click',function(){
+            if($(this).prop("checked")) {
+                
+                $('#fecha_validado').removeAttr('disabled');
+                $('#fecha_validado').removeClass('bg-gray-100');
+            }else{
+                $('#fecha_validado').attr('disabled', true);
+                $('#fecha_validado').addClass('bg-gray-100');
+            }
+        });
+
     //select ejercicio disponible por cliente
     $("#cliente_id").on('change', function () {
 
          cliente=$(this).val();
-         $("#ejercicio").empty();
+         $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
          $("#fuente").empty();
          $("#ejercicio").append('<option value="">Elija un cliente</option>');
          $("#fuente").append('<option value="">Elija un cliente y ejercicio</option>');
-          $('#fuenteCliente_id').val(cliente);
+         
           
          var link = '{{ url("/selectEjercicio")}}/'+cliente;
          $.ajax({
@@ -247,13 +244,13 @@
 
     });
   
-      //select fuentes de financiamiento disponibles por cliente
+      //validar select ejercicio y cliente , consulta los ejercicios disponibles de ese cliente
       $("#ejercicio, #cliente_id").on('change', function () {
         
         if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
-        console.log('hola');
+        
         $('#titulo_sisplade').addClass('hidden');
-        $('#form_sisplade').addClass('hidden');
+        $('#form_sisplade').addClass('hidden'); //esconde formulario sisplade
         
         
       }else{
@@ -262,18 +259,16 @@
       }
         ejercicio=$('#ejercicio').val();
         cliente=$('#cliente_id').val();
-        $("#fuente").empty();
-        $("#fuente").append('<option value="">Elija un cliente y ejercicio</option>');
+        
         if(cliente.length>0 && ejercicio.length>0){  
-          var direccion = '{{ url("/autocomplete")}}/'+ejercicio+','+cliente;
+          var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
           consulta(direccion);
-         
-
+        
         }
         //ejercicio
       }); 
 
-      function consulta(direccion){
+      function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
         $.ajax({
               url: direccion,
               dataType:'json',
@@ -281,7 +276,8 @@
               success: function(data){
                 console.log(data);
                 $.each(data,function(key, item) {
-                  $("#fuente").append('<option value='+item.id_fuente_financiamiento+'>'+item.nombre_corto+'</option>');
+                  $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
+                  //console.log('a '+ $('#fuenteCliente_id').val());
                 });
                 
               },
@@ -293,21 +289,20 @@
   //ejecucion del datatable
   $(document).ready(function() {
           var table = $('#example').DataTable({
-              select: true,
-              "autoWidth" : true,
+            "autoWidth": true,
               "responsive" : true,
-              columnDefs: [ 
-              ],
+              columnDefs: [
+            { responsivePriority: 1, targets: 4 },
+            { responsivePriority: 1, targets: 1 },
+            { responsivePriority: 10001, targets: 4 },
+            { responsivePriority: 2, targets: -2 }
+        ],
               language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
               }
-            }).columns.adjust();
+            }).columns.adjust().draw();
            
-            $('#example tbody').on( 'click', 'tr', function () {
-          //console.log( table.cell(1,2).data() );
           
-              $('#pass').val(table.cell(this,0).data());
-   });
 
 });
      

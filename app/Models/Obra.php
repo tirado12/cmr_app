@@ -39,4 +39,8 @@ class Obra extends Model
         'acta_excepcion_licitacion',
         'fuente_financiamiento_cliente_id'
     ];
+
+    public function fuentesCliente(){
+        return $this->hasMany(FuentesCliente::class,'obras_fuente.obra_id','id_obra');
+    }
 }

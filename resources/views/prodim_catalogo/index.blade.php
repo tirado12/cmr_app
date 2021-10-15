@@ -104,13 +104,13 @@
 
               <div class="col-span-8">
                   <label id="label_clave" for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                  <input type="text" name="clave" id="clave" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <input type="text" name="clave" id="clave" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                   <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una clave</label>
                 </div>
               
               <div class="col-span-8">
                   <label id="label_nombre" for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                  <input type="text" name="nombre" id="nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <input type="text" name="nombre" id="nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                   <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un nombre</label>
               </div>
             </div>
@@ -151,7 +151,7 @@
 @endif
 
 <script>
-$(".form-eliminar").submit(function(e){
+$(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia eliminar
     e.preventDefault();
     Swal.fire({
       customClass: {
@@ -172,8 +172,8 @@ $(".form-eliminar").submit(function(e){
       }
     })
 });
- /* alerta */
-     function toggleModal(modalID){
+ 
+     function toggleModal(modalID){ //mostrar y ocultar modal 
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
@@ -201,7 +201,7 @@ $(".form-eliminar").submit(function(e){
     });
 
 
-    $("#formulario").validate({
+    $("#formulario").validate({ //validar inputs del formulario
     onfocusout: false,
     onclick: false,
 		rules: {
@@ -214,7 +214,7 @@ $(".form-eliminar").submit(function(e){
       }else{
       $('#error_'+element.attr('id')).fadeOut();
       }
-     // console.log(element.attr('id'));
+     
     },
 	});
   });
@@ -222,7 +222,7 @@ $(".form-eliminar").submit(function(e){
 
 <script>
   
-    $(document).ready(function() {
+    $(document).ready(function() { //llamar datatable
           $('#example').DataTable({
               "autoWidth" : true,
               "responsive" : true,

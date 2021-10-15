@@ -29,8 +29,9 @@
 <table id="example" class="table table-striped bg-white" style="width:100%;">
   <thead>
       <tr>
-          <th>Usuario</th>
-          <th>Roles</th>
+          <th>RFC</th>
+          <th>Razón social</th>
+          <th>Tipo de contribuyente</th>
           <th class="flex justify-center">Acción</th>
           
       </tr>
@@ -50,6 +51,12 @@
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
                 {{$proveedor->razon_social}}
+            </div>
+            
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900">
+                {{($proveedor->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}
             </div>
             
           </td>
@@ -105,12 +112,25 @@
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
               <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-              <input type="text" name="rfc" id="rfc" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 5 caracteres</label>
+              <input type="text" name="rfc" id="rfc" minlength="12" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 12 caracteres</label>
             </div>
+
+            <div class="col-span-8">
+              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
+              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
+            </div>
+
+            <div class="col-span-6 sm:col-span-3">
+              <label id="label_tipo_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
+              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
+              
+            </div>
+
             <div class="col-span-8">
               <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+              <input type="text" name="razon_social" id="razon_social" maxlength="70" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
               <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Introduzca una razon social</label>
             </div>
            
@@ -151,7 +171,7 @@
 @endif
 
 <script>
-  $(".form-eliminar").submit(function(e){
+  $(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia eliminar
     e.preventDefault();
     Swal.fire({
       customClass: {
@@ -176,15 +196,28 @@
 </script>
 
 <script type="text/javascript">
-  function toggleModal(modalID){
+  function toggleModal(modalID){ //mostrar o ocultar modal
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
 
 //validacion de campos del modal
 $(document).ready(function() {
+  
    $("#modal-id input").keyup(function() {
-  //console.log($(this).attr('id'));
+
+     if($('#rfc').val().length <= 12){ //validacion de RFC y representante legal
+      $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Moral');
+        $('#label_representante_legal').removeClass('hidden');
+        $('#representante_legal').removeClass('hidden');
+     }else{
+        $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Física');
+        $('#label_representante_legal').addClass('hidden');
+        $('#representante_legal').addClass('hidden');
+     }
+  
       var monto = $(this).val();
       
       if(monto != ''){
@@ -209,7 +242,7 @@ $().ready(function() {
     onfocusout: false,
     onclick: false,
 		rules: {
-      rfc: { required: true, minlength: 5, maxlength: 13},
+      rfc: { required: true, minlength: 12, maxlength: 13},
 			razon_social: { required: true},
 		
 		},
@@ -219,7 +252,7 @@ $().ready(function() {
       }else{
         $('#error_'+element.attr('id')).fadeOut();
       }
-     // console.log(element.attr('id'));
+     
     },
 	}); 
 });

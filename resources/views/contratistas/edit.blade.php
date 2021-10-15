@@ -22,38 +22,44 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
                   <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength = "13" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->rfc }}">
-                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Se requiere al menos un RFC generico de 5 caracteres</label>
+                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Se requiere al menos un RFC generico de 12 caracteres</label>
                 </div>
-  
+
+                <div class="col-span-6 sm:col-span-3">
+                  <label id="label_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
+                  <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{( $contratista->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}" disabled>
+                  
+                </div>
+                
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->razon_social }}">
+                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->razon_social }}">
                   <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Se requiere una razón social</label>
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
-                    <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->representante_legal }}">
+                    <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->representante_legal }}">
                     <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Se requiere un representante legal</label>
                 </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_domicilio" for="domicilio" class="block text-sm font-medium text-gray-700">Domicilio *</label>
-                    <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->domicilio }}">
+                    <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->domicilio }}">
                     <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Se requiere un domicilio</label>
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="etiqueta_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
-                    <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->telefono }}">
+                    <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->telefono }}">
                     
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo *</label>
-                    <input type="text" name="correo" id="correo" placeholder="usuario@ejemplo.com" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->correo }}">
+                    <input type="text" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->correo }}">
                     <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Se requiere un correo</label>
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
-                    <input type="text" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->numero_padron_contratista }}">
+                    <input type="text" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->numero_padron_contratista }}">
                     <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Se requiere un numero de padron</label>
                   </div>
 
@@ -85,6 +91,18 @@
   //validacion de campos del modal
   $(document).ready(function() {
    $("#formulario input").keyup(function() {
+
+    if($('#rfc').val().length <= 12){ //mensajes y validacion rfc y representante legal
+      $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Moral');
+        $('#label_representante_legal').removeClass('hidden');
+        $('#representante_legal').removeClass('hidden');
+     }else{
+      $("#tipo_rfc").empty();
+        $('#tipo_rfc').val('Persona Física');
+        $('#label_representante_legal').addClass('hidden');
+        $('#representante_legal').addClass('hidden');
+     }
     //console.log($(this).attr('id'));
       var cadena = $(this).val();
       
@@ -103,7 +121,7 @@
     
     });
 
-    $("input[name='telefono']").keyup(function() {
+    $("input[name='telefono']").keyup(function() { //validacion de telefono
     $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
       });
   });
@@ -114,7 +132,7 @@
       onfocusout: false,
       onclick: false,
       rules: {
-        rfc: { required: true, minlength: 5, maxlength: 13},
+        rfc: { required: true, minlength: 12, maxlength: 13},
         razon_social: { required: true},
         representante_legal: { required: true},
         domicilio: { required: true},
