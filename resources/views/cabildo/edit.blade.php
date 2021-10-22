@@ -9,7 +9,30 @@
 <h1 class="font-bold text-xl ml-2">Editar Integrante de Cabildo</h1>
 </div>
 
-
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
 
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
@@ -46,22 +69,36 @@
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                    <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
+                    <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
                     <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 5 caracteres</label>
+                    <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
                   </div>
                 
-                  
+                  <div class="col-span-6 sm:col-span-3">
+                    <label for="ejercicio_actual" class="block text-sm font-medium text-gray-700">Ejercicio Actual </label>
+                    <input type="text" name="ejercicio_actual" id="ejercicio_actual" placeholder="" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipioCliente->anio_inicio.' - '. $municipioCliente->anio_fin }}" disabled>
+                  </div>
+
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="cliente" class="block text-sm font-medium text-gray-700">Cliente *</label>
-                  <select id="cliente_id" name="cliente_id" onchange="validarMunicipio()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                  <label for="municipio" class="block text-sm font-medium text-gray-700">Cliente </label>
+                  <select id="municipio" name="municipio" onchange="validarMunicipio()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     <option value="">Elija una opción</option>
                     @foreach($clientes as $cliente)
-                    <option value="{{ $cliente->id_cliente }}" {{ ($cliente->municipio_id == $municipioCliente->municipio_id) ? 'selected' : '' }}> {{ $cliente->nombre }}</option>
+                    <option value="{{ $cliente->municipio_id }}" {{ ($cliente->municipio_id == $municipioCliente->municipio_id) ? 'selected' : '' }}> {{ $cliente->nombre }}</option>
                     @endforeach
                   </select>
-                  <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Elija un municipio</label>
+                  <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Elija un municipio</label>
                 </div>
-
+                
+                <div class="col-span-6 sm:col-span-3">
+                  <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio </label>
+                  <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
+                      <option value="" >Elija una cliente</option>
+                      
+                  </select>
+                <label id="error_cliente" name="error_cliente" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+                <input type="text" id="cliente_id" name="cliente_id" class="hidden" value="{{ $integrante->cliente_id}}">
+                </div>
                 
                 
               </div>
@@ -90,20 +127,62 @@
   <script>
 //Validacion de select municipio
 function validarMunicipio() { //validacion para elegir una opcion
-  var valor = document.getElementById("cliente").value;
+  var valor = document.getElementById("municipio").value;
   if(valor != ''){
-    $('#error_cliente').fadeOut();
-    $("#label_cliente").removeClass('text-red-500');
-    $("#label_cliente").addClass('text-gray-700');
+    $('#error_municipio').fadeOut();
+    $("#label_municipio").removeClass('text-red-500');
+    $("#label_municipio").addClass('text-gray-700');
   }else{
-    $('#error_cliente').fadeIn();
-    $("#label_cliente").addClass('text-red-500');
-    $("#label_cliente").removeClass('text-gray-700');
+    $('#error_municipio').fadeIn();
+    $("#label_municipio").addClass('text-red-500');
+    $("#label_municipio").removeClass('text-gray-700');
   }
 }
 
 //validacion de campos del formulario
 $(document).ready(function() {
+
+  window.onload = function(){ //al terminar de cargar la pagina se rellena el select ejercicio con el municipio seleccionado
+  var municipio = $('#municipio').val();
+  var link = '{{ url("/clienteEjercicio")}}/'+municipio;
+  obtenerEjercicios(link);
+  }
+
+  $('#municipio').on('keyup change', function(){ //ejercicio select
+      municipio = $('#municipio').val();
+      $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+      $("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+      if(municipio.length!=0){
+      
+         link = '{{ url("/clienteEjercicio")}}/'+municipio;
+        obtenerEjercicios(link);
+      }else{
+        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+      $("#ejercicio").append('<option value="">Elija un cliente</option>');
+      }
+
+    });
+//===================================================
+    function obtenerEjercicios(link){ //funcion ajax 
+      $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                $.each(data,function(key, item) { //llenado del select ejercicio
+                console.log(item.id_cliente);
+                $("#ejercicio").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                });
+              },
+              cache: false
+            });
+    }
+//========================================
+$('#ejercicio').on('change', function(){
+  
+  $('#cliente_id').val($('#ejercicio').val());
+});
+//===========================================
    $("#formulario input").keyup(function() {
   
       var monto = $(this).val();
@@ -122,9 +201,16 @@ $(document).ready(function() {
       }
     
     });
-
-    $("input[name='telefono']").keyup(function() { //dar formato a numero de telefono
-    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+//=======================================
+    $("input[name='telefono']").keyup(function() { //validacion de telefono
+      if($(this).val()>10){
+          telefono = $(this).val();
+          telefono= telefono.slice(0,10);
+          $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+        }
+        else{
+          $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+        }
       });
   });
 
@@ -136,10 +222,9 @@ $().ready(function() {
 		rules: {
       nombre: { required: true},
 			cargo: { required: true},
-      
-      correo: { email: true},
       rfc: { required: true, minlength: 5, maxlength: 13},
       municipio: { required: true},
+      
 		},
     errorPlacement: function(error, element) {
       if(error != null){

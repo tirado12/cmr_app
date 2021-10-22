@@ -15,7 +15,8 @@ class CreateContratistasTable extends Migration
     {
         Schema::create('contratistas', function (Blueprint $table) {
             $table->id('id_contratista');
-            $table->string('rfc',13);
+            $table->string('rfc',13)->unique();
+            $table->boolean('tipo_rfc');
             $table->text('razon_social');
             $table->string('representante_legal')->nullable();
             $table->text('domicilio')->nullable();

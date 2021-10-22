@@ -6,7 +6,8 @@ use App\Models\Cliente;
 use App\Models\IntegrantesCabildo;
 use App\Models\Municipio;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\In;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class IntegrantesCabildoController extends Controller
 {
@@ -19,12 +20,13 @@ class IntegrantesCabildoController extends Controller
     public function index()
     {
         $integrantes = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
-        ->select('integrantes_cabildo.*','clientes.id_cliente','clientes.municipio_id')
+        ->select('integrantes_cabildo.*','clientes.id_cliente','clientes.anio_inicio','clientes.anio_fin','clientes.municipio_id')
         ->get();
-        
-        $clientes = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre')->get();
-        //return $clientes;
-        
+        //return $integrantes;
+        $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
+        $clientes =  $result->unique('municipio_id');
+        return $clientes;
+    
         
        return view('cabildo.index',compact('integrantes','clientes'));
     }
@@ -47,12 +49,11 @@ class IntegrantesCabildoController extends Controller
      */
     public function store(Request $request)
     {
+        //return $request;
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            
-            
-            'rfc' => 'required',
+            'rfc' => 'required|unique:integrantes_cabildo,rfc',
             'cliente' => 'required'
         ]);
         IntegrantesCabildo::create([
@@ -84,13 +85,15 @@ class IntegrantesCabildoController extends Controller
     public function edit(IntegrantesCabildo $integrante)
     {
        $municipioCliente = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
-        ->select('clientes.municipio_id')
+        ->select('clientes.municipio_id','clientes.anio_inicio','clientes.anio_fin')
         ->where('id_integrante', $integrante->id_integrante)
         ->first();
         
         //$municipioCliente= Municipio::find(Cliente::find($integrante->cliente_id)->municipio_id);
 
-        $clientes = Municipio::join('clientes','municipio_id','id_municipio')->select('id_cliente','nombre','municipio_id')->get();
+        //$clientes = Municipio::join('clientes','municipio_id','id_municipio')->select('id_cliente','nombre','municipio_id')->get();
+        $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
+        $clientes =  $result->unique('municipio_id');
         //return $integrante;
         
        return view('cabildo.edit',compact('integrante','clientes','municipioCliente'));
@@ -110,11 +113,9 @@ class IntegrantesCabildoController extends Controller
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            
-            'rfc' => 'required',
+            'rfc' => ['required',Rule::unique('integrantes_cabildo')->ignore($integrante)],
             'cliente_id' => 'required'
         ]);
-        //return $request;
         $integrante->update($request->all());
         return redirect()->route('cabildo.index');
     }
@@ -129,5 +130,15 @@ class IntegrantesCabildoController extends Controller
     {
         $integrante->delete();
         return redirect()->route('cabildo.index')->with('eliminar','ok');
+    }
+
+    //===============================================================
+
+    public function existeRfc($rfc){
+        $existe = IntegrantesCabildo::where('rfc',$rfc)->exists();
+        if ($existe == null)
+        return 0;
+        else
+        return $existe;
     }
 }

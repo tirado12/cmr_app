@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Proveedor;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProveedorController extends Controller
 {
@@ -16,6 +17,7 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::all();
+        //return $proveedores;
         return view('proveedores.index',compact('proveedores'));
         //return $proveedores;
     }
@@ -46,13 +48,15 @@ class ProveedorController extends Controller
             $tipo_rfc=false; //persona fisica
         }
 
-        $request->validate([
-            'rfc' => 'required',
+        $request->validate([ //faltan columnas de representante legal aqui y bd
+            'rfc' => 'required|unique:proveedores,rfc',
+            'representante_legal' => 'nullable',
             'razon_social' => 'required'
         ]);
         Proveedor::create([
             'rfc' => $request->rfc,
             'razon_social'=>$request->razon_social,
+            'representante_legal' => $request->representante_legal,
             'tipo_rfc'=>$tipo_rfc
         ]);
         return redirect()->route('proveedor.index');
@@ -95,17 +99,20 @@ class ProveedorController extends Controller
             $tipo_rfc=true; //persona moral
         }else{
             $tipo_rfc=false; //persona fisica
+            $request['representante_legal']=null;
         }
 
         //return $request;
         $request->validate([
-            'rfc' => 'required',
+            'rfc' => ['required',Rule::unique('proveedores')->ignore($proveedor)],
+            'representante_legal' => 'nullable',
             'razon_social' => 'required'
         ]);
 
         $proveedor->rfc = $request->rfc;
         $proveedor->razon_social = $request->razon_social;
         $proveedor->tipo_rfc = $tipo_rfc;
+        $proveedor->representante_legal = $request->representante_legal;
         $proveedor->save();
 
         //$proveedor->update($request->all());
@@ -122,5 +129,14 @@ class ProveedorController extends Controller
     {
         $proveedor->delete();
         return redirect()->route('proveedor.index')->with('eliminar','ok');
+    }
+
+    //==============================Validacion ajax=================================
+    public function existeRfcProveedor($rfc){
+        $existe = Proveedor::where('rfc',$rfc)->exists();
+        if($existe == null)
+        return 0;
+        else
+        return $existe;
     }
 }

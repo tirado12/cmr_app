@@ -28,11 +28,12 @@ class FuenteClienteController extends Controller
         
         $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
         //$municipios = Municipio::all(); //todos los municipios
-        $cliente = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
-        ->select('clientes.id_cliente', 'municipios.nombre')
+        $listaClientes = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
+        ->select('clientes.id_cliente', 'municipios.nombre','municipios.id_municipio','clientes.anio_inicio','clientes.anio_fin')
         ->get();
+        $cliente= $listaClientes->unique('id_municipio');
         //return $fuenteClientes;
-        return view('fuentes_clientes.index', compact('fuenteClientes', 'cliente', 'fuentes'));
+        return view('fuentes_clientes.index', compact('fuenteClientes', 'cliente', 'fuentes','listaClientes'));
     }
 
     /**
@@ -119,10 +120,10 @@ class FuenteClienteController extends Controller
         
         $cliente = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id')
         ->where('id_cliente',$fuenteCliente->cliente_id)
-        ->select('clientes.id_cliente', 'municipios.nombre')
+        ->select('clientes.id_cliente', 'municipios.nombre','clientes.anio_inicio','clientes.anio_fin')
         ->get();
 
-        //return $fuenteCliente;
+        //return $cliente;
        return view('fuentes_clientes.edit',compact('fuenteCliente','cliente','fuentes'));
     }
 
@@ -133,21 +134,17 @@ class FuenteClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, FuentesCliente $fuenteCliente)
     {
-
+        
         $request->validate([
             'monto_proyectado' => 'required',
-            'monto_comprometido' => 'required',
-            'acta_integracion_consejo' => 'required',
-            'acta_priorizacion' => 'required',
-            'adendum_priorizacion' => 'required',
-            'prodim' => 'required',
-            'gastos_indirectos' => 'required',
             'fuente_financiamiento_id' => 'required'
         ]);
-
-        $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
+        $fuenteCliente->monto_proyectado = str_replace(",", '',$request->monto_proyectado);
+        $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
+        $fuenteCliente->update();
+       /* $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
         $fuenteCliente->monto_proyectado = str_replace(",", '', $request->monto_proyectado_edit);
         if($request->fuente_financiamiento_id_edit == 2){
             $anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $request->fuente_id_edit)->first();
@@ -167,11 +164,11 @@ class FuenteClienteController extends Controller
             }
             
             $anexos_fondo3->update();
-        }
+        }*/
         
         
         //return $request;
-        $fuenteCliente->update();
+        //$fuenteCliente->update();
         //return $fuenteCliente;
 
         if(auth()->user()->getRoleNames()[0] == 'Administrador')

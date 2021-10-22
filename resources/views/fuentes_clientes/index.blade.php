@@ -37,6 +37,7 @@
           <th>Municipio</th>
           <th>Monto proyectado</th>
           <th>Monto comprometido</th>
+          <th>Periodo</th>
           <th>Ejercicio</th>
           <th>Fuente de financiamiento</th>
           <th class="flex justify-center">Acción</th>
@@ -48,7 +49,7 @@
       <tr>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-              {{  $cliente->find($index->cliente_id)->nombre }}
+              {{ $listaClientes->find($index->cliente_id)->nombre }}
             </div>
           
           </td>
@@ -61,6 +62,12 @@
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900 myDIV">
               {{$index->monto_comprometido}}
+            </div>
+            
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900">
+              {{ $listaClientes->find($index->cliente_id)->anio_inicio.' - '.$listaClientes->find($index->cliente_id)->anio_fin}}
             </div>
             
           </td>
@@ -81,9 +88,9 @@
             <form action="{{ route('fuenteCliente.destroy', $index->id_fuente_financ_cliente) }}" method="POST" class="form-eliminar" >
               <div>
               <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Editar</a> 
-              <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
+            <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
                 Detalles
-              </button>
+              </button> -->
               @csrf
               @method('DELETE')
               <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
@@ -188,20 +195,40 @@
       <div class="relative p-6 flex-auto">
           <div class="grid grid-cols-8 gap-4">
             <div class="col-span-4 ">
-              <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
-              <select id="cliente_id" name="cliente_id" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+              <label  id="label_municipio" for="municipio" class="block text-sm font-medium text-gray-700">Cliente *</label>
+              <select id="municipio" name="municipio" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
                 @foreach($cliente as $index)
-                <option value="{{ $index->id_cliente }}"> {{ $index->nombre }} </option>
+                <option value="{{ $index->id_municipio }}"> {{ $index->nombre }} </option>
                 @endforeach
               </select>
-              <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+              <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
             </div>
+            <div class="col-span-4 ">
+              <label  id="label_periodo" for="periodo" class="block text-sm font-medium text-gray-700">Periodo *</label>
+              <select id="periodo" name="periodo"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value=""> Elija un cliente primero</option>
+                
+              </select>
+              <label id="error_periodo" name="error_periodo" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+            </div>
+
+            <div class="col-span-4 mb-4">
+              <label for="fuente_financiamiento_id" id="label_fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
+              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" onchange="validarFuente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value="" selected> Elija una opción </option>
+                @foreach($fuentes as $fuente)
+                <option value="{{ $fuente->id_fuente_financiamiento }}"> {{ $fuente->nombre_corto }} </option>
+                @endforeach
+              </select>
+              <input type="text" id="cliente_id" name="cliente_id" class="hidden">
+              <label id="error_fuente_financiamiento_id" name="error_fuente_financiamiento_id" class="hidden text-base font-normal text-red-500" >Por favor elija una opción</label>  
+            </div> 
+
             <div class="col-span-4">
               <label id="label_ejercicio" for="label_ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
-              <input type="text" name="ejercicio" id="ejercicio" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
-              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
-                
+              <input type="number" name="ejercicio" id="ejercicio" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
+              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Ingresa un año de ejercicio dentro del periodo</label>  
             </div>
             <div class="col-span-4">
               <label id="label_monto_proyectado" for="label_monto_proyectado" class="block text-sm font-medium text-gray-700">Monto proyectado *</label>
@@ -229,18 +256,6 @@
               <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
             </div>
             
-            <div class="col-span-8 mb-4">
-              <label for="fuente_financiamiento_id" id="label_fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
-              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" onchange="validarFuente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                <option value="" selected> Elija una opción </option>
-                @foreach($fuentes as $fuente)
-                <option value="{{ $fuente->id_fuente_financiamiento }}"> {{ $fuente->nombre_corto }} </option>
-                @endforeach
-              </select>
-              <label id="error_fuente_financiamiento_id" name="error_fuente_financiamiento_id" class="hidden text-base font-normal text-red-500" >Por favor elija una opción</label>  
-            </div> 
-                  
-          
          </div>
 
           <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
@@ -260,7 +275,7 @@
             </div>
          </div>
 
-         <div id="error_existe" class="hidden alert flex flex-row items-center bg-red-200 p-2 rounded-lg border-b-2 border-red-300 mb-4 shadow">
+        <div id="error_existe" class="hidden alert flex flex-row items-center bg-red-200 p-2 rounded-lg border-b-2 border-red-300 mb-4 shadow">
            <div class="alert-icon flex items-center bg-red-100 border-2 border-red-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
             <span class="text-red-500">
               <svg fill="currentColor"
@@ -338,8 +353,6 @@
     }
 </script>
 <script>
-
-
   //Mensaje de advertencia
 $(".form-eliminar").submit(function(e){
     e.preventDefault();
@@ -365,13 +378,12 @@ $(".form-eliminar").submit(function(e){
  /* */
 </script>
 
-
 <script type="text/javascript">
 function toggleMod(modal, fuente){
     document.getElementById(modal).classList.toggle("hidden");
     document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
 }
-
+//================================================
 //validar selected del cliente
 function validarFuente() {
   var valor = document.getElementById("fuente_financiamiento_id").value;
@@ -385,28 +397,72 @@ function validarFuente() {
     $("#label_fuente_financiamiento_id").removeClass('text-gray-700');
   }
 }
-
+//================================================
 //validar selected del fuente
 function validarCliente() {
-  var valor = document.getElementById("cliente_id").value;
+  var valor = document.getElementById("municipio").value;
   if(valor != ''){
-    $('#error_cliente_id').fadeOut();
-    $("#label_cliente_id").removeClass('text-red-500');
-    $("#label_cliente_id").addClass('text-gray-700');
+    $('#error_municipio').fadeOut();
+    $("#label_municipio").removeClass('text-red-500');
+    $("#label_municipio").addClass('text-gray-700');
   }else{
-    $('#error_cliente_id').fadeIn();
-    $("#label_cliente_id").addClass('text-red-500');
-    $("#label_cliente_id").removeClass('text-gray-700');
+    $('#error_municipio').fadeIn();
+    $("#label_municipio").addClass('text-red-500');
+    $("#label_municipio").removeClass('text-gray-700');
   }
 }
-
+//================================================
 //validacion de campos del modal
 $(document).ready(function() {
- 
+  //$('#ejercicio').attr('maxlength','4');
+//================================================
+var myArray;
+$('#municipio').on('keyup change', function(){ //ejercicio select
+      municipio = $('#municipio').val();
 
+      if(municipio.length!=0){
+      $("#periodo").empty(); //valida si no se ha seleccionado una opc
+      //$("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+        var link = '{{ url("/clienteEjercicio")}}/'+municipio;
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data)
+                myArray= data;
+                $.each(data,function(key, item) { //llenado del select ejercicio
+                  if(key == 0){
+                  $("#periodo").append('<option value='+item.id_cliente+' selected>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                  $('#cliente_id').val(item.id_cliente);
+                  $('#ejercicio').attr({ min: item.anio_inicio, max: item.anio_fin});
+                  }else{
+                  $("#periodo").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                  }
+                });
+                
+              },
+              cache: false
+            });
+      }else{
+        $("#periodo").empty(); //valida si no se ha seleccionado una opc
+        $("#periodo").append('<option value="">Elija un cliente</option>');
+      }
 
-  $('#ejercicio').attr('maxlength','4');
+  });
+//====================================================
+  $('#periodo').on('change', function(){ //evento del select periodo
+  $('#cliente_id').val($('#periodo').val());
 
+  for(index in myArray){
+    if(parseInt(myArray[index].id_cliente) == parseInt($('#cliente_id').val())){
+      //console.log('hola')
+      $('#ejercicio').attr({ min: myArray[index].anio_inicio, max: myArray[index].anio_fin}); //si el periodo cambia, tambien el rango de ejercicio
+    }
+  }
+  
+});
+//===========================================
   $('#fuente_financiamiento_id, #ejercicio').on('keyup change',function(){
     cliente = $('#cliente_id').val();
     fuente= $('#fuente_financiamiento_id').val();
@@ -435,23 +491,23 @@ $(document).ready(function() {
               cache: false
             });
     }
+    
   });
+//================================================
    $("#modal input").keyup(function() {
-
-     $("#ejercicio").on({ //validacion de solo numeros
+    $("#ejercicio").on({ //validacion de solo numeros
             "focus": function(event) {
                 $(event.target).select();
             },
             "keyup": function(event) {
-              
                 $(event.target).val(function(index, value) { //formato montos
-                  
                     return value.replace(/\D/g, "")
                         .replace(/[^\d]/,'');
                         //.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
                 });
             }
         });
+//================================================
         var proyectado;
         var comprometido;
         $("#monto_proyectado, #monto_comprometido").on({
@@ -473,42 +529,37 @@ $(document).ready(function() {
                 comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
                 comprometido = parseFloat(comprometido) || 0;
                 
-
                 if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
                   $('#error_monto_menor').fadeIn();
                   //$('#guardar').attr("disabled", true);
                  
-
                 }else{
                   $('#error_monto_menor').fadeOut();
                   //$('#guardar').removeAttr("disabled");
                   
-                  
                 }
-
             }
         });
-
+//================================================
         //validacion de campo vacio
       var monto = $(this).val();
       
       if(monto != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).fadeOut();
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       //$('#guardar').removeAttr("disabled");
       }
       else{
       //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).fadeIn();
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
       }
     
     });
-    
 });
-
+//================================================
 //validacion del formulario con el btn guardar
 $().ready(function($) {
   $('#formulario').validate({
@@ -530,8 +581,7 @@ $().ready(function($) {
      
     },
   });
-
-
+//================================================
   
 });
 
@@ -544,12 +594,14 @@ $(".btn-AddDate").on("click",function() {
     
 });
   function toggleModal(modalID, index, cliente, fuente, key){
-      cliente.forEach(function(municipio) {
-          if(index.cliente_id == municipio.id_cliente){
-          //console.log( municipio.id_cliente + " " +  municipio.nombre);
-          $('#nombre_municipio').html(municipio.nombre); 
+      
+        //console.log(index)
+        for(item in cliente){
+          if(index.cliente_id == cliente[item].id_cliente){
+            // console.log(cliente[index].nombre)
+            $('#nombre_municipio').html(cliente[item].nombre); 
           }
-        });
+        }
         
     $('#ver_monto_proyectado').html(index.monto_proyectado); 
     $('#ver_monto_comprometido').html(index.monto_comprometido); 

@@ -183,6 +183,13 @@ class ClienteController extends Controller
         return $cliente;
     }
 
+    //============================= funciones ajax ============================
+
+    public function clienteXejercicio($id_municipio){
+        $disponibles = Cliente::where('municipio_id',$id_municipio)->select('id_cliente','anio_inicio','anio_fin')->get();
+        return $disponibles;
+    }
+
 
     // ============================= Funciones API ============================= //
 

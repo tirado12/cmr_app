@@ -1,6 +1,6 @@
 
 @extends('layouts.plantilla')
-@section('title','Municipio')
+@section('title','Cliente Municipio')
 @section('contenido')
         <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
         <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">

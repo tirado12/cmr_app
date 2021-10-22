@@ -9,12 +9,13 @@
 <h1 class="font-bold text-xl ml-2">Editar Proveedor</h1>
 </div>
 
-<div class="alert flex flex-row items-center bg-blue-200 p-2 rounded-lg border-b-2 border-blue-300 mb-4 shadow">
-  <div class="alert-icon flex items-center bg-blue-100 border-2 border-blue-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
-    <span class="text-blue-500">
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
       <svg fill="currentColor"
-         viewBox="0 0 20 20"
-         class="h-5 w-5">
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
         <path fill-rule="evenodd"
             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
             clip-rule="evenodd"></path>
@@ -22,14 +23,16 @@
     </span>
   </div>
   <div class="alert-content ml-4">
-    <div class="alert-title font-semibold text-lg text-blue-800">
-      Recuerda
-    </div>
-    <div class="alert-description text-sm text-blue-600">
-      <strong>NO</strong> compartir detalles o capturas del sistema, previene la filtración de datos sensibles.
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
   </div>
 </div>
+@endif
 
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
@@ -43,19 +46,18 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
                   <input type="text" name="rfc" id="rfc" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->rfc }}" required>
-                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 5 caracteres</label>
+                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 12 caracteres</label>
                 </div>
 
-                <div class="col-span-8">
+                <div class="col-span-6 sm:col-span-3" id="div_representante_legal">
                   <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
-                  <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                  <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
+                  <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $proveedor->representante_legal }}">
+                  <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresar un representante legal</label>
                 </div>
   
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
                   <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{( $proveedor->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}" disabled>
-                  
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -73,10 +75,9 @@
                 <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Regresar
                 </a>
-              <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                Guardar
-              </button>
-              
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Guardar
+                </button>
               </div>
             </div>
           </div>
@@ -90,21 +91,12 @@
  <script>
    //validacion de campos del form
   $(document).ready(function() {
-
+    var tipo=$('#rfc').val().length;
+    validar_tipo_rfc(tipo);
 
    $("#formulario input").keyup(function() {// validacion de rfc y representante legal
 
-    if($('#rfc').val().length <= 12){
-      $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Moral');
-        $('#label_representante_legal').removeClass('hidden');
-        $('#representante_legal').removeClass('hidden');
-     }else{
-      $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Física');
-        $('#label_representante_legal').addClass('hidden');
-        $('#representante_legal').addClass('hidden');
-     }
+    validar_tipo_rfc($('#rfc').val().length);    
     
       var cadena = $(this).val();
       
@@ -124,13 +116,27 @@
     });
   });
 
+  function validar_tipo_rfc($tipo){
+    
+    if($tipo<=12){
+    $("#tipo_rfc").empty();
+      $('#tipo_rfc').val('Persona Moral');
+      $('#div_representante_legal').removeClass('hidden');
+    }else{
+    $("#tipo_rfc").empty();
+      $('#tipo_rfc').val('Persona Física');
+      $('#div_representante_legal').addClass('hidden');
+    }
+
+}
+
   //validacion del formulario con el btn guardar
   $().ready(function() {
     $("#formulario").validate({
       onfocusout: false,
       onclick: false,
       rules: {
-        rfc: { required: true, minlength: 5, maxlength: 13},
+        rfc: { required: true, minlength: 12, maxlength: 13},
         razon_social: { required: true} 
       },
       errorPlacement: function(error, element) {

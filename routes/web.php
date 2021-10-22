@@ -99,11 +99,15 @@ Route::get('cliente/ejercicio/{id},{anio}', [GeneralController::class, 'ejercici
 Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
 
 
-
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');
 Route::resource('perfil', PerfilController::class)->names('perfil');
 
+//rutas de validaciones ajax
 Route::get('/obtClienteFuente/{ejercicio},{cliente}',[SispladeController::class,'obtenerFuenteCliente']);
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
 Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']);
-//Route::get('/fuentesClientes/{ejercicio},{cliente},{fuente}',[SispladeController::class,'fuentesClientes']);
+Route::get('/cabildoRfc/{rfc}',[IntegrantesCabildoController::class,'existeRfc']);
+Route::get('/contratistaRfc/{rfc}',[ContratistaController::class,'existeRfc']);
+Route::get('/proveedorRfc/{rfc}',[ProveedorController::class,'existeRfcProveedor']);
+
+Route::get('/clienteEjercicio/{id_municipio}',[ClienteController::class,'clienteXejercicio']);

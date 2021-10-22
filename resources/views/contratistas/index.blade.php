@@ -23,19 +23,44 @@
         <!-- div de tabla -->
     </div>
 </div>
+
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
+
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
 
 <table id="example" class="table table-striped bg-white" style="width:100%;">
   <thead>
       <tr>
-          
           <th>Contratista</th>
           <th>Telefono</th>
           <th>Correo</th>
           <th>Tipo de contribuyente</th>
+          <th>Representante legal</th>
           <th class="flex justify-center">Acción</th>
-          
       </tr>
   </thead>
   <tbody> 
@@ -51,20 +76,25 @@
           </div>
           </td>
           <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $contratista->telefono }}
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+            {{ ($contratista->telefono == null ) ? '-' : $contratista->telefono }}
             </div>
             
           </td>
           <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $contratista->correo }}
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+            {{ ($contratista->correo == null) ? '-' :  $contratista->correo}}
             </div>
             
           </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
                 {{($contratista->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}
+            </div>
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                {{($contratista->representante_legal == null) ? '-' : $contratista->representante_legal}}
             </div>
             
           </td>
@@ -77,7 +107,7 @@
               
               @csrf
               @method('DELETE')
-          <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
+                <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
               </div>
               
               </form>
@@ -122,6 +152,7 @@
               <label id="label_rfc" for="first_name" class="block text-sm font-medium text-gray-700">RFC *</label>
               <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" minlength="12" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Porfavor ingresar al menos un RFC generico con 12 caracteres</label>
+              <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
             </div>
             <div class="col-span-6 sm:col-span-3">
               <label id="label_tipo_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
@@ -133,7 +164,7 @@
               <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
               <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una razón social</label>
             </div>
-            <div class="col-span-8">
+            <div class="col-span-8 " id="div_representante_legal">
               <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
               <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
               <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
@@ -144,14 +175,14 @@
                 <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un domicilio</label>
               </div>
             <div class="col-span-8">
-                <label id="label_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
+                <label id="label_telefon" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
                 <input type="text" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un telefono</label>
+                
               </div>
             <div class="col-span-8">
-                <label id="label_correo" for="correo" class="block text-sm font-medium text-gray-700" >Correo *</label>
+                <label id="label_corre" for="correo" class="block text-sm font-medium text-gray-700" >Correo </label>
                 <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_correo" name="error_correo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo valido</label>
+                <label id="aviso_correo" name="aviso_correo" class="hidden text-base font-normal text-red-500" >Por favor ingresa un correo válido</label>
               </div>
             <div class="col-span-8">
                 <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
@@ -159,6 +190,8 @@
                 <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un numero de padron</label>
             </div>
           </div>
+
+        
         
       </div>
       <!--footer-->
@@ -169,7 +202,7 @@
         <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
           Cancelar
         </button>
-        <button type="submit" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
+        <button type="submit" id="guardar" name="guardar" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
           Guardar
         </button>
         </div>
@@ -228,39 +261,91 @@
 
 //validacion de campos del modal
 $(document).ready(function() {
+
+  $('#rfc').on('keyup', function(){ //existe RFC
+      rfc = $('#rfc').val();
+      //console.log(rfc.length);
+      if(rfc.length >= 12){
+        var link = '{{ url("/contratistaRfc")}}/'+rfc;
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data== 1){
+                  $('#error_existe').removeClass('hidden');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-500');
+                  $("#guardar").addClass('bg-gray-700');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-700');
+                  $("#guardar").addClass('bg-green-500');
+                }
+              },
+              cache: false
+            });
+      }
+
+    });
+
    $("#modal-id input").keyup(function() {
 
     if($('#rfc').val().length <= 12){ //validacion de rfc y representante legal
         $("#tipo_rfc").empty();
         $('#tipo_rfc').val('Persona Moral');
-        $('#label_representante_legal').removeClass('hidden');
-        $('#representante_legal').removeClass('hidden');
+        $('#div_representante_legal').removeClass('hidden');
+        //$('#representante_legal').removeClass('hidden');
      }else{
         $("#tipo_rfc").empty();
         $('#tipo_rfc').val('Persona Física');
-        $('#label_representante_legal').addClass('hidden');
-        $('#representante_legal').addClass('hidden');
+        $('#div_representante_legal').addClass('hidden');
+       //$('#representante_legal').addClass('hidden');
      }
 
       var monto = $(this).val();
       
       if(monto != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
+      $('#error_'+$(this).attr('id')).addClass('hidden');
       $("#label_"+$(this).attr('id')).removeClass('text-red-500');
       $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       //$('#guardar').removeAttr("disabled");
       }
       else{
       //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
+      $('#error_'+$(this).attr('id')).removeClass('hidden');
       $("#label_"+$(this).attr('id')).addClass('text-red-500');
       $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+      }
+
+      if($(this).attr('id')=='correo' && $(this).val() != ''){
+        correo= $(this).val();
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+        //console.log(regex.test(correo));
+        if(regex.test(correo)){
+          //console.log('asdasd');
+          $('#aviso_'+$(this).attr('id')).fadeOut();
+        }else{
+          //console.log('bbbb')
+          $('#aviso_'+$(this).attr('id')).fadeIn();
+        }
+      }else{
+        $('#aviso_'+$(this).attr('id')).fadeOut();
       }
     
     });
 
     $("input[name='telefono']").keyup(function() { //validacion de telefono
-    $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+      if($(this).val()>10){
+          telefono = $(this).val();
+          telefono= telefono.slice(0,10);
+          $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+        }
+        else{
+          $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+        }
       });
 });
 
@@ -270,12 +355,12 @@ $().ready(function() {
     onfocusout: false,
     onclick: false,
 		rules: {
-			rfc: { required: true, minlength: 12, maxlength: 13},
+			'rfc': { required: true, minlength: 12, maxlength: 13},
       razon_social: { required: true},
       
       domicilio: { required: true},
       
-      correo: { required: true, email: true},
+      
       numero_padron_contratista:{ required: true}
 		},
     errorPlacement: function(error, element) {

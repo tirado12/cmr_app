@@ -64,7 +64,7 @@
                         
                         <button type="button"
                           href=""
-                          class="text-base text-white bg-blue-500 p-2 rounded-lg px-6" onclick="toggleModal_1('modal-edit', {{$fuente_cliente}}, '{{$service->formatNumber($fuente_cliente->monto_proyectado)}}', '{{$service->formatNumber($fuente_cliente->monto_comprometido)}}')">Editar</button>
+                          class="text-base text-white bg-blue-500 p-2 rounded-lg px-6" onclick="toggleModal_1('modal-edit', {{$fuente_cliente}}, '{{($fuente_cliente->monto_proyectado)}}', '{{($fuente_cliente->monto_comprometido)}}')">Editar</button>
                         
                     </div>
                     
@@ -73,13 +73,13 @@
                     </div>
                     <div class="p-4 grid grid-cols-6 ">
                         <div class="col-span-6 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto recibido: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_proyectado)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto recibido: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_proyectado)}}</span></p>
                         </div>
                         <div class="col-span-8 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto comprometido: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_comprometido)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto comprometido: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_comprometido)}}</span></p>
                         </div>
                         <div class="col-span-8 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto pendiente: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_proyectado - $fuente_cliente->monto_comprometido)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto pendiente: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_proyectado - $fuente_cliente->monto_comprometido)}}</span></p>
                         </div>
                     </div>
                     
@@ -105,7 +105,7 @@
                                         </td>
                                         <td>
                                             <div class="text-base leading-5 font-medium text-gray-900 text-right">
-                                                {{ $service->formatNumber($obras->where('fuente_financiamiento_id', $fuente_cliente->fuente_financiamiento_id)->where('id_obra', $obra_fuente->obra_id)->first()->monto)}}
+                                                {{ ($obras->where('fuente_financiamiento_id', $fuente_cliente->fuente_financiamiento_id)->where('id_obra', $obra_fuente->obra_id)->first()->monto)}}
                                                 
                                             </div>
                                         </td>

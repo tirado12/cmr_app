@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
         <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-        <script type="text/javascript" charset="utf8" src="{{ asset('js/jquery.maskMoney.js')}}"></script>
+        
 
 <div class="flex flex-row">
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">

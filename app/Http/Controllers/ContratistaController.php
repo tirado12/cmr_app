@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contratista;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ContratistaController extends Controller
 {
@@ -37,23 +38,32 @@ class ContratistaController extends Controller
     public function store(Request $request)
     {
         $rfc = $request->rfc;
+        
         $tipo_rfc="";
         if(strlen($rfc)<=12 ){
             $tipo_rfc=true; //persona moral
         }else{
             $tipo_rfc=false; //persona fisica
+            
         }
 
-        $request->validate([
-            'rfc' => 'required',
-            'razon_social' => 'required',
-            'representante_legal' => 'required',
-            'domicilio' => 'required',
-            
-            'correo' => 'required',
-            'numero_padron_contratista' => 'required' 
-        ]);
-        //return $request;
+        if($request->representante_legal != ''){
+            $request->validate([
+                'rfc' => 'required|unique:contratistas,rfc',
+                'razon_social' => 'required',
+                'representante_legal' => 'required',
+                'domicilio' => 'required',
+                'numero_padron_contratista' => 'required' 
+            ]);
+        }else{
+            $request->validate([
+                'rfc' => 'required',
+                'razon_social' => 'required',
+                'domicilio' => 'required',
+                'numero_padron_contratista' => 'required' 
+            ]);
+        }
+        
          
         Contratista::create([
             'rfc' => $request->rfc,
@@ -103,16 +113,25 @@ class ContratistaController extends Controller
             $tipo_rfc=true; //persona moral
         }else{
             $tipo_rfc=false; //persona fisica
+            $request['representante_legal']='';
         }
-
-        $request->validate([
-            'rfc' => 'required',
-            'razon_social' => 'required',
-            'representante_legal' => 'required',
-            'domicilio' => 'required',
-            'correo' => 'required',
-            'numero_padron_contratista' => 'required'
-        ]);
+        
+        if($request->representante_legal != ''){
+            $request->validate([
+                'rfc' => ['required',Rule::unique('contratistas')->ignore($contratista)],
+                'razon_social' => 'required',
+                'representante_legal' => 'required',
+                'domicilio' => 'required',
+                'numero_padron_contratista' => 'required' 
+            ]);
+        }else{
+            $request->validate([
+                'rfc' => ['required',Rule::unique('contratistas')->ignore($contratista)],
+                'razon_social' => 'required',
+                'domicilio' => 'required',
+                'numero_padron_contratista' => 'required' 
+            ]);
+        }
 
         $contratista->rfc = $request->rfc;
         $contratista->tipo_rfc = $tipo_rfc;
@@ -138,5 +157,15 @@ class ContratistaController extends Controller
     {
         $contratista->delete();
         return redirect()->route('contratistas.index')->with('eliminar','ok');
+    }
+
+     //==============================Validacion ajax=================================
+
+     public function existeRfc($rfc){
+        $existe = Contratista::where('rfc',$rfc)->exists();
+        if($existe == null)
+        return 0;
+        else
+        return $existe;
     }
 }

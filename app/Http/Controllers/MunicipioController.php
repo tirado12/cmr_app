@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt\Echo_;
 use App\Models\Distrito;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class MunicipioController extends Controller
 {
@@ -81,11 +82,12 @@ class MunicipioController extends Controller
      */
     public function update(Request $request, Municipio $municipio)
     {
+        
         $request->validate([
             'nombre' => 'required',
             'distrito_id' => 'required',
-            'rfc' => 'required',
-            'direccion' => 'required'
+            'rfc' => ['required',Rule::unique('municipios')->ignore($municipio)],
+            'direccion' => 'nullable'
         ]);
 
         $municipio->update($request->all());

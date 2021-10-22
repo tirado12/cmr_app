@@ -23,6 +23,32 @@
         <!-- div de tabla -->
     </div>
 </div>
+
+
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
 
@@ -30,8 +56,9 @@
   <thead>
       <tr>
           <th>RFC</th>
-          <th>Razón social</th>
           <th>Tipo de contribuyente</th>
+          <th>Razón social</th>
+          <th>Representante legal</th>
           <th class="flex justify-center">Acción</th>
           
       </tr>
@@ -48,6 +75,13 @@
               </div>
           </div>
           </td>
+          
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900">
+                {{($proveedor->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}
+            </div>
+            
+          </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
                 {{$proveedor->razon_social}}
@@ -55,8 +89,8 @@
             
           </td>
           <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
-                {{($proveedor->tipo_rfc ) ? 'Persona Moral' : 'Persona Física'}}
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                {{($proveedor->representante_legal) ? $proveedor->representante_legal : '-' }}
             </div>
             
           </td>
@@ -114,6 +148,7 @@
               <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
               <input type="text" name="rfc" id="rfc" minlength="12" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
               <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 12 caracteres</label>
+              <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
             </div>
 
             <div class="col-span-8">
@@ -203,6 +238,35 @@
 
 //validacion de campos del modal
 $(document).ready(function() {
+
+  $('#rfc').on('keyup', function(){ //existe RFC
+      rfc = $('#rfc').val();
+      //console.log(rfc.length);
+      if(rfc.length >= 12){
+        var link = '{{ url("/proveedorRfc")}}/'+rfc;
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data== 1){
+                  $('#error_existe').removeClass('hidden');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-500');
+                  $("#guardar").addClass('bg-gray-700');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-700');
+                  $("#guardar").addClass('bg-green-500');
+                }
+              },
+              cache: false
+            });
+      }
+
+    });
   
    $("#modal-id input").keyup(function() {
 

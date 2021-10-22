@@ -48,20 +48,20 @@
             <div class="px-4 py-5 bg-white sm:p-6"> 
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
-                  <label id="label_nombre" for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                  <input type="text" name="nombre" id="nombre" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipio->nombre }}" disabled>
+                  <label id="label_nombre" for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
+                  <input type="text" name="nombre" id="nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipio->nombre }}" >
                   <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Introduzca un nombre</label>
                 </div>
-  
+                    
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                  <input type="text" name="rfc" id="rfc" autocomplete="rfc" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipio ->rfc }}">
-                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 5 caracteres</label>
+                  <input type="text" name="rfc" id="rfc" autocomplete="rfc" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipio ->rfc }}">
+                  <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 13 caracteres</label>
                 </div>
                 <div class="col-span-6 sm:col-span-3">
-                  <label id="label_direccion" for="direccion" class="block text-sm font-medium text-gray-700">Dirección *</label>
+                  <label id="label_direccio" for="direccion" class="block text-sm font-medium text-gray-700">Dirección *</label>
                   <input type="text" name="direccion" id="direccion" autocomplete="direccion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipio ->direccion }}">
-                  <label id="error_direccion" name="error_direccion" class="hidden text-base font-normal text-red-500" >Introduzca una dirección</label>
+                  <label id="erro_direccion" name="erro_direccion" class="hidden text-base font-normal text-red-500" >Introduzca una dirección</label>
                 </div>
                 
                   
@@ -144,8 +144,8 @@ $().ready(function() {
     onclick: false,
 		rules: {
       nombre: { required: true},
-			rfc: { required: true, minlength: 5},
-      direccion: { required: true},
+			rfc: { required: true, minlength: 13},
+      
       distrito_id: { required: true},
 		},
     errorPlacement: function(error, element) {
