@@ -60,11 +60,14 @@ class FuenteClienteController extends Controller
 
         $request->validate([
             'monto_proyectado' => 'required',
-            'monto_comprometido' => 'required',
+            //'monto_comprometido' => 'required',
             'ejercicio' => 'required',
             'cliente_id' =>'required',
             'fuente_financiamiento_id'=> 'required'
         ]);
+        if(str_replace(",", '',$request->monto_comprometido) == null){
+        $request->monto_comprometido = 0;
+        }
         $fuenteCliente = FuentesCliente::create([
             'monto_proyectado' => str_replace(",", '', $request->monto_proyectado),
             'monto_comprometido' => str_replace(",", '',$request->monto_comprometido),

@@ -151,7 +151,7 @@
             <div class="col-span-8 ">
               <label id="label_rfc" for="first_name" class="block text-sm font-medium text-gray-700">RFC *</label>
               <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" minlength="12" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Porfavor ingresar al menos un RFC generico con 12 caracteres</label>
+              <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresar al menos un RFC generico con 12 caracteres</label>
               <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
             </div>
             <div class="col-span-6 sm:col-span-3">
@@ -160,19 +160,19 @@
               
             </div>
             <div class="col-span-8">
-              <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-              <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una razón social</label>
+              <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Nombre *</label>
+              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="150" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Por favor ingresar una razón social</label>
             </div>
             <div class="col-span-8 " id="div_representante_legal">
               <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
               <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-              <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
+              <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresar un representante legal</label>
             </div>
             <div class="col-span-8">
                 <label id="label_domicilio" for="domicilio" class="block text-sm font-medium text-gray-700">Domicilio *</label>
                 <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un domicilio</label>
+                <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un domicilio</label>
               </div>
             <div class="col-span-8">
                 <label id="label_telefon" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
@@ -187,7 +187,7 @@
             <div class="col-span-8">
                 <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
                 <input type="number" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un numero de padron</label>
+                <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Por favor ingresar un numero de padron</label>
             </div>
           </div>
 
@@ -297,11 +297,19 @@ $(document).ready(function() {
         $("#tipo_rfc").empty();
         $('#tipo_rfc').val('Persona Moral');
         $('#div_representante_legal').removeClass('hidden');
+        $('#label_razon_social').empty();
+        $('#label_razon_social').text('Nombre *');
+        $('#error_razon_social').empty();
+        $('#error_razon_social').text('Por favor ingresar un nombre');
         //$('#representante_legal').removeClass('hidden');
      }else{
         $("#tipo_rfc").empty();
         $('#tipo_rfc').val('Persona Física');
         $('#div_representante_legal').addClass('hidden');
+        $('#label_razon_social').empty();
+        $('#label_razon_social').text('Razón social *');
+        $('#error_razon_social').empty();
+        $('#error_razon_social').text('Por favor ingresar una razón social');
        //$('#representante_legal').addClass('hidden');
      }
 

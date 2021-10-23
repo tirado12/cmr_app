@@ -25,7 +25,7 @@ class IntegrantesCabildoController extends Controller
         //return $integrantes;
         $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
         $clientes =  $result->unique('municipio_id');
-        return $clientes;
+        //return $clientes;
     
         
        return view('cabildo.index',compact('integrantes','clientes'));

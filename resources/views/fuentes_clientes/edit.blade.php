@@ -87,6 +87,8 @@
                 </div>
                 
                 @if($fuenteCliente->fuente_financiamiento_id == 2)
+               
+
                 <!--<div class="col-span-10 lg:col-span-2">
                     <label id="label_acta_integracion_consejo" for="acta_integracion_consejo" class="block text-sm font-medium text-gray-700">Acta de integracion de consejo *</label>
                     <input type="date" name="acta_integracion_consejo" id="acta_integracion_consejo" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuenteCliente->acta_integracion_consejo }}">
@@ -134,7 +136,51 @@
                   <label id="error_monto" name="error_monto" class="hidden w-full text-base font-normal text-red-500" >El monto proyectado debe ser mayor o igual al comprometido</label>
                 </div>
 
+                
+
               </div>
+              @if($fuenteCliente->fuente_financiamiento_id == 2)
+              <div class=" relative p-6 flex-auto" id="anexos">
+                <div class=" alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
+                  <div class="alert-content ml-4">
+                  <p class="font-bold sm:text-sm">Anexos</p>
+                  </div>
+                </div>
+              
+                <div class="flex flex-col-2 justify-center " >
+                  <div class="flex flex-row  p-2">
+                      <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                      <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                  </div>
+                  <div class="flex flex-row  p-2">
+                    <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
+                    <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                  </div>
+                </div>
+             
+                <div class="grid grid-cols-6 gap-4">
+    
+                  <div class="col-span-2">
+                    <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
+                    <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    
+                  </div>
+                
+                  <div class="col-span-2">
+                    <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
+                    <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    
+                  </div>
+    
+                  <div class="col-span-2">
+                    <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
+                    <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    
+                  </div>
+    
+                </div>
+             </div>
+             @endif
 
             </div>
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
@@ -189,7 +235,7 @@
 
       $('#monto_proyectado').keyup();
 
-      $('#monto_comprometido').keyup();
+     // $('#monto_comprometido').keyup();
 
       var statusProdim =  '{{ $fuenteCliente->prodim }}';
       var statusGastos =  '{{ $fuenteCliente->gastos_indirectos }}';
@@ -210,6 +256,17 @@
 
 //validacion de campos del formulario
 $(document).ready(function() {
+  $('#fuente_financiamiento_id').on('change',function(){
+    if($('#fuente_financiamiento_id').val() == '2'){
+      $('#titulo_anexo').removeClass('hidden');
+      $('#anexos').removeClass('hidden');
+    }else{
+      $('#titulo_anexo').addClass('hidden');
+      $('#anexos').addClass('hidden');
+    }
+  });
+   
+
    $("#formulario input").keyup(function() {
   //console.log($(this).attr('id'));
       var monto = $(this).val();

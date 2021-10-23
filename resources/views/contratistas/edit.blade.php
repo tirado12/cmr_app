@@ -58,7 +58,7 @@
                 
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->razon_social }}">
+                  <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="150" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->razon_social }}">
                   <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Se requiere una razón social</label>
                 </div>
                 
@@ -85,7 +85,7 @@
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
-                    <input type="text" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->numero_padron_contratista }}">
+                    <input type="number" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->numero_padron_contratista }}">
                     <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Se requiere un numero de padron</label>
                   </div>
 

@@ -15,9 +15,7 @@
   </svg>
 <h1 class="text-xl font-bold ml-2">Lista de Fuentes de financiamiento</h1>
 </div>
-@php
-  $aux = 1;
-@endphp
+
 
 <div class="flex flex-col mt-6">
   <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -28,6 +26,55 @@
       <!-- div de tabla -->
   </div>
 </div>
+
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+         viewBox="0 0 20 20"
+         class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+
+  <div class="alert-content ml-4">
+    <div class="alert-title font-semibold text-lg text-yellow-800">
+      Aviso
+    </div>
+    <div class="alert-description text-sm text-yellow-600">
+      lo registros de esta tabla <strong>NO</strong> podran ser eliminados.
+    </div>
+  </div>
+  
+</div>
+
+@if ($errors->any())
+        <div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+          <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+            <span class="text-yellow-500">
+              <svg fill="currentColor"
+                viewBox="0 0 20 20"
+                class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+              </svg>
+            </span>
+          </div>
+          <div class="alert-content ml-4">
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+          </div>
+        </div>
+    @endif
 <!-- inicio data table -->
 <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
 
@@ -91,9 +138,9 @@
             <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
                 Detalles
               </button> -->
-              @csrf
+              <!--@csrf
               @method('DELETE')
-              <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
+              <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>-->
               </div>
               
               </form>
@@ -250,28 +297,51 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" >
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" disabled>
               </div>
               <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>  
               <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
             </div>
             
          </div>
-
-          <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
-            <div class="alert-content ml-4">
-            <p class="font-bold sm:text-sm">Anexos</p>
+         <div class="hidden relative p-6 flex-auto" id="anexos">
+            <div class=" alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
+              <div class="alert-content ml-4">
+              <p class="font-bold sm:text-sm">Anexos</p>
+              </div>
             </div>
-          </div>
-
-          <div class="flex flex-col-2 justify-center ">
-            <div class="flex flex-row  p-2">
-                <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim *</label>
-                <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+          
+            <div class="flex flex-col-2 justify-center " >
+              <div class="flex flex-row  p-2">
+                  <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                  <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+              </div>
+              <div class="flex flex-row  p-2">
+                <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
+                <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+              </div>
             </div>
-            <div class="flex flex-row  p-2">
-              <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos *</label>
-              <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+         
+            <div class="grid grid-cols-6 gap-4">
+
+              <div class="col-span-2">
+                <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
+                <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                
+              </div>
+            
+              <div class="col-span-2">
+                <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
+                <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                
+              </div>
+
+              <div class="col-span-2">
+                <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
+                <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                
+              </div>
+
             </div>
          </div>
 
@@ -395,6 +465,14 @@ function validarFuente() {
     $('#error_fuente_financiamiento_id').fadeIn();
     $("#label_fuente_financiamiento_id").addClass('text-red-500');
     $("#label_fuente_financiamiento_id").removeClass('text-gray-700');
+  }
+
+  if($('#fuente_financiamiento_id').val() == '2'){
+    $('#titulo_anexo').removeClass('hidden');
+    $('#anexos').removeClass('hidden');
+  }else{
+    $('#titulo_anexo').addClass('hidden');
+    $('#anexos').addClass('hidden');
   }
 }
 //================================================
@@ -569,7 +647,7 @@ $().ready(function($) {
       cliente_id: { required: true },
       ejercicio: { required: true },
       monto_proyectado: { required: true },
-      monto_comprometido: { required: true},
+      //monto_comprometido: { required: true},
       fuente_financiamiento_id: { required: true },
     },
     errorPlacement: function(error, element) {
