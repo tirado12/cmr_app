@@ -215,9 +215,9 @@
                 <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
               </div>
               <div class="col-span-8" >
-                <label id="label_cliente" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
+                <label id="label_cliente" for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo *</label>
                 <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required="">
-                    <option value="">Elija una cliente</option>
+                    <option value="">Elija un cliente</option>
                     
                 </select>
                 <label id="error_cliente" name="error_cliente" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>

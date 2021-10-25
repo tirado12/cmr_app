@@ -103,7 +103,7 @@
 
               <div class="col-span-8">
                   <label id="label_clave" for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                  <input type="text" name="clave" id="clave" placeholder="100" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <input type="number" name="clave" id="clave" placeholder="100" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
                   <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una clave</label>
                 </div>
               

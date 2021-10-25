@@ -78,7 +78,7 @@ class GastosIndirectosFuentesController extends Controller
         GastosIndirectosFuentes::create([
             'indirectos_id' => $request->gasto_indirecto,
             'fuente_cliente_id' => $request->fuenteCliente_id,
-            'monto' => $request->monto
+            'monto' => str_replace(",", '',$request->monto)
         ]);
         return redirect()->route('gastosIndirectosFuentes.index');
     }
@@ -128,7 +128,7 @@ class GastosIndirectosFuentesController extends Controller
             'indirectos_id' => 'required',
             'monto' => 'required',
         ]);
-        
+        $request['monto'] = str_replace(",", '', $request['monto']);
         $gasto->update($request->all());
         return redirect()->route('gastosIndirectosFuentes.index');
     }

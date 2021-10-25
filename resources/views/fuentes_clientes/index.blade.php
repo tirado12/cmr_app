@@ -13,7 +13,7 @@
   <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
   </svg>
-<h1 class="text-xl font-bold ml-2">Lista de Fuentes de financiamiento</h1>
+<h1 class="text-xl font-bold ml-2">Lista de Fuentes de financiamiento - Clientes</h1>
 </div>
 
 
@@ -45,7 +45,7 @@
       Aviso
     </div>
     <div class="alert-description text-sm text-yellow-600">
-      lo registros de esta tabla <strong>NO</strong> podran ser eliminados.
+      los registros agregados <strong>NO</strong> podran ser eliminados, debido al nivel de importancia con otras tablas.
     </div>
   </div>
   
@@ -138,6 +138,9 @@
             <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
                 Detalles
               </button> -->
+              @if($index->fuente_financiamiento_id == 2)
+              <a type="button"  href="{{ route('anexos.index') }}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Anexos</a> 
+              @endif
               <!--@csrf
               @method('DELETE')
               <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>-->
@@ -240,6 +243,19 @@
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">
+        <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-blue-900">
+            <span class="text-xl inline-block mr-5 align-middle">
+              <i class="fas fa-bell"></i>
+            </span>
+            <span class="inline-block align-middle mr-8">
+              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por ejercicio antes 
+              <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
+            </span>
+            <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
+              <span>×</span>
+            </button>
+        </div>
+
           <div class="grid grid-cols-8 gap-4">
             <div class="col-span-4 ">
               <label  id="label_municipio" for="municipio" class="block text-sm font-medium text-gray-700">Cliente *</label>
@@ -287,7 +303,8 @@
                 </div>
                 <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0">
               </div>
-                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad.</label><br>
+                <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado.</label>
             </div>
             <div class="col-span-4">
               <label id="label_monto_comprometido" for="label_monto_comprometido" class="block text-sm font-medium text-gray-700">Monto comprometido *</label>
@@ -297,10 +314,10 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0" disabled>
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="5" placeholder="0.0" readonly>
               </div>
               <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>  
-              <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
+                
             </div>
             
          </div>
@@ -311,7 +328,7 @@
               </div>
             </div>
           
-            <div class="flex flex-col-2 justify-center " >
+            <div class="flex flex-col-2 justify-center mb-2" >
               <div class="flex flex-row  p-2">
                   <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
                   <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
@@ -421,6 +438,15 @@
         x[i].innerHTML = num;
         x[i].classList.add("currSign"); 
     }
+</script>
+<script>
+  function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
+    let element = event.target;
+    while(element.nodeName !== "BUTTON"){
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
 </script>
 <script>
   //Mensaje de advertencia
@@ -609,10 +635,16 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 
                 if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
                   $('#error_monto_menor').fadeIn();
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-500');
+                  $("#guardar").addClass('bg-gray-700');
                   //$('#guardar').attr("disabled", true);
                  
                 }else{
                   $('#error_monto_menor').fadeOut();
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-700');
+                  $("#guardar").addClass('bg-green-500');
                   //$('#guardar').removeAttr("disabled");
                   
                 }

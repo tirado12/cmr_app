@@ -69,7 +69,7 @@
                         $
                       </span>
                     </div>
-                    <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7 mt-1 text-base focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md myDIV" value="{{($fuenteCliente->monto_proyectado)}}" onclick="">
+                    <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7 mt-1 text-base focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md myDIV" value="{{($fuenteCliente->monto_proyectado)}}" onclick="" >
                   </div>
                   <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Introduzca un monto proyectado</label>
                 </div>
@@ -82,7 +82,7 @@
                           $
                         </span>
                       </div>
-                      <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 text-base bg-gray-100 border-gray-300 border rounded-md block text-gray-700 w-full  myDIV" disabled value="{{($fuenteCliente->monto_comprometido)}}" onclick="">
+                      <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 text-base bg-gray-100 border-gray-300 border rounded-md block text-gray-700 w-full  myDIV"  value="{{($fuenteCliente->monto_comprometido)}}" onclick="" readonly>
                     </div>
                 </div>
                 
@@ -140,7 +140,7 @@
 
               </div>
               @if($fuenteCliente->fuente_financiamiento_id == 2)
-              <div class=" relative p-6 flex-auto" id="anexos">
+              <div class="hidden relative p-6 flex-auto" id="anexos">
                 <div class=" alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
                   <div class="alert-content ml-4">
                   <p class="font-bold sm:text-sm">Anexos</p>
@@ -150,11 +150,11 @@
                 <div class="flex flex-col-2 justify-center " >
                   <div class="flex flex-row  p-2">
                       <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
-                      <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                      <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($anexos_fondo3->prodim == 1) ? 'checked' : '' }}>
                   </div>
                   <div class="flex flex-row  p-2">
                     <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
-                    <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                    <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($anexos_fondo3->gastos_indirectos == 1) ? 'checked' : '' }}>
                   </div>
                 </div>
              
@@ -162,25 +162,91 @@
     
                   <div class="col-span-2">
                     <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
-                    <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_integracion_consejo }}">
                     
                   </div>
                 
                   <div class="col-span-2">
                     <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
-                    <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_priorizacion }}">
                     
                   </div>
     
                   <div class="col-span-2">
                     <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
-                    <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                    <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->adendum_priorizacion }}" >
                     
                   </div>
     
                 </div>
              </div>
+             @else 
+             <div class="hidden relative p-6 flex-auto" id="anexos">
+              <div class=" alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
+                <div class="alert-content ml-4">
+                <p class="font-bold sm:text-sm">Anexos</p>
+                </div>
+              </div>
+            
+              <div class="flex flex-col-2 justify-center " >
+                <div class="flex flex-row  p-2">
+                    <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                    <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" >
+                </div>
+                <div class="flex flex-row  p-2">
+                  <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
+                  <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" >
+                </div>
+              </div>
+           
+              <div class="grid grid-cols-6 gap-4">
+  
+                <div class="col-span-2">
+                  <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
+                  <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                  
+                </div>
+              
+                <div class="col-span-2">
+                  <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
+                  <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                  
+                </div>
+  
+                <div class="col-span-2">
+                  <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
+                  <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"  >
+                  
+                </div>
+  
+              </div>
+           </div>
+
              @endif
+
+             <div id="error_existe" class="hidden alert flex flex-row items-center bg-red-200 p-2 rounded-lg border-b-2 border-red-300 mb-4 shadow">
+              <div class="alert-icon flex items-center bg-red-100 border-2 border-red-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+               <span class="text-red-500">
+                 <svg fill="currentColor"
+                    viewBox="0 0 20 20"
+                    class="h-5 w-5">
+                   <path fill-rule="evenodd"
+                       d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                       clip-rule="evenodd"></path>
+                 </svg>
+               </span>
+             </div>
+           
+             <div class="alert-content ml-4">
+               <div class="alert-title font-semibold text-lg text-red-800">
+                 Aviso
+               </div>
+               <div class="alert-description text-sm text-red-600">
+                 <strong>YA</strong> existe un registro con el mismo cliente, fuente y ejercicio.
+               </div>
+             </div>
+             
+           </div>
 
             </div>
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
@@ -256,10 +322,52 @@
 
 //validacion de campos del formulario
 $(document).ready(function() {
+  //fuente_financiamiento_id
+  $('#fuente_financiamiento_id').on('change', function(){
+    cliente = '{{ $fuenteCliente->cliente_id }}';
+    fuente= $('#fuente_financiamiento_id').val();
+    ejercicio= '{{ $fuenteCliente->ejercicio }}';
+    
+    var link = '{{ url("/ejercicioDisponible")}}/'+cliente+','+ejercicio+','+fuente;
+    if($(this).val()!=cliente  &&cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data== 1){
+                  $('#error_existe').removeClass('hidden');
+                  $('#enviar_datos').attr("disabled", true);
+                  $("#enviar_datos").removeClass('bg-orange-800');
+                  $("#enviar_datos").addClass('bg-gray-700');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#enviar_datos').removeAttr("disabled");
+                  $("#enviar_datos").removeClass('bg-gray-700');
+                  $("#enviar_datos").addClass('bg-orange-800');
+                }
+              },
+              cache: false
+            });
+    }
+  });
+
+  window.onload =function(){
+    if($('#fuente_financiamiento_id').val() == '2'){
+      $('#titulo_anexo').removeClass('hidden');
+      $('#anexos').removeClass('hidden');
+    }else{
+      $('#titulo_anexo').addClass('hidden');
+      $('#anexos').addClass('hidden');
+    }
+  }
+
   $('#fuente_financiamiento_id').on('change',function(){
     if($('#fuente_financiamiento_id').val() == '2'){
       $('#titulo_anexo').removeClass('hidden');
       $('#anexos').removeClass('hidden');
+      
     }else{
       $('#titulo_anexo').addClass('hidden');
       $('#anexos').addClass('hidden');
@@ -314,9 +422,9 @@ $().ready(function() {
 			monto_proyectado: { required: true},
       monto_comprometido: { required: true},
       ejercicio: { required: true},
-      acta_integracion_consejo: { required: true},
-      acta_priorizacion: { required: true},
-      adendum_priorizacion: { required: true},
+      
+      
+      
       fuente_financiamiento_id: { required: true},
       /*prodim: { required: true},
       gastos_indirectos: { required: true},*/

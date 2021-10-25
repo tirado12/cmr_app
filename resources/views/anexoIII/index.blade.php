@@ -100,9 +100,9 @@
                 
                   <div>
                   <a type="button"  href="{{ route('anexos.edit', $item->id_anexos_fondo3) }}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Editar</a> 
-                  <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="">
+                  <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="">
                     Detalles
-                  </button>
+                  </button> -->
                   
                   </div>
                  @endforeach 

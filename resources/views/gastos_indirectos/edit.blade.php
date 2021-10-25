@@ -20,7 +20,7 @@
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-6 sm:col-span-3">
                 <label for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                <input type="text" name="clave" id="clave" placeholder="100" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->clave }}">
+                <input type="number" name="clave" id="clave" placeholder="100" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $gastosIndirecto->clave }}">
                 <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Introduzca una clave</label>
               </div>
 

@@ -16,6 +16,19 @@
 </div>
 
 <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
+      <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-blue-900">
+        <span class="text-xl inline-block mr-5 align-middle">
+          <i class="fas fa-bell"></i>
+        </span>
+        <span class="inline-block align-middle mr-8">
+          <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por ejercicio antes 
+          <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
+        </span>
+        <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
+          <span>×</span>
+        </button>
+      </div>
+
     <div class="relative p-6 flex-auto">
         <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mb-4 shadow">
             <div class="alert-content ml-4">
@@ -84,9 +97,14 @@
 </div>
 
 <script>
- $(function() {
-    
-  });
+
+function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
+    let element = event.target;
+    while(element.nodeName !== "BUTTON"){
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
 $(document).ready(function() {
 
   //select muestra ejercicios disponibles por cliente
