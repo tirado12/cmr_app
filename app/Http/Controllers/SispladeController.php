@@ -55,7 +55,7 @@ class SispladeController extends Controller
        //$cli = Cliente::has('municipio')->get();
        //return $clientes->find($fuenteClientes[0]->cliente_id)->nombre;
        
-       //return $clientes;
+        //return $clientes;
         return view('sisplade.add_sisplade',compact('clientes'));
     }
 
@@ -69,10 +69,10 @@ class SispladeController extends Controller
     {
         $request->validate([
             'fuentes_clientes_id' => 'required',
-            'capturado' => 'required',
-            'fecha_capturado' => 'required',
-            'validado' =>'required',
-            'fecha_validado'=> 'required'
+            'capturado' => 'nullable',
+            'fecha_capturado' => 'nullable',
+            'validado' =>'nullable',
+            'fecha_validado'=> 'nullable'
         ]);
         Sisplade::create([
             'fuentes_clientes_id' => $request->fuentes_clientes_id,
@@ -128,11 +128,13 @@ class SispladeController extends Controller
            $capturado = 1;
        }else{
             $capturado = 0;
+            $request['fecha_capturado']=null;
        }
        if($request->validado == 'on'){
              $validado = 1;
         }else{
              $validado = 0;
+             $request['fecha_validacion']=null;
         }
         $request->merge([
             'capturado' => $capturado,
@@ -175,6 +177,14 @@ class SispladeController extends Controller
         ->select('ejercicio','cliente_id')
         ->get();  
         return $fuenteClie;
+    }
+
+    public function existeEjercicio($cliente){
+        $existe = Sisplade::where('fuentes_clientes_id', $cliente)->exists();
+        if ($existe == null)
+        return 0;
+        else
+        return $existe;
     }
 
     /*public function fuentesClientes($ejercicio,$cliente,$fuente){

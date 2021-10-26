@@ -104,14 +104,14 @@
 
               <div class="col-span-8">
                   <label id="label_clave" for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                  <input type="number" name="clave" id="clave" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                  <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una clave</label>
+                  <input type="number" name="clave" id="clave" max="999999" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                  <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Por favor ingresar una clave (Max: 999999)</label>
                 </div>
               
               <div class="col-span-8">
                   <label id="label_nombre" for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
                   <input type="text" name="nombre" id="nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
-                  <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un nombre</label>
+                  <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Por favor ingresar un nombre</label>
               </div>
             </div>
         </div>

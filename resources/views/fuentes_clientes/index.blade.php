@@ -243,6 +243,7 @@
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">
+        
         <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-blue-900">
             <span class="text-xl inline-block mr-5 align-middle">
               <i class="fas fa-bell"></i>
@@ -614,7 +615,7 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
 //================================================
         var proyectado;
         var comprometido;
-        $("#monto_proyectado, #monto_comprometido").on({
+        $("#monto_proyectado").on({
             "focus": function(event) {
                 $(event.target).select();
             },
@@ -626,30 +627,34 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
                         
                 });
+                
+            }
+        });
+
+      $("#monto_proyectado").on('keyup', function(){ //validar montos
                 //obtener el monto para eliminar formato y pasar a float
-                proyectado=   $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+                proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
                 proyectado = parseFloat(proyectado) || 0;
                 
                 comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
                 comprometido = parseFloat(comprometido) || 0;
                 
                 if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
-                  $('#error_monto_menor').fadeIn();
+                  $('#error_monto_menor').removeClass('hidden');
                   $('#guardar').attr("disabled", true);
                   $("#guardar").removeClass('bg-green-500');
                   $("#guardar").addClass('bg-gray-700');
                   //$('#guardar').attr("disabled", true);
                  
                 }else{
-                  $('#error_monto_menor').fadeOut();
+                  $('#error_monto_menor').addClass('hidden');
                   $('#guardar').removeAttr("disabled");
                   $("#guardar").removeClass('bg-gray-700');
                   $("#guardar").addClass('bg-green-500');
                   //$('#guardar').removeAttr("disabled");
                   
                 }
-            }
-        });
+      });
 //================================================
         //validacion de campo vacio
       var monto = $(this).val();

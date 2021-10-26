@@ -104,6 +104,7 @@ Route::resource('perfil', PerfilController::class)->names('perfil');
 
 //rutas de validaciones ajax
 Route::get('/obtClienteFuente/{ejercicio},{cliente}',[SispladeController::class,'obtenerFuenteCliente']);
+Route::get('/existeEnSisplade/{cliente}',[SispladeController::class,'existeEjercicio']);
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
 Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']);
 Route::get('/cabildoRfc/{rfc}',[IntegrantesCabildoController::class,'existeRfc']);

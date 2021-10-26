@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
 <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('css/style_alert.css') }}">
+
 <meta name="_token" content="{{ csrf_token() }}">
 
 <!--Responsive Extension Datatables CSS-->
@@ -19,6 +20,45 @@
   </svg>
 <h1 class="text-xl font-bold ml-2">Agregar Sisplade</h1>
 </div>
+
+<div class="text-white px-6 py-4 border-0 rounded relative mt-2 mb-4 bg-blue-900 ">
+  <span class="text-xl inline-block mr-5 align-middle">
+    <i class="fas fa-bell"></i>
+  </span>
+  <span class="inline-block align-middle mr-8">
+    <b class="capitalize">Recuerde:</b> Asignar un nuevo fondo III a un cliente, si la lista aparece vacia.
+    <a href="{{route('fuenteCliente.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo registro</a>
+  </span>
+  <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
+    <span>×</span>
+  </button>
+</div>
+
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+         viewBox="0 0 20 20"
+         class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+
+@endif
 
 <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
     <div class="relative p-6 flex-auto">
@@ -48,7 +88,8 @@
               <select id="ejercicio" name="ejercicio" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija un cliente </option>
               </select>
-            <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
+            <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio.</label>  <br>
+            <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro en este ejercicio</label>
           </div>
         
           
@@ -151,7 +192,15 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 
-
+<script>
+  function closeAlert(event){ //div de alerta - aviso azul
+    let element = event.target;
+    while(element.nodeName !== "BUTTON"){
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
+</script>
 
 <script>
 
@@ -161,19 +210,31 @@
     
     //guardar registro sisplade
     $("#guardar").on('click', function () {
-      var validado,capturado;
+      var validado,capturado,fecha_capturado,fecha_validado;
       var fuentes_clientes_id= $("#fuenteCliente_id").val();
       if($('#capturado').prop("checked"))
-      {capturado=1;}
+      {
+        capturado=1;
+        fecha_capturado= $('#fecha_capturado').val();
+      }
       else
-      {capturado=0;}
-      var fecha_capturado= $('#fecha_capturado').val();
-      if($('#validado').prop("checked"))
-      {validado= 1;}
-      else
-      {validado=0;}
+      {
+        capturado=0;
+        fecha_capturado='';
+      }
       
-      var fecha_validado= $('#fecha_validado').val();
+      if($('#validado').prop("checked"))
+      {
+        validado= 1;
+        fecha_validado= $('#fecha_validado').val();
+      }
+      else
+      {
+        validado=0;
+        fecha_validado ='';
+      }
+      
+      
       var direccion= '{{ route("sisplade.store") }}';
       var token = '{{ csrf_token() }}';
       var data= {
@@ -248,41 +309,62 @@
       $("#ejercicio, #cliente_id").on('change', function () {
         
         if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
-        
-        $('#titulo_sisplade').addClass('hidden');
-        $('#form_sisplade').addClass('hidden'); //esconde formulario sisplade
-        
-        
-      }else{
-      $('#titulo_sisplade').removeClass('hidden'); //mostrar el formulario de sisplade
-       $('#form_sisplade').removeClass('hidden');
-      }
-        ejercicio=$('#ejercicio').val();
-        cliente=$('#cliente_id').val();
+          $('#titulo_sisplade').addClass('hidden');
+          $('#form_sisplade').addClass('hidden'); //esconde formulario sisplade
+        }else{
+          $('#titulo_sisplade').removeClass('hidden'); //mostrar el formulario de sisplade
+          $('#form_sisplade').removeClass('hidden');
+        }
+          ejercicio=$('#ejercicio').val();
+          cliente=$('#cliente_id').val();
         
         if(cliente.length>0 && ejercicio.length>0){  
           var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
           consulta(direccion);
-        
         }
         //ejercicio
       }); 
 
-      function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
+      function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar segun las opc de los select
         $.ajax({
               url: direccion,
               dataType:'json',
               type:'get',
               success: function(data){
-                console.log(data);
+                //console.log(data);
                 $.each(data,function(key, item) {
                   $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
                   //console.log('a '+ $('#fuenteCliente_id').val());
+                  existe($('#fuenteCliente_id').val());
                 });
                 
               },
               cache: false
         });
+       
+      }
+
+      function existe($id){ //valida si existe un registro con este mismo ejercicio
+        $.ajax({
+              url: '{{ url("/existeEnSisplade")}}/'+$id,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data== 1){
+                  $('#error_existe').removeClass('hidden');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-orange-800');
+                  $("#guardar").addClass('bg-gray-700');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-700');
+                  $("#guardar").addClass('bg-orange-800');
+                }
+              },
+              cache: false
+            });
       }
   });
  

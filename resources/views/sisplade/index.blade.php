@@ -66,7 +66,7 @@
               </td>
               <td>
                 <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                    {{$item->fecha_capturado}}
+                    {{($item->fecha_capturado == '') ? '-' : $item->fecha_capturado}}
                 </div>
               </td>
               <td>
@@ -76,7 +76,7 @@
               </td>
               <td>
                 <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                   {{$item->fecha_validado}}
+                   {{($item->fecha_validado == '') ? '-' : $item->fecha_validado}}
                 </div>
               </td>
               <td>

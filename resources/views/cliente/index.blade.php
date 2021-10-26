@@ -318,22 +318,22 @@
                 </div>
           </div>
           <div class="flex flex-wrap">
-  <div class="w-full text-center">
-    <button class="bg-pink-500 text-white active:bg-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="openPopover(event,'popover-id')">
-      top pink
-    </button>
-    <div class="hidden bg-white border mb-3 block z-50 font-normal leading-normal text-sm max-w-xs text-left no-underline break-words rounded-lg border-blueGray-100" id="popover-id">
-      <div>
-        <div class="bg-white text-black opacity-75 font-semibold p-3 mb-0 border-b border-solid border-blueGray-100 uppercase rounded-t-lg">
-          Estructura de contraseña
-        </div>
-        <div class="text-black p-3">
-          Utiliza entre ocho y doce caracteres con una combinación de letras minúsculas, mayúsculas, números y símbolos $@_!%*?&.
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+              <!--<div class="w-full text-center">
+                <button class="bg-pink-500 text-white active:bg-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="openPopover(event,'popover-id')">
+                  top pink
+                </button>
+                <div class="hidden bg-white border mb-3 block z-50 font-normal leading-normal text-sm max-w-xs text-left no-underline break-words rounded-lg border-blueGray-100" id="popover-id">
+                  <div>
+                    <div class="bg-white text-black opacity-75 font-semibold p-3 mb-0 border-b border-solid border-blueGray-100 uppercase rounded-t-lg">
+                      Estructura de contraseña
+                    </div>
+                    <div class="text-black p-3">
+                      Utiliza entre ocho y doce caracteres con una combinación de letras minúsculas, mayúsculas, números y símbolos $@_!%*?&.
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+            </div>
 
 
       </div>
