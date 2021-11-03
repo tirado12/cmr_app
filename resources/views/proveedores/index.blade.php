@@ -59,6 +59,7 @@
           <th>Tipo de contribuyente</th>
           <th>Razón social</th>
           <th>Representante legal</th>
+          <th>Municipio</th>
           <th class="flex justify-center">Acción</th>
           
       </tr>
@@ -93,6 +94,11 @@
                 {{($proveedor->representante_legal) ? $proveedor->representante_legal : '-' }}
             </div>
             
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+               {{$municipios->find($proveedor->municipio_id)->nombre}}
+            </div>
           </td>
           <td>
             <div class="flex justify-center">
@@ -146,31 +152,40 @@
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
               <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-              <input type="text" name="rfc" id="rfc" minlength="12" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+              <input type="text" name="rfc" id="rfc" minlength="12" maxlength="13" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required value="{{ old('rfc') }}">
               <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico con 12 caracteres</label>
-              <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
-            </div>
-
-            <div class="col-span-8">
-              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
-              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-              <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un representante legal</label>
+              
             </div>
 
             <div class="col-span-6 sm:col-span-3">
               <label id="label_tipo_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
-              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
+              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" readonly value="{{ old('tipo_rfc') }}">
               
+            </div>
+
+            <div class="col-span-8" id="div_representante_legal">
+              <label id="labe_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
+              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('representante_legal') }}">
+              <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresar un representante legal</label>
             </div>
 
             <div class="col-span-8">
               <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
-              <input type="text" name="razon_social" id="razon_social" maxlength="70" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+              <input type="text" name="razon_social" id="razon_social" maxlength="70" placeholder="Materiales para construcción S.A. de C.V." class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required value="{{ old('razon_social') }}">
               <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Introduzca una razon social</label>
+            </div>
+
+            <div class="col-span-8">
+              <label for="country" class="block text-sm font-medium text-gray-700">Municipio *</label>
+              <select id="municipio_id" name="municipio_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-800 focus:border-blue-800 sm:text-sm">
+                @foreach($municipios as $municipio)
+                  <option value="{{ $municipio->id_municipio}}" {{ ($municipio->id_municipio == old('municipio_id')) ? 'selected' : '' }}>{{ $municipio->nombre }}</option>
+                @endforeach
+              </select>
             </div>
            
           </div>
-        
+          <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC y este municipio asociado.</label>
       </div>
       <!--footer-->
       <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
@@ -180,7 +195,7 @@
         <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
           Cancelar
         </button>
-        <button type="submit" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
+        <button type="submit" id="guardar" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
           Guardar
         </button>
         </div>
@@ -202,6 +217,17 @@
       'El proveedor ha sido eliminado.',
       'success'
     )
+  </script>
+@endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este proveedor tiene relación con otro registro.<br> No es posible eliminarlo.'
+      
+    });
   </script>
 @endif
 
@@ -239,18 +265,19 @@
 //validacion de campos del modal
 $(document).ready(function() {
 
-  $('#rfc').on('keyup', function(){ //existe RFC
+  $('#municipio_id, #rfc').on('change keyup', function(){ //existe RFC
       rfc = $('#rfc').val();
+      municipio_id = $('#municipio_id').val();
       //console.log(rfc.length);
       if(rfc.length >= 12){
-        var link = '{{ url("/proveedorRfc")}}/'+rfc;
+        var link = '{{ url("/proveedorRfc")}}/'+rfc+','+municipio_id;
         $.ajax({
               url: link,
               dataType:'json',
               type:'get',
               success: function(data){
-                //console.log(data);
-                if(data== 1){
+                console.log(data);
+                if(data.length>0){
                   $('#error_existe').removeClass('hidden');
                   $('#guardar').attr("disabled", true);
                   $("#guardar").removeClass('bg-green-500');
@@ -270,21 +297,36 @@ $(document).ready(function() {
   
    $("#modal-id input").keyup(function() {
 
-     if($('#rfc').val().length <= 12){ //validacion de RFC y representante legal
-      $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Moral');
-        $('#label_representante_legal').removeClass('hidden');
-        $('#representante_legal').removeClass('hidden');
-     }else{
-        $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Física');
-        $('#label_representante_legal').addClass('hidden');
-        $('#representante_legal').addClass('hidden');
-     }
+    if($(this).attr('id') == 'rfc'){
+          rfc = $('#rfc').val();
+          if(rfc.length == 12){ // > 12
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Moral');
+              $('#div_representante_legal').removeClass('hidden');
+              $('#representante_legal').attr('required',true);
+              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Razón social *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar una razón social');
+              
+            }else if(rfc.length == 13){
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Física');
+              $('#div_representante_legal').addClass('hidden');
+              $('#representante_legal').removeAttr('required');
+              $('#razon_social').attr("placeholder",'Juan N.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Nombre *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar un nombre');
+              
+            }
+        }
   
-      var monto = $(this).val();
+      var cadena = $(this).val();
       
-      if(monto != ''){
+      if(cadena != ''){
       $('#error_'+$(this).attr('id')).fadeOut();
       $("#label_"+$(this).attr('id')).removeClass('text-red-500');
       $("#label_"+$(this).attr('id')).addClass('text-gray-700');
@@ -308,7 +350,6 @@ $().ready(function() {
 		rules: {
       rfc: { required: true, minlength: 12, maxlength: 13},
 			razon_social: { required: true},
-		
 		},
     errorPlacement: function(error, element) {
       if(error != null){

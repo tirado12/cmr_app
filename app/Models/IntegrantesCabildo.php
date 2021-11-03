@@ -18,6 +18,7 @@ class IntegrantesCabildo extends Model
         'telefono',
         'correo',
         'rfc',
+        'representante_legal',
         'cliente_id'
     ];
 }

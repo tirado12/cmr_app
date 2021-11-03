@@ -15,10 +15,12 @@ class CreateProveedoresTable extends Migration
     {
         Schema::create('proveedores', function (Blueprint $table) {
             $table->id('id_proveedor');
-            $table->string('rfc',13)->unique();
+            $table->string('rfc',13);
             $table->boolean('tipo_rfc');
             $table->text('razon_social');
             $table->string('representante_legal')->nullable();
+            $table->unsignedBigInteger('municipio_id');
+            $table->foreign('municipio_id')->references('id_municipio')->on('municipios');
             $table->timestamps();
         });
     }

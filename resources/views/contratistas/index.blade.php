@@ -12,7 +12,7 @@
   <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
   </svg>
-<h1 class="text-xl font-bold ml-2">Lista de Contratistas</h1>
+<h1 class="text-xl font-bold ml-2">Lista General de Contratistas</h1>
 </div>
 
 <div class="flex flex-col mt-6">
@@ -60,6 +60,7 @@
           <th>Correo</th>
           <th>Tipo de contribuyente</th>
           <th>Representante legal</th>
+          <th>Municipio</th>
           <th class="flex justify-center">Acción</th>
       </tr>
   </thead>
@@ -96,7 +97,11 @@
             <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
                 {{($contratista->representante_legal == null) ? '-' : $contratista->representante_legal}}
             </div>
-            
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+               {{$municipios->find($contratista->municipio_id)->nombre}}
+            </div>
           </td>
 
           <td>
@@ -150,49 +155,57 @@
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
               <label id="label_rfc" for="first_name" class="block text-sm font-medium text-gray-700">RFC *</label>
-              <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" minlength="12" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" minlength="12" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('rfc') }}">
               <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresar al menos un RFC generico con 12 caracteres</label>
-              <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
+              
             </div>
             <div class="col-span-6 sm:col-span-3">
               <label id="label_tipo_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Tipo de contribuyente:</label>
-              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
+              <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" readonly value="{{ old('tipo_rfc') }}">
               
             </div>
             <div class="col-span-8">
-              <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Nombre *</label>
-              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="150" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <label id="label_razon_social" for="razon_social" class="block text-sm font-medium text-gray-700">Razón social *</label>
+              <input type="text" name="razon_social" id="razon_social" placeholder="Materiales para construcción S.A. de C.V." maxlength="150" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('razon_social') }}">
               <label id="error_razon_social" name="error_razon_social" class="hidden text-base font-normal text-red-500" >Por favor ingresar una razón social</label>
             </div>
             <div class="col-span-8 " id="div_representante_legal">
-              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
-              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
+              <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('representante_legal') }}">
               <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresar un representante legal</label>
             </div>
             <div class="col-span-8">
                 <label id="label_domicilio" for="domicilio" class="block text-sm font-medium text-gray-700">Domicilio *</label>
-                <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="text" name="domicilio" id="domicilio" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('domicilio') }}">
                 <label id="error_domicilio" name="error_domicilio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un domicilio</label>
               </div>
             <div class="col-span-8">
-                <label id="label_telefon" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
-                <input type="text" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                
+                <label id="label_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono </label>
+                <input type="text" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');"  class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('telefono') }}">
+                <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Ingresar un minimo de 10 digitos</label>
               </div>
             <div class="col-span-8">
                 <label id="label_corre" for="correo" class="block text-sm font-medium text-gray-700" >Correo </label>
-                <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('correo') }}">
                 <label id="aviso_correo" name="aviso_correo" class="hidden text-base font-normal text-red-500" >Por favor ingresa un correo válido</label>
               </div>
             <div class="col-span-8">
                 <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
-                <input type="number" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="number" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ old('numero_padron_contratista') }}">
                 <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Por favor ingresar un numero de padron</label>
             </div>
-          </div>
 
-        
-        
+            <div class="col-span-8">
+              <label for="country" class="block text-sm font-medium text-gray-700">Municipio *</label>
+              <select id="municipio_id" name="municipio_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-800 focus:border-blue-800 sm:text-sm">
+                @foreach($municipios as $municipio)
+                  <option value="{{ $municipio->id_municipio}}" {{ ($municipio->id_municipio == old('municipio_id')) ? 'selected' : '' }}>{{ $municipio->nombre }}</option>
+                @endforeach
+              </select>
+            </div>
+            
+          </div>
+          <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC y municipio asociado</label>        
       </div>
       <!--footer-->
       <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
@@ -226,15 +239,26 @@
     )
   </script>
 @endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este contratista tiene relación con otro registro.<br> No es posible eliminarlo.'
+      
+    });
+  </script>
+@endif
 
 <script>
   $(".form-eliminar").submit(function(e){ //mensaje advertencia de eliminacion
     e.preventDefault();
     Swal.fire({
       customClass: {
-  title: 'swal_title_modificado',
-  cancelButton: 'swal_button_cancel_modificado'
-},
+        title: 'swal_title_modificado',
+        cancelButton: 'swal_button_cancel_modificado'
+      },
   title: '¿Seguro que desea eliminar este contratista?',
   text: "¡Aviso, esta acción es irreversible!",
   icon: 'warning',
@@ -262,18 +286,19 @@
 //validacion de campos del modal
 $(document).ready(function() {
 
-  $('#rfc').on('keyup', function(){ //existe RFC
+  $('#municipio_id, #rfc').on('change keyup', function(){ //existe RFC
       rfc = $('#rfc').val();
+      municipio = $('#municipio_id').val();
       //console.log(rfc.length);
       if(rfc.length >= 12){
-        var link = '{{ url("/contratistaRfc")}}/'+rfc;
+        var link = '{{ url("/contratistaRfc")}}/'+rfc+','+municipio;
         $.ajax({
               url: link,
               dataType:'json',
               type:'get',
               success: function(data){
                 //console.log(data);
-                if(data== 1){
+                if(data.length>0){
                   $('#error_existe').removeClass('hidden');
                   $('#guardar').attr("disabled", true);
                   $("#guardar").removeClass('bg-green-500');
@@ -293,40 +318,60 @@ $(document).ready(function() {
 
    $("#modal-id input").keyup(function() {
 
-    if($('#rfc').val().length <= 12){ //validacion de rfc y representante legal
-        $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Moral');
-        $('#div_representante_legal').removeClass('hidden');
-        $('#label_razon_social').empty();
-        $('#label_razon_social').text('Nombre *');
-        $('#error_razon_social').empty();
-        $('#error_razon_social').text('Por favor ingresar un nombre');
-        //$('#representante_legal').removeClass('hidden');
-     }else{
-        $("#tipo_rfc").empty();
-        $('#tipo_rfc').val('Persona Física');
-        $('#div_representante_legal').addClass('hidden');
-        $('#label_razon_social').empty();
-        $('#label_razon_social').text('Razón social *');
-        $('#error_razon_social').empty();
-        $('#error_razon_social').text('Por favor ingresar una razón social');
-       //$('#representante_legal').addClass('hidden');
-     }
+        var vacio = $(this).val();
+        
+        if(vacio != ''){
+        $('#error_'+$(this).attr('id')).addClass('hidden');
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+        //$('#guardar').removeAttr("disabled");
+        }
+        else{
+        //$("#guardar").attr("disabled", true);
+        $('#error_'+$(this).attr('id')).removeClass('hidden');
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        }
 
-      var monto = $(this).val();
-      
-      if(monto != ''){
-      $('#error_'+$(this).attr('id')).addClass('hidden');
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
-      //$('#guardar').removeAttr("disabled");
-      }
-      else{
-      //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).removeClass('hidden');
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
-      }
+        if($(this).attr('id') == 'rfc'){
+          rfc = $('#rfc').val();
+          if(rfc.length == 12){ // > 12
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Moral');
+              $('#div_representante_legal').removeClass('hidden');
+              $('#representante_legal').attr('required',true);
+              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Razón social *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar una razón social');
+              
+            }else if(rfc.length == 13){
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Física');
+              $('#div_representante_legal').addClass('hidden');
+              $('#representante_legal').removeAttr('required');
+              $('#razon_social').attr("placeholder",'Juan N.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Nombre *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar un nombre');
+              
+            }
+        }
+        
+
+        if($(this).attr('id') == 'telefono'){
+             telefono = $(this).val();
+             telefono= telefono.slice(0,10);
+         if($(this).val().length>13){
+             $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+           }
+          else{
+            $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
+          }
+     }
+     
 
       if($(this).attr('id')=='correo' && $(this).val() != ''){
         correo= $(this).val();
@@ -345,37 +390,28 @@ $(document).ready(function() {
     
     });
 
-    $("input[name='telefono']").keyup(function() { //validacion de telefono
-      if($(this).val()>10){
-          telefono = $(this).val();
-          telefono= telefono.slice(0,10);
-          $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
-        }
-        else{
-          $(this).val($(this).val().replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
-        }
-      });
+    
 });
 
-  //validacion del formulario con el btn guardar
-$().ready(function() {
+ //validacion del formulario con el btn guardar
+ $().ready(function() {
   $("#formulario").validate({
     onfocusout: false,
     onclick: false,
 		rules: {
 			'rfc': { required: true, minlength: 12, maxlength: 13},
       razon_social: { required: true},
-      
       domicilio: { required: true},
-      
-      
-      numero_padron_contratista:{ required: true}
+      telefono:{  minlength: 13, maxlength: 13},
+      numero_padron_contratista:{ required: true},
+      municipio_id: { required: true }
+
 		},
     errorPlacement: function(error, element) {
       if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
+        $('#error_'+element.attr('id')).fadeIn();
       }else{
-      $('#error_'+element.attr('id')).fadeOut();
+        $('#error_'+element.attr('id')).fadeOut();
       }
      
     },

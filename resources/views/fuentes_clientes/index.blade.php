@@ -27,29 +27,7 @@
   </div>
 </div>
 
-<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
-  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
-    <span class="text-yellow-500">
-      <svg fill="currentColor"
-         viewBox="0 0 20 20"
-         class="h-5 w-5">
-        <path fill-rule="evenodd"
-            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-            clip-rule="evenodd"></path>
-      </svg>
-    </span>
-  </div>
 
-  <div class="alert-content ml-4">
-    <div class="alert-title font-semibold text-lg text-yellow-800">
-      Aviso
-    </div>
-    <div class="alert-description text-sm text-yellow-600">
-      los registros agregados <strong>NO</strong> podran ser eliminados, debido al nivel de importancia con otras tablas.
-    </div>
-  </div>
-  
-</div>
 
 @if ($errors->any())
         <div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
@@ -315,7 +293,7 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="5" placeholder="0.0" readonly>
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0" readonly>
               </div>
               <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>  
                 

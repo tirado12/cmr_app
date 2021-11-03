@@ -1,12 +1,14 @@
 @extends('layouts.plantilla')
 @section('title','Cabildo')
 @section('contenido')
+<meta charset = "UTF-8" />
         <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
         <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style_alert.css') }}">
-        <!--Responsive Extension Datatables CSS-->
-        <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+        
+           <!--Responsive Extension Datatables CSS-->
+           <link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+           <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
         
 <div class="flex flex-row">
   <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -52,18 +54,17 @@
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
 
-<table id="example" class="table table-striped bg-white" style="width:100%;">
+<table id="example" class="table table-striped bg-white" style="width: 100%"> <!-- width: 100%; -->
   <thead>
       <tr>
-          
           <th>Nombre</th>
           <th>Cargo</th>
-          <th>Telefono</th>
-          <th>Correo</th>
-          <th>Municipio</th>
-          <th>Ejercicio</th>
-          <th class="flex justify-center">Acción</th>
           
+          <th>Representante legal</th>
+          
+          <th>Municipio</th>
+          <th>Periodo</th>
+          <th class="flex justify-center">Acción</th>
       </tr>
   </thead>
   <tbody> 
@@ -83,22 +84,18 @@
             </div>
             
           </td>
+          
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $integrante->telefono }}
+            {{ $integrante->representante_legal }}
             </div>
             
           </td>
-          <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $integrante->correo }}
-            </div>
-            
-          </td>
+          
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
             @foreach($clientes as $cliente)
-              {{ ($cliente->municipio_id == $integrante->municipio_id ) ? $cliente->nombre : ''}}
+              {{$nombre_municipio= ($cliente->municipio_id == $integrante->municipio_id ) ? $cliente->nombre : ''}}
             </div>
             @endforeach
           </td>
@@ -113,7 +110,9 @@
             <form action="{{ route('cabildo.destroy', $integrante->id_integrante) }}" method="POST" class="form-eliminar" >
               <div>
               <a type="button"  href="{{ route('cabildo.edit', $integrante)}}" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
-              
+              <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150"  type="button" onclick="toggleModal1('modal-cliente', {{$integrante}}, '{{ $nombre_municipio }}')">
+                Detalles
+              </button>
               @csrf
               @method('DELETE')
           <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
@@ -133,6 +132,7 @@
       </tr>
   </tfoot>-->
 </table>
+
 </div>
 
 <!-- inicio modal -->
@@ -180,28 +180,33 @@
 
               <div class="col-span-8 ">
                 <label id="label_nombre" for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Nombre" maxlength="50" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required >
+                <input type="text" name="nombre" id="nombre" placeholder="Nombre" maxlength="50" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required />
                 <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Por favor ingresa un nombre</label>
               </div>
               <div class="col-span-8">
                 <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="12" >
+                <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="12" required />
                 <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresa al menos un RFC generico con 12 caracteres</label>
                 <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
               </div>
               <div class="col-span-8">
+                <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
+                <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required />
+                <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresa un representante legal</label>
+              </div>
+              <div class="col-span-8">
                 <label id="label_cargo" for="cargo" class="block text-sm font-medium text-gray-700">Cargo *</label>
-                <input type="text" name="cargo" id="cargo" placeholder="Presidente" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required>
+                <input type="text" name="cargo" id="cargo" placeholder="Presidente" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required />
                 <label id="error_cargo" name="error_cargo" class="hidden text-base font-normal text-red-500" >Por favor ingresa un cargo</label>
               </div>
               <div class="col-span-8">
                   <label id="eti_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
-                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13">   
+                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" />   
               </div>
               
               <div class="col-span-8">
                   <label id="label_corre" for="correo" class="block text-sm font-medium text-gray-700">Correo </label>
-                  <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                  <input type="email" name="correo" id="correo" placeholder="usuario@ejemplo.com" maxlength="30" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" />
                   <label id="aviso_correo" name="aviso_correo" class="hidden text-base font-normal text-red-500" >Por favor ingresa un correo válido</label>
                 </div>
               <div class="col-span-8" >
@@ -215,16 +220,16 @@
                 <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
               </div>
               <div class="col-span-8" >
-                <label id="label_cliente" for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo *</label>
+                <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo *</label>
                 <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required="">
                     <option value="">Elija un cliente</option>
                     
                 </select>
-                <label id="error_cliente" name="error_cliente" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+                <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
                 <input type="text" id="cliente" name="cliente" class="hidden">
               </div>
             </div>
-          
+            
         </div>
         <!--footer-->
         <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
@@ -242,12 +247,87 @@
         </form>
       </div>
     </div>
+</div>
+
+  <!-- inicio modal -->
+<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-cliente">
+  <div class="relative w-auto my-6 mx-auto max-w-3xl">
+    <!--content-->
+    <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+      <!--header-->
+      <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+        <h4 class="text-xl font-semibold">
+          Datos del integrante
+        </h4>
+        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal1('modal-cliente') ">
+          <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
+            ×
+          </span>
+        </button>
+      </div>
+      <!--body-->
+
+      <div class="relative p-6 flex-auto">
+
+
+          <div class="grid grid-cols-8 ">
+
+
+            <div class="grid col-span-4 gap-4">
+              <div class="col-span-8 ">
+                <label for="first_name" class="text-base font-medium text-gray-700">Nombre de integrante: </label>
+                <label id="detalle_nombre" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8 ">
+                <label for="rfc" class="text-base font-medium text-gray-700">RFC: </label>
+                <label id="detalle_rfc" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="cargo" class=" text-base font-medium text-gray-700">Cargo: </label>
+                <label id="detalles_cargo" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="telefono" class=" text-base font-medium text-gray-700">Telefono: </label>
+                <label id="detalle_telefono" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="correo" class=" text-base font-medium text-gray-700">Correo: </label>
+                <label id="detalle_correo" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="representante_legal" class=" text-base font-medium text-gray-700">Representante legal: </label>
+                
+                <label id="detalle_representante_legal" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="detalles_municipio" class="text-base font-medium text-gray-700">Municipio: </label>
+                <label id="detalles_municipio" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="detalles_periodo" class="text-base font-medium text-gray-700">Periodo: </label>
+                <label id="detalles_periodo" class="text-base font-bold text-gray-900"></label>
+              </div>
+            </div>
+            
+
+
+
+          </div>
+
+      </div>
+      <!--footer-->
+    </div>
   </div>
+</div>
   
 
 <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
+<div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-cliente-backdrop"></div>
+
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script> 
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
 
 
@@ -306,39 +386,61 @@
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
 
+
+  function toggleModal1(modalID, integrante, nombre_municipio){ //mostrar y ocultar modal detalles
+    if(integrante != null){
+      $('#detalle_nombre').text(integrante.nombre);
+      $('#detalle_rfc').text(integrante.rfc);
+      $('#detalles_cargo').text(integrante.cargo);
+      if(integrante.telefono != null)
+        $('#detalle_telefono').text(integrante.telefono);
+      else
+        $('#detalle_telefono').text('-');
+      if(integrante.telefono != null)
+        $('#detalle_correo').text(integrante.correo);
+      else
+        $('#detalle_correo').text('-');
+      $('#detalle_representante_legal').text(integrante.representante_legal);
+      $('#detalles_municipio').text(nombre_municipio);
+      $('#detalles_periodo').text(integrante.anio_inicio + ' - '+ integrante.anio_fin);
+    }
+    document.getElementById(modalID).classList.toggle("hidden");
+    document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
+  }
+
 //validacion de campos del modal
 $(document).ready(function() {
 
-  $('#rfc').on('keyup', function(){ //validacion si existe RFC
-      rfc = $('#rfc').val();
-      //console.log(rfc.length);
-      if(rfc.length >= 12){
-        var link = '{{ url("/cabildoRfc")}}/'+rfc;
-        $.ajax({
-              url: link,
-              dataType:'json',
-              type:'get',
-              success: function(data){
-                //console.log(data);
-                if(data== 1){
-                  $('#error_existe').removeClass('hidden');
-                  $('#guardar').attr("disabled", true);
-                  $("#guardar").removeClass('bg-green-500');
-                  $("#guardar").addClass('bg-gray-700');
-                }else{
-                  $('#error_existe').addClass('hidden');
-                  $('#guardar').removeAttr("disabled");
-                  $("#guardar").removeClass('bg-gray-700');
-                  $("#guardar").addClass('bg-green-500');
-                }
-              },
-              cache: false
-            });
-      }
+  // $('#rfc').on('keyup', function(){ //validacion si existe RFC
+  //     rfc = $('#rfc').val();
+  //     //console.log(rfc.length);
+  //     if(rfc.length >= 12){
+  //       var link = '{{ url("/cabildoRfc")}}/'+rfc;
+  //       $.ajax({
+  //             url: link,
+  //             dataType:'json',
+  //             type:'get',
+  //             success: function(data){
+  //               //console.log(data);
+  //               if(data== 1){
+  //                 $('#error_existe').removeClass('hidden');
+  //                 $('#guardar').attr("disabled", true);
+  //                 $("#guardar").removeClass('bg-green-500');
+  //                 $("#guardar").addClass('bg-gray-700');
+  //               }else{
+  //                 $('#error_existe').addClass('hidden');
+  //                 $('#guardar').removeAttr("disabled");
+  //                 $("#guardar").removeClass('bg-gray-700');
+  //                 $("#guardar").addClass('bg-green-500');
+  //               }
+  //             },
+  //             cache: false
+  //           });
+  //     }
 
-    });
+  //   });
 //============================================
-  $('#municipio').on('keyup change', function(){ //ejercicio select
+  $('#municipio').on('keyup change', function(){ //ejercicio select -
       municipio = $('#municipio').val();
 
       if(municipio.length!=0){
@@ -363,7 +465,7 @@ $(document).ready(function() {
 
   });
 //===========================================
-$('#ejercicio').on('change', function(){
+$('#ejercicio').on('change', function(){ //se asigna el valor del id cliente desde el select dinamico ejercicio
   
   $('#cliente').val($('#ejercicio').val());
 });
@@ -371,6 +473,7 @@ $('#ejercicio').on('change', function(){
 //===========================================
    $("#modal-id input").keyup(function() {  //mensajes de los campos
       var monto = $(this).val();
+      //console.log(monto);
       if(monto != ''){
       $('#error_'+$(this).attr('id')).addClass('hidden');
       $("#label_"+$(this).attr('id')).removeClass('text-red-500');
@@ -433,14 +536,19 @@ $().ready(function() {
     onclick: false,
 		rules: {
       nombre: { required: true },
-			rfc: { required: true, minlength: 5, maxLength: 13 },
+			rfc: { required: true, minlength: 5, maxlength: 12},
+      representante_legal: { required: true },
       cargo: { required: true },
-      cliente: { required: true },
+      municipio: { required: true },
+      ejercicio: { required: true },
+      //cliente: { required: true },
 		},
     errorPlacement: function(error, element) {
       if(error != null){
+        console.log('a');
       $('#error_'+element.attr('id')).fadeIn();
       }else{
+        console.log('b');
       $('#error_'+element.attr('id')).fadeOut();
       }
      

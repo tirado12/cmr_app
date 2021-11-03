@@ -16,6 +16,7 @@ class Proveedor extends Model
         'rfc',
         'tipo_rfc',
         'razon_social',
-        'representante_legal'
+        'representante_legal',
+        'municipio_id'
     ];
 }

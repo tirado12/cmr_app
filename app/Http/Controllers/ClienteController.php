@@ -186,7 +186,7 @@ class ClienteController extends Controller
     //============================= funciones ajax ============================
 
     public function clienteXejercicio($id_municipio){
-        $disponibles = Cliente::where('municipio_id',$id_municipio)->select('id_cliente','anio_inicio','anio_fin')->get();
+        $disponibles = Cliente::where('municipio_id',$id_municipio)->select('id_cliente','anio_inicio','anio_fin','municipio_id')->get();
         return $disponibles;
     }
 

@@ -73,16 +73,22 @@
                     <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 5 caracteres</label>
                     <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
                   </div>
-                
+
                   <div class="col-span-6 sm:col-span-3">
-                    <label for="ejercicio_actual" class="block text-sm font-medium text-gray-700">Ejercicio Actual </label>
-                    <input type="text" name="ejercicio_actual" id="ejercicio_actual" placeholder="" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipioCliente->anio_inicio.' - '. $municipioCliente->anio_fin }}" disabled>
+                    <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
+                    <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->representante_legal }}" required />
+                    <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresa un representante legal</label>
                   </div>
+                
+                 <!--<div class="col-span-6 sm:col-span-3">
+                    <label for="ejercicio_actual" class="block text-sm font-medium text-gray-700">Periodo Actual </label>
+                    <input type="text" name="ejercicio_actual" id="ejercicio_actual" placeholder="" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipioCliente->anio_inicio.' - '. $municipioCliente->anio_fin }}" disabled>
+                  </div> -->
 
                 <div class="col-span-6 sm:col-span-3">
                   <label for="municipio" class="block text-sm font-medium text-gray-700">Cliente </label>
                   <select id="municipio" name="municipio" onchange="validarMunicipio()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <option value="">Elija una opción</option>
+                    
                     @foreach($clientes as $cliente)
                     <option value="{{ $cliente->municipio_id }}" {{ ($cliente->municipio_id == $municipioCliente->municipio_id) ? 'selected' : '' }}> {{ $cliente->nombre }}</option>
                     @endforeach
@@ -93,7 +99,7 @@
                 <div class="col-span-6 sm:col-span-3">
                   <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio </label>
                   <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
-                      <option value="" >Elija una cliente</option>
+                      
                       
                   </select>
                 <label id="error_cliente" name="error_cliente" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
@@ -143,36 +149,44 @@ function validarMunicipio() { //validacion para elegir una opcion
 $(document).ready(function() {
 
   window.onload = function(){ //al terminar de cargar la pagina se rellena el select ejercicio con el municipio seleccionado
-  var municipio = $('#municipio').val();
-  var link = '{{ url("/clienteEjercicio")}}/'+municipio;
-  obtenerEjercicios(link);
+  //var municipio = $('#municipio').val();
+  var municipio = '{{ $municipioCliente->municipio_id }}';
+  //var link = '{{ url("/clienteEjercicio")}}/'+integrante+','+municipio;
+  obtenerEjercicios() ;
+    console.log('aja ' + municipio)
   }
 
   $('#municipio').on('keyup change', function(){ //ejercicio select
       municipio = $('#municipio').val();
-      $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-      $("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+      var integrante = '{{ $integrante->id_integrante }}';
+        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+        $("#ejercicio").append('<option value="">Elija un ejercicio</option>');
       if(municipio.length!=0){
-      
-         link = '{{ url("/clienteEjercicio")}}/'+municipio;
-        obtenerEjercicios(link);
+        link = '{{ url("/ejerciciosCabildo") }} /'+integrante+','+municipio;
+         //obtenerEjercicios(link);
       }else{
         $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-      $("#ejercicio").append('<option value="">Elija un cliente</option>');
+        $("#ejercicio").append('<option value="">Elija un cliente</option>');
       }
 
     });
 //===================================================
-    function obtenerEjercicios(link){ //funcion ajax 
-      $.ajax({
+    function obtenerEjercicios(){ //funcion ajax 
+      var cliente = '{{ $integrante->cliente_id }}';
+      var municipio = '{{ $municipioCliente->municipio_id }}';
+      var link = '{{ url("/ejerciciosIntegrantes") }}/'+municipio;
+        $.ajax({
               url: link,
               dataType:'json',
-              type:'get',
+              type:'GET',
               success: function(data){
-                $.each(data,function(key, item) { //llenado del select ejercicio
-                console.log(item.id_cliente);
-                $("#ejercicio").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
-                });
+                console.log(data);
+                 $.each(data,function(key, item) { //llenado del select ejercicio
+                  if(cliente == item.id_cliente)
+                   $("#ejercicio").append('<option value='+item.id_cliente+' selected >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                  else
+                  $("#ejercicio").append('<option value='+item.id_cliente+' >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                 });
               },
               cache: false
             });
@@ -223,6 +237,7 @@ $().ready(function() {
       nombre: { required: true},
 			cargo: { required: true},
       rfc: { required: true, minlength: 5, maxlength: 13},
+      representante_legal : { required: true }, 
       municipio: { required: true},
       
 		},

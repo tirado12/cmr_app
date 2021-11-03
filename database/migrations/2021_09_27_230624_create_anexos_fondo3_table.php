@@ -21,7 +21,7 @@ class CreateAnexosFondo3Table extends Migration
             $table->boolean('prodim')->nullable();
             $table->boolean('gastos_indirectos')->nullable();
             $table->unsignedBigInteger('fuente_financiamiento_cliente_id')->nullable();
-            $table->foreign('fuente_financiamiento_cliente_id')->references('id_fuente_financ_cliente')->on('fuentes_clientes')->onDelete('cascade');
+            $table->foreign('fuente_financiamiento_cliente_id')->references('id_fuente_financ_cliente')->on('fuentes_clientes')->onDelete('restrict');
             $table->timestamps();
         });
     }

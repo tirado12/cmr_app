@@ -54,6 +54,7 @@ class IntegrantesCabildoController extends Controller
             'nombre' => 'required',
             'cargo' => 'required',
             'rfc' => 'required|unique:integrantes_cabildo,rfc',
+            'representante_legal' => 'required',
             'cliente' => 'required'
         ]);
         IntegrantesCabildo::create([
@@ -62,6 +63,7 @@ class IntegrantesCabildoController extends Controller
             'telefono' => $request->telefono,
             'correo' => $request->correo,
             'rfc' => $request->rfc,
+            'representante_legal' => $request->representante_legal,
             'cliente_id' => $request->cliente
         ]);
         return redirect()->route('cabildo.index');
@@ -95,7 +97,11 @@ class IntegrantesCabildoController extends Controller
         $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
         $clientes =  $result->unique('municipio_id');
         //return $clientes;
-        
+        //$disponibles = IntegrantesCabildo::join('clientes','id_cliente','cliente_id')
+        //->where('id_integrante', $integrante->id_integrante)
+        //->select('id_integrante','id_cliente','anio_inicio','anio_fin','municipio_id')
+        //->first();
+        //return $municipioCliente;
        return view('cabildo.edit',compact('integrante','clientes','municipioCliente'));
         
     }
@@ -114,6 +120,7 @@ class IntegrantesCabildoController extends Controller
             'nombre' => 'required',
             'cargo' => 'required',
             'rfc' => ['required',Rule::unique('integrantes_cabildo')->ignore($integrante)],
+            'representante_legal' => 'required',
             'cliente_id' => 'required'
         ]);
         $integrante->update($request->all());
@@ -134,11 +141,20 @@ class IntegrantesCabildoController extends Controller
 
     //===============================================================
 
-    public function existeRfc($rfc){
-        $existe = IntegrantesCabildo::where('rfc',$rfc)->exists();
-        if ($existe == null)
-        return 0;
-        else
-        return $existe;
+    // public function existeRfc($rfc){
+    //     $existe = IntegrantesCabildo::where('rfc',$rfc)->exists();
+    //     if ($existe == null)
+    //     return 0;
+    //     else
+    //     return $existe;
+    // }
+
+
+    public function ejerciciosCabildo($municipio){
+        $result= Cliente::join('municipios', 'id_municipio','municipio_id')->select('id_cliente','municipio_id','anio_inicio','anio_fin')
+        //->join('integrantes_cabildo','id_cliente','cliente_id')}
+        ->where('id_municipio',$municipio)
+        ->get();
+        return $result;
     }
 }

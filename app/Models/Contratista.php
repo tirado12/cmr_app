@@ -20,6 +20,7 @@ class Contratista extends Model
         'domicilio',
         'telefono',
         'correo',
-        'numero_padron_contratista'
+        'numero_padron_contratista',
+        'municipio_id'
     ];
 }

@@ -47,7 +47,7 @@
                   <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
                   <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength = "13" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->rfc }}">
                   <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Se requiere al menos un RFC generico de 12 caracteres</label>
-                  <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
+                  
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -63,7 +63,7 @@
                 </div>
                 
                 <div class="col-span-6 sm:col-span-3" id="div_representante_legal">
-                    <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal </label>
+                    <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
                     <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->representante_legal }}">
                     <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Se requiere un representante legal</label>
                 </div>
@@ -76,7 +76,7 @@
                 <div class="col-span-6 sm:col-span-3">
                     <label id="etiqueta_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
                     <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->telefono }}">
-                    
+                    <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Ingresar un minimo de 10 digitos</label>
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="etiqueta_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo </label>
@@ -87,10 +87,18 @@
                     <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Numero de padron *</label>
                     <input type="number" name="numero_padron_contratista" id="numero_padron_contratista" placeholder="100" maxlength = "15" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->numero_padron_contratista }}">
                     <label id="error_numero_padron_contratista" name="error_numero_padron_contratista" class="hidden text-base font-normal text-red-500" >Se requiere un numero de padron</label>
-                  </div>
+                </div>
+                <div class="col-span-6 sm:col-span-3">
+                  <label id="label_numero_padron_contratista" for="numero_padron_contratista" class="block text-sm font-medium text-gray-700">Municipio *</label>
+                  <select id="municipio_id" name="municipio_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-800 focus:border-blue-800 sm:text-sm" >
+                    @foreach($municipios as $municipio)
+                      <option value="{{ $municipio->id_municipio }}" {{ ($municipio->id_municipio == $contratista->municipio_id) ? 'selected' : '' }}> {{ $municipio->nombre }}</option>
+                    @endforeach
+                  </select>
+                </div>
 
-                
               </div>
+              <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC y municipio asociado</label>        
             </div>
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
               <span class="block text-xs">Porfavor verifique que todos los campos marcados con ( * ) esten rellenados</span>
@@ -116,42 +124,98 @@
   
   //validacion de campos 
   $(document).ready(function() {
-    var tipo_contribuyente = '{{ $contratista->tipo_rfc }}';
-    /*$('#rfc').on('keyup', function(){ //existe RFC
+    var contratista = '{{ $contratista->id_contratista }}';
+    $('#municipio_id, #rfc').on('change keyup', function(){ //existe RFC
       rfc = $('#rfc').val();
-      
+      municipio = $('#municipio_id').val();
       if(rfc.length >= 12){
-        var link = '{{ url("/contratistaRfc")}}/'+rfc;
+        var link = '{{ url("/contratistaRfc")}}/'+rfc+','+municipio;
         $.ajax({
               url: link,
               dataType:'json',
               type:'get',
               success: function(data){
                 //console.log(data);
-                if(data== 1){
-                  $('#error_existe').removeClass('hidden');
-                  $('#guardar').attr("disabled", true);
-                  $("#guardar").removeClass('bg-orange-800');
-                  $("#guardar").addClass('bg-gray-700');
+                if(data.length>0){
+                  if(data[0].id_contratista != contratista){
+                      $('#error_existe').removeClass('hidden');
+                      $('#guardar').attr("disabled", true);
+                      $("#guardar").removeClass('bg-orange-800');
+                      $("#guardar").addClass('bg-gray-700');
+                  }else{
+                      $('#error_existe').addClass('hidden');
+                      $('#guardar').removeAttr("disabled");
+                      $("#guardar").removeClass('bg-gray-700');
+                      $("#guardar").addClass('bg-orange-800');
+                    }
                 }else{
-                  $('#error_existe').addClass('hidden');
-                  $('#guardar').removeAttr("disabled");
-                  $("#guardar").removeClass('bg-gray-700');
-                  $("#guardar").addClass('bg-orange-800');
+                      $('#error_existe').addClass('hidden');
+                      $('#guardar').removeAttr("disabled");
+                      $("#guardar").removeClass('bg-gray-700');
+                      $("#guardar").addClass('bg-orange-800');
                 }
+             
               },
               cache: false
             });
       }
 
-    });*/
-    var tipo=$('#rfc').val().length;
-    validar_tipo_rfc(tipo);
+    });
+
+    window.onload = function(){
+      rfc = $('#rfc').val();
+      if(rfc.length == 12){ // > 12
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Moral');
+              $('#div_representante_legal').removeClass('hidden');
+              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Razón social *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar una razón social');
+              
+            }else if(rfc.length == 13){
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Física');
+              $('#div_representante_legal').addClass('hidden');
+              $('#razon_social').attr("placeholder",'Nombre');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Nombre *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar un nombre');
+              
+            }
+    };
 
    $("#formulario input").keyup(function() {
 
-    validar_tipo_rfc($('#rfc').val().length);    
-    //console.log($(this).attr('id'));
+    if($(this).attr('id') == 'rfc'){
+      rfc = $('#rfc').val();
+      if(rfc.length == 12){ // > 12
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Moral');
+              $('#div_representante_legal').removeClass('hidden');
+              $('#representante_legal').attr('required',true);
+              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Razón social *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar una razón social');
+              
+            }else if(rfc.length == 13){
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Física');
+              $('#div_representante_legal').addClass('hidden');
+              $('#representante_legal').removeAttr('required');
+              $('#razon_social').attr("placeholder",'Nombre');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Nombre *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar un nombre');
+              
+            }
+    }
+
       var cadena = $(this).val();
       
       if(cadena != ''){
@@ -185,7 +249,7 @@
     });
 
     $("input[name='telefono']").keyup(function() { //validacion de telefono
-      if($(this).val()>10){
+      if($(this).val().length>13){
           telefono = $(this).val();
           telefono= telefono.slice(0,10);
           $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
@@ -196,23 +260,21 @@
       });
   });
 
-  function validar_tipo_rfc($tipo){
+//   function validar_tipo_rfc($tipo){
+//     if($tipo<=12){
+//       $("#tipo_rfc").empty();
+//       $('#tipo_rfc').val('Persona Moral');
+//       $('#div_representante_legal').removeClass('hidden');
+//     }else{
+//       $("#tipo_rfc").empty();
+//       $('#tipo_rfc').val('Persona Física');
+//       $('#div_representante_legal').addClass('hidden');
+//     }
 
-    
-    if($tipo<=12){
-    $("#tipo_rfc").empty();
-      $('#tipo_rfc').val('Persona Moral');
-      $('#div_representante_legal').removeClass('hidden');
-    }else{
-    $("#tipo_rfc").empty();
-      $('#tipo_rfc').val('Persona Física');
-      $('#div_representante_legal').addClass('hidden');
-    }
-
-}
+// }
 
 //validacion del formulario con el btn guardar
-  $().ready(function() {
+$().ready(function() {
     $("#formulario").validate({
       onfocusout: false,
       onclick: false,
@@ -220,6 +282,7 @@
         rfc: { required: true, minlength: 12, maxlength: 13},
         razon_social: { required: true},
         domicilio: { required: true},
+        telefono:{  minlength: 13, maxlength: 13},
         numero_padron_contratista: { required: true},
       },
       errorPlacement: function(error, element) {
