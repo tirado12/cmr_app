@@ -18,7 +18,9 @@ class ContratistaController extends Controller
     public function index()
     {
         $contratistas = Contratista::all();
-        $municipios= Municipio::select('id_municipio','nombre')->get();
+        $result= Municipio::join('clientes','id_municipio','municipio_id')->select('id_municipio','nombre')->get();
+        $municipios =  $result->unique('id_municipio');
+        //return $municipios;
         return view('contratistas.index', compact('contratistas','municipios'));
     }
 
@@ -97,7 +99,8 @@ class ContratistaController extends Controller
      */
     public function edit(Contratista $contratista)
     {
-            $municipios= Municipio::select('id_municipio','nombre')->get();
+        $result= Municipio::join('clientes','id_municipio','municipio_id')->select('id_municipio','nombre')->get();
+        $municipios =  $result->unique('id_municipio');
             return view('contratistas.edit',compact('contratista','municipios'));
     }
 
@@ -119,17 +122,16 @@ class ContratistaController extends Controller
             $request['representante_legal']='';
         }
         
-        
             $request->validate([
                 //'rfc' => ['required',Rule::unique('contratistas')->ignore($contratista)],
                 'rfc' => 'required',
                 'razon_social' => 'required',
                 'representante_legal' => 'nullable',
                 'domicilio' => 'required',
-                'numero_padron_contratista' => 'required' 
+                'numero_padron_contratista' => 'required',
+                'municipio_id' =>'required' 
             ]);
         
-
         $contratista->rfc = $request->rfc;
         $contratista->tipo_rfc = $tipo_rfc;
         $contratista->razon_social = $request->razon_social;
@@ -138,6 +140,7 @@ class ContratistaController extends Controller
         $contratista->telefono = $request->telefono;
         $contratista->correo = $request->correo;
         $contratista->numero_padron_contratista = $request->numero_padron_contratista;
+        $contratista->municipio_id = $request->municipio_id;
         $contratista->save();
 
         //$contratista->update($request->all());

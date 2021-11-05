@@ -60,7 +60,7 @@
           <th>Nombre</th>
           <th>Cargo</th>
           
-          <th>Representante legal</th>
+          
           
           <th>Municipio</th>
           <th>Periodo</th>
@@ -87,15 +87,12 @@
           
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-            {{ $integrante->representante_legal }}
-            </div>
-            
-          </td>
-          
-          <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
             @foreach($clientes as $cliente)
-              {{$nombre_municipio= ($cliente->municipio_id == $integrante->municipio_id ) ? $cliente->nombre : ''}}
+              @if($cliente->municipio_id == $integrante->municipio_id)
+                {{ $nombre_municipio= $cliente->nombre }}
+              @else
+                {{ '' }}
+              @endif
             </div>
             @endforeach
           </td>
@@ -168,7 +165,7 @@
               <i class="fas fa-bell"></i>
             </span>
             <span class="inline-block align-middle mr-8">
-              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por ejercicio antes 
+              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por periodo antes 
               <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
             </span>
             <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
@@ -185,15 +182,11 @@
               </div>
               <div class="col-span-8">
                 <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="12" required />
+                <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required />
                 <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresa al menos un RFC generico con 12 caracteres</label>
                 <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
               </div>
-              <div class="col-span-8">
-                <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
-                <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required />
-                <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresa un representante legal</label>
-              </div>
+
               <div class="col-span-8">
                 <label id="label_cargo" for="cargo" class="block text-sm font-medium text-gray-700">Cargo *</label>
                 <input type="text" name="cargo" id="cargo" placeholder="Presidente" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" required />
@@ -222,7 +215,7 @@
               <div class="col-span-8" >
                 <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo *</label>
                 <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required="">
-                    <option value="">Elija un cliente</option>
+                    <option value="">Elija primero un cliente</option>
                     
                 </select>
                 <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
@@ -268,11 +261,7 @@
       <!--body-->
 
       <div class="relative p-6 flex-auto">
-
-
           <div class="grid grid-cols-8 ">
-
-
             <div class="grid col-span-4 gap-4">
               <div class="col-span-8 ">
                 <label for="first_name" class="text-base font-medium text-gray-700">Nombre de integrante: </label>
@@ -294,11 +283,7 @@
                 <label for="correo" class=" text-base font-medium text-gray-700">Correo: </label>
                 <label id="detalle_correo" class="text-base font-bold text-gray-900"></label>
               </div>
-              <div class="col-span-8">
-                <label for="representante_legal" class=" text-base font-medium text-gray-700">Representante legal: </label>
-                
-                <label id="detalle_representante_legal" class="text-base font-bold text-gray-900"></label>
-              </div>
+              
               <div class="col-span-8">
                 <label for="detalles_municipio" class="text-base font-medium text-gray-700">Municipio: </label>
                 <label id="detalles_municipio" class="text-base font-bold text-gray-900"></label>
@@ -308,12 +293,8 @@
                 <label id="detalles_periodo" class="text-base font-bold text-gray-900"></label>
               </div>
             </div>
-            
-
-
 
           </div>
-
       </div>
       <!--footer-->
     </div>
@@ -341,9 +322,7 @@
   }
 </script>
 
-
-
-<!--Alerta de confirmacion-->
+<!--Alerta de eliminacion correcta-->
 @if(session('eliminar')=='ok')
   <script>
     Swal.fire( //metodo para llamar el mensaje despues de eliminar dato
@@ -353,40 +332,37 @@
     )
   </script>
 @endif
-
+<!--Alerta de pregunta y confirmacion-->
 <script>
-  $(".form-eliminar").submit(function(e){ //propiedades mensaje de confirmacion de eliminar 
+ $(".form-eliminar").submit(function(e){ //propiedades mensaje de confirmacion de eliminar 
     e.preventDefault();
     Swal.fire({
       customClass: {
-  title: 'swal_title_modificado',
-  cancelButton: 'swal_button_cancel_modificado'
-},
-  title: '¿Seguro que desea eliminar este integrante?',
-  text: "¡Aviso, esta acción es irreversible!",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonColor: '#10b981',
-  cancelButtonColor: '#d33',
-  confirmButtonText: 'Borrar',
-  cancelButtonText: 'Cancelar'
-}).then((result) => {
-  if (result.isConfirmed) {
-    this.submit();
-  }
-})
-  });
- /* */
+        title: 'swal_title_modificado',
+        cancelButton: 'swal_button_cancel_modificado'
+      },
+      title: '¿Seguro que desea eliminar este integrante?',
+      text: "¡Aviso, esta acción es irreversible!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Borrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    })
+});
 </script>
-
 
 <script type="text/javascript">
   function toggleModal(modalID){ //mostrar y ocultar modal
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
-
-
+//======================================================
   function toggleModal1(modalID, integrante, nombre_municipio){ //mostrar y ocultar modal detalles
     if(integrante != null){
       $('#detalle_nombre').text(integrante.nombre);
@@ -396,7 +372,7 @@
         $('#detalle_telefono').text(integrante.telefono);
       else
         $('#detalle_telefono').text('-');
-      if(integrante.telefono != null)
+      if(integrante.correo != null)
         $('#detalle_correo').text(integrante.correo);
       else
         $('#detalle_correo').text('-');
@@ -407,45 +383,14 @@
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
-
+//======================================================
 //validacion de campos del modal
 $(document).ready(function() {
-
-  // $('#rfc').on('keyup', function(){ //validacion si existe RFC
-  //     rfc = $('#rfc').val();
-  //     //console.log(rfc.length);
-  //     if(rfc.length >= 12){
-  //       var link = '{{ url("/cabildoRfc")}}/'+rfc;
-  //       $.ajax({
-  //             url: link,
-  //             dataType:'json',
-  //             type:'get',
-  //             success: function(data){
-  //               //console.log(data);
-  //               if(data== 1){
-  //                 $('#error_existe').removeClass('hidden');
-  //                 $('#guardar').attr("disabled", true);
-  //                 $("#guardar").removeClass('bg-green-500');
-  //                 $("#guardar").addClass('bg-gray-700');
-  //               }else{
-  //                 $('#error_existe').addClass('hidden');
-  //                 $('#guardar').removeAttr("disabled");
-  //                 $("#guardar").removeClass('bg-gray-700');
-  //                 $("#guardar").addClass('bg-green-500');
-  //               }
-  //             },
-  //             cache: false
-  //           });
-  //     }
-
-  //   });
-//============================================
   $('#municipio').on('keyup change', function(){ //ejercicio select -
       municipio = $('#municipio').val();
-
       if(municipio.length!=0){
-      $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-      $("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+        $("#ejercicio").append('<option value="">Elija un periodo</option>');
         var link = '{{ url("/clienteEjercicio")}}/'+municipio;
         $.ajax({
               url: link,
@@ -453,59 +398,60 @@ $(document).ready(function() {
               type:'get',
               success: function(data){
                 $.each(data,function(key, item) { //llenado del select ejercicio
-                $("#ejercicio").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                  $("#ejercicio").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
                 });
               },
               cache: false
             });
       }else{
         $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-        $("#ejercicio").append('<option value="">Elija un cliente</option>');
+        $("#ejercicio").append('<option value="">Elija primero un cliente</option>');
       }
 
   });
 //===========================================
 $('#ejercicio').on('change', function(){ //se asigna el valor del id cliente desde el select dinamico ejercicio
-  
   $('#cliente').val($('#ejercicio').val());
 });
-
 //===========================================
-   $("#modal-id input").keyup(function() {  //mensajes de los campos
-      var monto = $(this).val();
-      //console.log(monto);
-      if(monto != ''){
-      $('#error_'+$(this).attr('id')).addClass('hidden');
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
-      //$('#guardar').removeAttr("disabled");
+   $("#modal-id input").keyup(function() {  //mensajes de los campos vacios
+      var cadena = $(this).val();
+      if(cadena != ''){
+        $('#error_'+$(this).attr('id')).addClass('hidden');
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       }
       else{
-      $('#error_'+$(this).attr('id')).removeClass('hidden');
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).removeClass('hidden');
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
       }
     
-      if($(this).attr('id')=='correo' && $(this).val() != ''){
+      if($(this).attr('id')=='correo' && $(this).val() != ''){ //formato de correo
         correo= $(this).val();
         var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-        //console.log(regex.test(correo));
         if(regex.test(correo)){
-          //console.log('asdasd');
           $('#aviso_'+$(this).attr('id')).fadeOut();
         }else{
-          //console.log('bbbb')
           $('#aviso_'+$(this).attr('id')).fadeIn();
         }
       }else{
         $('#aviso_'+$(this).attr('id')).fadeOut();
       }
+
+      if($(this).attr('id') == 'rfc'){ //letras y numeros rfc
+        rfc= $(this).val();
+        rfc= rfc.replace(/[^a-zA-Z0-9]/g, ""); //caracteres especiales
+        rfc = rfc.trim(); // espacios en blanco
+        $('#rfc').val(rfc);  
+      }
     });
+    
 //==============================================
     $("input[name='telefono']").keyup(function() { //dar formato y limite de caracteres al input telefono
         if($(this).val()>10){
           telefono = $(this).val();
-          telefono= telefono.slice(0,10);
+          telefono= telefono.slice(0,10); //copia de array de caracteres 
           $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
         }
         else{
@@ -513,7 +459,7 @@ $('#ejercicio').on('change', function(){ //se asigna el valor del id cliente des
         }
     });
 });
-
+//=================================================
 //Validacion de select municipio
 function validarCliente() {
   var valor = document.getElementById("municipio").value;
@@ -527,8 +473,7 @@ function validarCliente() {
     $("#label_municipio").removeClass('text-gray-700');
   }
 }
-
-
+//======================================================
 //validacion del formulario con el btn guardar
 $().ready(function() {
   $("#formulario").validate({
@@ -536,8 +481,8 @@ $().ready(function() {
     onclick: false,
 		rules: {
       nombre: { required: true },
-			rfc: { required: true, minlength: 5, maxlength: 12},
-      representante_legal: { required: true },
+			rfc: { required: true, minlength: 13, maxlength: 13},
+      
       cargo: { required: true },
       municipio: { required: true },
       ejercicio: { required: true },
@@ -545,16 +490,12 @@ $().ready(function() {
 		},
     errorPlacement: function(error, element) {
       if(error != null){
-        console.log('a');
       $('#error_'+element.attr('id')).fadeIn();
       }else{
-        console.log('b');
       $('#error_'+element.attr('id')).fadeOut();
       }
-     
     },
 	}); 
-  
 });
 </script>
 <style>
@@ -564,7 +505,6 @@ $().ready(function() {
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
 
 <script>
-  
   $(document).ready(function() { //llamar datatable
     $('#example').DataTable({
         "autoWidth" : true,

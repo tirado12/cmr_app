@@ -108,6 +108,7 @@ Route::get('/existeEnSisplade/{cliente}',[SispladeController::class,'existeEjerc
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
 Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']);
 //Route::get('/cabildoRfc/{rfc}',[IntegrantesCabildoController::class,'existeRfc']);
+
 Route::get('/contratistaRfc/{rfc},{municipio_id}',[ContratistaController::class,'existeRfc']);
 Route::get('/proveedorRfc/{rfc},{municipio_id}',[ProveedorController::class,'existeRfcProveedor']);
 Route::get('/ejerciciosIntegrantes/{municipio}',[IntegrantesCabildoController::class,'ejerciciosCabildo']); //integrantes cabildo

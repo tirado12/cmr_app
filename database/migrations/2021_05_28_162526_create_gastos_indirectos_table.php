@@ -15,7 +15,7 @@ class CreateGastosIndirectosTable extends Migration
     {
         Schema::create('gastos_indirectos', function (Blueprint $table) {
             $table->id('id_indirectos');
-            $table->integer('clave');
+            $table->integer('clave')->unique();
             $table->string('nombre');
             $table->timestamps();
         });

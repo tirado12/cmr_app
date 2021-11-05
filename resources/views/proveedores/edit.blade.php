@@ -99,8 +99,8 @@
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
  <script>
-
-window.onload = function(){
+//=======================================================
+window.onload = function(){ //valida por tipo de rfc al cargar
             rfc = $('#rfc').val();
           if(rfc.length == 12){ // > 12
               $("#tipo_rfc").empty();
@@ -126,7 +126,7 @@ window.onload = function(){
               
             }
 }
-
+//=======================================================
    //validacion de campos del form
   $(document).ready(function() {
     var proveedor = '{{ $proveedor->id_proveedor }}';
@@ -167,9 +167,8 @@ window.onload = function(){
       }
 
     });
-
+//=======================================================
    $("#formulario input").keyup(function() {// validacion de rfc y representante legal
-
     //validar_tipo_rfc($('#rfc').val().length);
 
     if($(this).attr('id') == 'rfc'){
@@ -194,12 +193,11 @@ window.onload = function(){
               $('#label_razon_social').empty();
               $('#label_razon_social').text('Nombre *');
               $('#error_razon_social').empty();
-              $('#error_razon_social').text('Por favor ingresar un nombre');
-              
+              $('#error_razon_social').text('Por favor ingresar un nombre'); 
             }
         }    
-    
-      var cadena = $(this).val();
+    //=======================================================
+      var cadena = $(this).val(); //valdia campos vacios
       
       if(cadena != ''){
       $('#error_'+$(this).attr('id')).fadeOut();
@@ -216,7 +214,7 @@ window.onload = function(){
     
     });
   });
-
+//=======================================================
   //validacion del formulario con el btn guardar
   $().ready(function() {
     $("#formulario").validate({

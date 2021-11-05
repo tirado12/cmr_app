@@ -30,7 +30,6 @@
         <tr>
             <th>Municipio</th>
             <th>Ejercicio</th>
-            <th>Fuente Financiamiento</th>
             <th>Gasto</th>
             <th>Monto</th>
             <th class="flex justify-center">Acción</th>
@@ -51,11 +50,7 @@
               {{-- {{ $item->anio_inicio}}{{ ( $item->anio_inicio == $item->anio_fin ) ? '' : ' - '.$item->anio_fin }} --}}
               </div>
             </td>
-            <td>
-              <div class="text-sm leading-5 font-medium text-gray-900 ">
-                {{$item->nombre_corto}}
-              </div>
-            </td>
+            
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900">
                   {{$item->nombre_indirectos}}
@@ -93,9 +88,6 @@
 
   
 </div>
-
-
-
 
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
@@ -157,7 +149,6 @@ $(".form-eliminar").submit(function(e){
 
 <script>
   //ejecucion del datatable
-
     $('#example').DataTable({
         "autoWidth" : true,
         "responsive" : true,

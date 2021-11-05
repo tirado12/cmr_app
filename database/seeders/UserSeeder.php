@@ -36,7 +36,43 @@ class UserSeeder extends Seeder
             'password' => bcrypt('12345678'),
             'remember_token' => Str::random(100)
         ])->assignRole('Administrador');
-
+        
+        Cliente::create([
+            'user' => 'oaxaca',
+            'email' => 'oaxaca@gmail.com',
+            'password' => bcrypt('12345678'),
+            'anio_inicio' => '2021',
+            'anio_fin' => '2022',
+            'logo' => 'http://127.0.0.1:8000/uploads/img-1.png',
+            'municipio_id' => '67'
+        ]);
+        Cliente::create([
+            'user' => 'barrio',
+            'email' => 'barrio@gmail.com',
+            'password' => bcrypt('12345678'),
+            'anio_inicio' => '2021',
+            'anio_fin' => '2022',
+            'logo' => 'http://127.0.0.1:8000/uploads/img-1.png',
+            'municipio_id' => '10'
+        ]);
+        Cliente::create([
+            'user' => 'oaxaca1',
+            'email' => 'oaxaca1@gmail.com',
+            'password' => bcrypt('12345678'),
+            'anio_inicio' => '2022',
+            'anio_fin' => '2023',
+            'logo' => 'http://127.0.0.1:8000/uploads/img-1.png',
+            'municipio_id' => '67'
+        ]);
+        Cliente::create([
+            'user' => 'abejones',
+            'email' => 'abejones@gmail.com',
+            'password' => bcrypt('12345678'),
+            'anio_inicio' => '2021',
+            'anio_fin' => '2022',
+            'logo' => 'http://127.0.0.1:8000/uploads/img-1.png',
+            'municipio_id' => '1'
+        ]);
        /* $cliente= new Cliente();
         $cliente ->anio_inicio = 2020;
         $cliente ->anio_fin = 2022;

@@ -54,7 +54,6 @@ class IntegrantesCabildoController extends Controller
             'nombre' => 'required',
             'cargo' => 'required',
             'rfc' => 'required|unique:integrantes_cabildo,rfc',
-            'representante_legal' => 'required',
             'cliente' => 'required'
         ]);
         IntegrantesCabildo::create([
@@ -63,7 +62,6 @@ class IntegrantesCabildoController extends Controller
             'telefono' => $request->telefono,
             'correo' => $request->correo,
             'rfc' => $request->rfc,
-            'representante_legal' => $request->representante_legal,
             'cliente_id' => $request->cliente
         ]);
         return redirect()->route('cabildo.index');
@@ -120,7 +118,6 @@ class IntegrantesCabildoController extends Controller
             'nombre' => 'required',
             'cargo' => 'required',
             'rfc' => ['required',Rule::unique('integrantes_cabildo')->ignore($integrante)],
-            'representante_legal' => 'required',
             'cliente_id' => 'required'
         ]);
         $integrante->update($request->all());

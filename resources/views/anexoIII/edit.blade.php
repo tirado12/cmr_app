@@ -20,29 +20,27 @@
               <div class="col-span-6 sm:col-span-3">
                 <label id="label_municipio" for="municipio" class="block text-sm font-medium text-gray-700">Municipio *</label>
                 <input type="text" name="municipio" id="municipio"  class="mt-1 focus:ring-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->nombre }}" disabled>
-                
               </div>
 
               <div class="col-span-6 sm:col-span-3">
-                <label id="label_rfc" for="tipo_rfc" class="block text-sm font-medium text-gray-700">Ejercicio:</label>
-                <input type="text" id="tipo_rfc" name="tipo_rfc" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->ejercicio }}" disabled>
-                
+                <label id="label_rfc" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio:</label>
+                <input type="text" id="ejercicio" name="ejercicio" class="mt-1 w-full block bg-gray-100 shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->ejercicio }}" disabled>
               </div>
               
               <div class="col-span-6 sm:col-span-3">
                 <label id="label_acta_integracion_consejo" for="acta_integracion_consejo" class="block text-sm font-medium text-gray-700">Acta de integración *</label>
-                <input type="date" name="acta_integracion_consejo" id="acta_integracion_consejo" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->acta_integracion_consejo }}" >
-                
+                <input type="date" name="acta_integracion_consejo" id="acta_integracion_consejo" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->acta_integracion_consejo }}" required>
+                <label id="error_acta_integracion_consejo" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
               <div class="col-span-6 sm:col-span-3">
                   <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta de priorización *</label>
-                  <input type="date" name="acta_priorizacion" id="acta_priorizacion" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->acta_priorizacion }}">
-                  
+                  <input type="date" name="acta_priorizacion" id="acta_priorizacion" placeholder="Nombre" maxlength="40" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->acta_priorizacion }}" required>
+                  <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
               <div class="col-span-6 sm:col-span-3">
                   <label id="label_adendum_priorizacion" for="adendum_priorizacion" class="block text-sm font-medium text-gray-700">Adendum *</label>
-                  <input type="date" name="adendum_priorizacion" id="adendum_priorizacion" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->adendum_priorizacion }}">
+                  <input type="date" name="adendum_priorizacion" id="adendum_priorizacion" placeholder="Conocido S/N" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos->adendum_priorizacion }}" >
                   
               </div>
 
@@ -54,7 +52,6 @@
                     <input type="checkbox" id="gastos_indirectos" name="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($anexos->gastos_indirectos==1) ? 'checked' : '' }}><span class="ml-2 text-gray-700">Gastos indirectos</span>
                 </label>
               </div>
-
               
             </div>
           </div>
@@ -65,10 +62,9 @@
               <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Regresar
               </a>
-            <button type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Guardar
-            </button>
-            
+              <button type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Guardar
+              </button>
             </div>
           </div>
         </div>
@@ -76,5 +72,38 @@
     </div>
   
 </div>
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>    
+<script>
+window.onload = function(){
+  var anio= $('#ejercicio').val();
+  fechaMin = anio+'-01'+'-01';
+  fechaMax = anio+'-12'+'-31';
+  $('#acta_integracion_consejo').attr('min',fechaMin);
+  $('#acta_integracion_consejo').attr('max',fechaMax);
+  $('#acta_priorizacion').attr('min',fechaMin);
+  $('#acta_priorizacion').attr('max',fechaMax);
+  $('#adendum_priorizacion').attr('min',fechaMin);
+  $('#adendum_priorizacion').attr('max',fechaMax);
+}
 
+  $().ready(function() {
+      $("#formulario").validate({
+        onfocusout: false,
+        onclick: false,
+        rules: {
+          acta_integracion_consejo: { required: true},
+          acta_priorizacion: { required: true},
+        },
+        errorPlacement: function(error, element) {
+          if(error != null){
+            $('#error_'+element.attr('id')).fadeIn();
+          }else{
+            $('#error_'+element.attr('id')).fadeOut();
+          }
+        
+        },
+      }); 
+  });
+</script>
 @endsection

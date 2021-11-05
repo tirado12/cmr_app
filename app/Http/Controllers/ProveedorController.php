@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\ContratosArrendamiento;
 use App\Models\Factura;
 use App\Models\Municipio;
@@ -20,7 +21,8 @@ class ProveedorController extends Controller
     public function index()
     {
         $proveedores = Proveedor::all();
-        $municipios= Municipio::select('id_municipio','nombre')->get();
+        $result= Municipio::join('clientes','id_municipio','municipio_id')->select('id_municipio','nombre')->get();
+        $municipios =  $result->unique('id_municipio');
         //return $municipios;
         return view('proveedores.index',compact('proveedores','municipios'));
         
@@ -53,7 +55,7 @@ class ProveedorController extends Controller
             $request['representante_legal']=null;
         }
 
-        $valido=$request->validate([ //faltan columnas de representante legal aqui y bd
+        $valido= $request->validate([ //faltan columnas de representante legal aqui y bd
             //'rfc' => 'required|unique:proveedores,rfc',
             'rfc' => 'required',
             'representante_legal' => 'nullable',
@@ -93,7 +95,8 @@ class ProveedorController extends Controller
     public function edit(Proveedor $proveedor)
     {
         //return $proveedor;
-        $municipios= Municipio::select('id_municipio','nombre')->get();
+        $result= Municipio::join('clientes','id_municipio','municipio_id')->select('id_municipio','nombre')->get();
+        $municipios =  $result->unique('id_municipio');
         return view('proveedores.edit',compact('proveedor','municipios'));
        //return $proveedor;
     }
@@ -119,7 +122,7 @@ class ProveedorController extends Controller
         //return $request;
         $request->validate([
             //'rfc' => ['required',Rule::unique('proveedores')->ignore($proveedor)],
-            'rfc' => 'requried',
+            'rfc' => 'required',
             'representante_legal' => 'nullable',
             'razon_social' => 'required',
             'municipio_id' => 'required'

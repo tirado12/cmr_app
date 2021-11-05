@@ -74,7 +74,7 @@
       <tr>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-              {{ $listaClientes->find($index->cliente_id)->nombre }}
+              {{ $nombre_cliente= $listaClientes->find($index->cliente_id)->nombre }}
             </div>
           
           </td>
@@ -103,7 +103,7 @@
             
           </td>
           <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
+            <div class="grid text-sm leading-5 font-medium text-gray-900 justify-items-center">
                 {{$fuentes->find($index->fuente_financiamiento_id)->nombre_corto}}
             </div>
             
@@ -112,16 +112,16 @@
             <div class="flex justify-center">
             <form action="{{ route('fuenteCliente.destroy', $index->id_fuente_financ_cliente) }}" method="POST" class="form-eliminar" >
               <div>
-              <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Editar</a> 
-            <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
+              <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm p-1 text-blue-500 font-normal text-ms rounded rounded-lg">Editar</a> 
+              <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
                 Detalles
               </button> -->
               @if($index->fuente_financiamiento_id == 2)
-              <a type="button"  href="{{ route('anexos.index') }}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Anexos</a> 
+              <a type="button"  href="{{ route('anexos.index').'?r='.$nombre_cliente }}" class="bg-white text-sm text-blue-500 p-1 font-normal text-ms rounded rounded-lg">Anexos</a> 
               @endif
-              <!--@csrf
+              @csrf
               @method('DELETE')
-              <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>-->
+                <button type="submit" class="bg-white p-1 text-sm text-red-500 rounded rounded-lg">Eliminar</button>
               </div>
               
               </form>
@@ -227,7 +227,7 @@
               <i class="fas fa-bell"></i>
             </span>
             <span class="inline-block align-middle mr-8">
-              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por ejercicio antes 
+              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por periodo antes 
               <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
             </span>
             <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
@@ -319,22 +319,21 @@
             </div>
          
             <div class="grid grid-cols-6 gap-4">
-
               <div class="col-span-2">
-                <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
-                <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                
+                <label id="label_acta_integracion" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración *</label>
+                <input type="date" name="acta_integracion" id="acta_integracion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
             
               <div class="col-span-2">
-                <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
-                <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                
+                <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización *</label>
+                <input type="date" name="acta_priorizacion" id="acta_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
               <div class="col-span-2">
                 <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
-                <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <input type="date" name="adendum" id="adendum" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                 
               </div>
 
@@ -403,6 +402,17 @@
     )
   </script>
 @endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este registro tiene relación con otro.<br> No es posible eliminarlo.'
+    });
+  </script>
+@endif
+
 <style>
   .currSign:before {
       content: '$';
@@ -475,9 +485,13 @@ function validarFuente() {
   if($('#fuente_financiamiento_id').val() == '2'){
     $('#titulo_anexo').removeClass('hidden');
     $('#anexos').removeClass('hidden');
+    $('#acta_integracion').attr('required',true);
+    $('#acta_priorizacion').attr('required',true);
   }else{
     $('#titulo_anexo').addClass('hidden');
     $('#anexos').addClass('hidden');
+    $('#acta_integracion').removeAttr('required');
+    $('#acta_priorizacion').removeAttr('required');
   }
 }
 //================================================
@@ -502,7 +516,6 @@ $(document).ready(function() {
 var myArray;
 $('#municipio').on('keyup change', function(){ //ejercicio select
       municipio = $('#municipio').val();
-
       if(municipio.length!=0){
       $("#periodo").empty(); //valida si no se ha seleccionado una opc
       //$("#ejercicio").append('<option value="">Elija un ejercicio</option>');
@@ -545,8 +558,18 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
   }
   
 });
-//===========================================
+//====================================================
   $('#fuente_financiamiento_id, #ejercicio').on('keyup change',function(){
+   $('#ejercicio').val($('#ejercicio').val().slice(0,4));//copia de array de caracteres
+   var anio = $('#ejercicio').val();
+   var fechaMin = anio+'-01'+'-01';
+   var fechaMax = anio+'-12'+'-31';
+   $('#acta_integracion').attr('min',fechaMin);
+  $('#acta_integracion').attr('max',fechaMax);
+  $('#acta_priorizacion').attr('min',fechaMin);
+  $('#acta_priorizacion').attr('max',fechaMax);
+  $('#adendum').attr('min',fechaMin);
+  $('#adendum').attr('max',fechaMax);
     cliente = $('#cliente_id').val();
     fuente= $('#fuente_financiamiento_id').val();
     ejercicio= $('#ejercicio').val();
@@ -675,13 +698,11 @@ $().ready(function($) {
     },
   });
 //================================================
-  
 });
 
 
 //Codigo de Modal detalles
 $(".btn-AddDate").on("click",function() {
-  //alert("Modal Mostrada");
   document.getElementById('modal-id').classList.toggle("hidden");
   document.getElementById('modal-id' + "-backdrop").classList.toggle("hidden");
     
@@ -744,15 +765,14 @@ $(".btn-AddDate").on("click",function() {
 
 <script>
   //ejecucion del datatable
+  
 $(document).ready(function() {
     $('#example').DataTable({
+        "oSearch": {"sSearch": "" },
         "autoWidth" : true,
         "responsive" : true,
-        columnDefs: [
-            { responsivePriority: 1, targets: 4 },
-            { responsivePriority: 1, targets: 1 },
-            { responsivePriority: 10001, targets: 4 },
-            { responsivePriority: 2, targets: -2 }
+        "columnDefs": [
+          { "width": "10%", "targets": 0 }
         ],
         language: {
           url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'

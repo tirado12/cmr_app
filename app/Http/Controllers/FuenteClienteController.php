@@ -6,8 +6,11 @@ use App\Models\Cliente;
 use App\Models\FuentesCliente;
 use App\Models\AnexosFondoIII;
 use App\Models\FuentesFinanciamiento;
+use App\Models\GastosIndirectosFuentes;
 use App\Models\Municipio;
-use App\Models\Obra;
+use App\Models\ObrasFuentes;
+use App\Models\Prodim;
+use App\Models\Sisplade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,7 +35,7 @@ class FuenteClienteController extends Controller
         ->select('clientes.id_cliente', 'municipios.nombre','municipios.id_municipio','clientes.anio_inicio','clientes.anio_fin')
         ->get();
         $cliente= $listaClientes->unique('id_municipio');
-        //return $fuenteClientes;
+        
         return view('fuentes_clientes.index', compact('fuenteClientes', 'cliente', 'fuentes','listaClientes'));
     }
 
@@ -56,8 +59,6 @@ class FuenteClienteController extends Controller
     public function store(Request $request)
     {
         //return $request;
-        
-
         $request->validate([
             'monto_proyectado' => 'required',
             //'monto_comprometido' => 'required',
@@ -87,9 +88,9 @@ class FuenteClienteController extends Controller
                 $request->gastos_indirectos = true;
             }
             AnexosFondoIII::create([
-                'acta_integracion_consejo' => $request->acta_integracion_consejo,
+                'acta_integracion_consejo' => $request->acta_integracion,
                 'acta_priorizacion' => $request->acta_priorizacion,
-                'adendum_priorizacion' => $request->adendum_priorizacion,
+                'adendum_priorizacion' => $request->adendum,
                 'prodim' => $request->prodim,
                 'gastos_indirectos' => $request->gastos_indirectos,
                 'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
@@ -219,8 +220,17 @@ class FuenteClienteController extends Controller
      */
     public function destroy(FuentesCliente $fuenteCliente)
     {
-        $fuenteCliente->delete();
-        return redirect()->route('fuenteCliente.index')->with('eliminar','ok');
+        $existeGastosFuente = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->exists();
+        $existeSisplade = Sisplade::where('fuentes_clientes_id',$fuenteCliente->id_fuente_financ_cliente)->exists();
+        $existeProdim = Prodim::where('fuente_id', $fuenteCliente->id_fuente_financ_cliente)->exists();
+        $existeObrasFuentes = ObrasFuentes::where('fuente_financiamiento_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->exists();
+        if($existeGastosFuente == null && $existeSisplade==null && $existeProdim==null && $existeObrasFuentes==null){
+            $fuenteCliente->delete();
+            return redirect()->route('fuenteCliente.index')->with('eliminar','ok');
+        }else{
+            return redirect()->route('fuenteCliente.index')->with('eliminar','error');
+        }
+        
     }
     // ======================= Funciones API ========================= //
     public function getFuentesCliente($cliente_id, $anio){

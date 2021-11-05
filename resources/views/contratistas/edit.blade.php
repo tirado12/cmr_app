@@ -76,7 +76,7 @@
                 <div class="col-span-6 sm:col-span-3">
                     <label id="etiqueta_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
                     <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength = "13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $contratista->telefono }}">
-                    <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Ingresar un minimo de 10 digitos</label>
+                    <label id="error_telefono" name="error_telefono" class="hidden text-base font-normal text-red-500" >Ingresar un minimo y maximo de 10 digitos</label>
                   </div>
                 <div class="col-span-6 sm:col-span-3">
                     <label id="etiqueta_correo" for="correo" class="block text-sm font-medium text-gray-700">Correo </label>
@@ -96,7 +96,6 @@
                     @endforeach
                   </select>
                 </div>
-
               </div>
               <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC y municipio asociado</label>        
             </div>
@@ -121,7 +120,30 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>   
 
 <script>
-  
+   window.onload = function(){ // ocultar o mostrar representante
+      rfc = $('#rfc').val();
+      if(rfc.length == 12){ // > 12
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Moral');
+              $('#div_representante_legal').removeClass('hidden');
+              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Razón social *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar una razón social');
+              
+            }else if(rfc.length == 13){
+              $("#tipo_rfc").empty();
+              $('#tipo_rfc').val('Persona Física');
+              $('#div_representante_legal').addClass('hidden');
+              $('#razon_social').attr("placeholder",'Nombre');
+              $('#label_razon_social').empty();
+              $('#label_razon_social').text('Nombre *');
+              $('#error_razon_social').empty();
+              $('#error_razon_social').text('Por favor ingresar un nombre');
+              
+            }
+    };
   //validacion de campos 
   $(document).ready(function() {
     var contratista = '{{ $contratista->id_contratista }}';
@@ -162,30 +184,7 @@
 
     });
 
-    window.onload = function(){
-      rfc = $('#rfc').val();
-      if(rfc.length == 12){ // > 12
-              $("#tipo_rfc").empty();
-              $('#tipo_rfc').val('Persona Moral');
-              $('#div_representante_legal').removeClass('hidden');
-              $('#razon_social').attr("placeholder",'Materiales para construcción S.A. de C.V.');
-              $('#label_razon_social').empty();
-              $('#label_razon_social').text('Razón social *');
-              $('#error_razon_social').empty();
-              $('#error_razon_social').text('Por favor ingresar una razón social');
-              
-            }else if(rfc.length == 13){
-              $("#tipo_rfc").empty();
-              $('#tipo_rfc').val('Persona Física');
-              $('#div_representante_legal').addClass('hidden');
-              $('#razon_social').attr("placeholder",'Nombre');
-              $('#label_razon_social').empty();
-              $('#label_razon_social').text('Nombre *');
-              $('#error_razon_social').empty();
-              $('#error_razon_social').text('Por favor ingresar un nombre');
-              
-            }
-    };
+   
 
    $("#formulario input").keyup(function() {
 

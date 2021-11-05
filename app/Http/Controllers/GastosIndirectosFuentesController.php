@@ -145,6 +145,12 @@ class GastosIndirectosFuentesController extends Controller
         $gasto->delete();
         return redirect()->route('gastosIndirectosFuentes.index')->with('eliminar','ok');
     }
+    //=========================================================
+    public function existeRegistro($fuenteCliente, $gastoIndirecto){
+        $existeGasto = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente)
+        ->where('indirectos_id', $gastoIndirecto)
+        ->exists();
+    }
     // ================= Funciones API ====================== //
     public function getDesgloseGI($cliente_id, $anio){
 

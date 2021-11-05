@@ -58,7 +58,6 @@
                 <div class="col-span-6 sm:col-span-3">
                     <label for="eti_telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
                     <input type="tel" name="telefono" id="telefono" placeholder="9519999999" maxlength="13" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->telefono }}">
-                    
                 </div>
 
                 <div class="col-span-6 sm:col-span-3">
@@ -69,17 +68,11 @@
 
                   <div class="col-span-6 sm:col-span-3">
                     <label for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
-                    <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
-                    <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 5 caracteres</label>
+                    <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" maxlength="13" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->rfc }}">
+                    <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Introduzca al menos un RFC generico de 13 caracteres</label>
                     <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
                   </div>
 
-                  <div class="col-span-6 sm:col-span-3">
-                    <label id="label_representante_legal" for="representante_legal" class="block text-sm font-medium text-gray-700">Representante legal *</label>
-                    <input type="text" name="representante_legal" id="representante_legal" placeholder="Nombre" maxlength="70" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $integrante->representante_legal }}" required />
-                    <label id="error_representante_legal" name="error_representante_legal" class="hidden text-base font-normal text-red-500" >Por favor ingresa un representante legal</label>
-                  </div>
-                
                  <!--<div class="col-span-6 sm:col-span-3">
                     <label for="ejercicio_actual" class="block text-sm font-medium text-gray-700">Periodo Actual </label>
                     <input type="text" name="ejercicio_actual" id="ejercicio_actual" placeholder="" maxlength="12" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $municipioCliente->anio_inicio.' - '. $municipioCliente->anio_fin }}" disabled>
@@ -97,15 +90,13 @@
                 </div>
                 
                 <div class="col-span-6 sm:col-span-3">
-                  <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio </label>
+                  <label id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo </label>
                   <select id="ejercicio" name="ejercicio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >
-                      
                       
                   </select>
                 <label id="error_cliente" name="error_cliente" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
                 <input type="text" id="cliente_id" name="cliente_id" class="hidden" value="{{ $integrante->cliente_id}}">
                 </div>
-                
                 
               </div>
             </div>
@@ -144,37 +135,17 @@ function validarMunicipio() { //validacion para elegir una opcion
     $("#label_municipio").removeClass('text-gray-700');
   }
 }
-
-//validacion de campos del formulario
-$(document).ready(function() {
-
-  window.onload = function(){ //al terminar de cargar la pagina se rellena el select ejercicio con el municipio seleccionado
+//===================================================
+window.onload = function(){ //al terminar de cargar la pagina se rellena el select ejercicio con el municipio seleccionado
   //var municipio = $('#municipio').val();
   var municipio = '{{ $municipioCliente->municipio_id }}';
-  //var link = '{{ url("/clienteEjercicio")}}/'+integrante+','+municipio;
-  obtenerEjercicios() ;
-    console.log('aja ' + municipio)
+  obtenerEjercicios(municipio) ;
   }
-
-  $('#municipio').on('keyup change', function(){ //ejercicio select
-      municipio = $('#municipio').val();
-      var integrante = '{{ $integrante->id_integrante }}';
-        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-        $("#ejercicio").append('<option value="">Elija un ejercicio</option>');
-      if(municipio.length!=0){
-        link = '{{ url("/ejerciciosCabildo") }} /'+integrante+','+municipio;
-         //obtenerEjercicios(link);
-      }else{
-        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
-        $("#ejercicio").append('<option value="">Elija un cliente</option>');
-      }
-
-    });
-//===================================================
-    function obtenerEjercicios(){ //funcion ajax 
+//==================================================
+  function obtenerEjercicios(municipio){ //funcion ajax 
       var cliente = '{{ $integrante->cliente_id }}';
-      var municipio = '{{ $municipioCliente->municipio_id }}';
       var link = '{{ url("/ejerciciosIntegrantes") }}/'+municipio;
+      var muniActual = '{{ $municipioCliente->municipio_id }}';
         $.ajax({
               url: link,
               dataType:'json',
@@ -182,40 +153,63 @@ $(document).ready(function() {
               success: function(data){
                 console.log(data);
                  $.each(data,function(key, item) { //llenado del select ejercicio
-                  if(cliente == item.id_cliente)
-                   $("#ejercicio").append('<option value='+item.id_cliente+' selected >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
-                  else
-                  $("#ejercicio").append('<option value='+item.id_cliente+' >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                  
+                    if(cliente == item.id_cliente){
+                      $("#ejercicio").append('<option value='+item.id_cliente+' selected >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                    }else{
+                      $("#ejercicio").append('<option value='+item.id_cliente+' >'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                      if(muniActual != municipio)
+                        $("#ejercicio option:first").attr("selected","selected");
+                    }
+                    
                  });
+                 $('#cliente_id').val($('#ejercicio').val()); //asigna id cliente
               },
               cache: false
             });
     }
-//========================================
-$('#ejercicio').on('change', function(){
-  
+//======================================================
+//validacion de campos del formulario
+$(document).ready(function() {
+  $('#municipio').on('keyup change', function(){ //periodo select 
+      municipio = $('#municipio').val();
+      var integrante = '{{ $integrante->id_integrante }}';
+        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+        //$("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+      if(municipio.length!=0){
+         obtenerEjercicios(municipio); //llamada al metodo
+      }else{
+        $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+       // $("#ejercicio").append('<option value="">Elija un cliente</option>');
+      }
+
+    });
+//=====================================================
+$('#ejercicio').on('change', function(){ //asigna id de cliente para envio de form
   $('#cliente_id').val($('#ejercicio').val());
 });
-//===========================================
-   $("#formulario input").keyup(function() {
-  
-      var monto = $(this).val();
-      
-      if(monto != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
-      //$('#guardar').removeAttr("disabled");
+//=====================================================
+   $("#formulario input").keyup(function() { //valida campos vacios
+      var cadena = $(this).val();
+        if(cadena != ''){
+        $('#error_'+$(this).attr('id')).fadeOut();
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+        }
+        else{
+        $('#error_'+$(this).attr('id')).fadeIn();
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        }
+
+        if($(this).attr('id') == 'rfc'){ //letras y numeros rfc
+        rfc= $(this).val();
+        rfc= rfc.replace(/[^a-zA-Z0-9]/g, ""); //caracteres especiales
+        rfc = rfc.trim(); // espacios en blanco
+        $('#rfc').val(rfc);  
       }
-      else{
-      //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
-      }
-    
     });
-//=======================================
+//=====================================================
     $("input[name='telefono']").keyup(function() { //validacion de telefono
       if($(this).val()>10){
           telefono = $(this).val();
@@ -227,30 +221,28 @@ $('#ejercicio').on('change', function(){
         }
       });
   });
-
+//======================================================
     //validacion del formulario con el btn guardar
-$().ready(function() {
-  $("#formulario").validate({
-    onfocusout: false,
-    onclick: false,
-		rules: {
-      nombre: { required: true},
-			cargo: { required: true},
-      rfc: { required: true, minlength: 5, maxlength: 13},
-      representante_legal : { required: true }, 
-      municipio: { required: true},
-      
-		},
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-        $('#error_'+element.attr('id')).fadeOut();
-      }
-     
-    },
-	}); 
-});
+  $().ready(function() {
+      $("#formulario").validate({
+        onfocusout: false,
+        onclick: false,
+        rules: {
+          nombre: { required: true},
+          cargo: { required: true},
+          rfc: { required: true, minlength: 13, maxlength: 13},
+          municipio: { required: true},
+        },
+        errorPlacement: function(error, element) {
+          if(error != null){
+          $('#error_'+element.attr('id')).fadeIn();
+          }else{
+            $('#error_'+element.attr('id')).fadeOut();
+          }
+        
+        },
+      }); 
+  });
   </script>
   
 @endsection

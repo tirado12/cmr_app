@@ -20,7 +20,7 @@ class CreateIntegrantesCabildoTable extends Migration
             $table->string('telefono')->nullable();
             $table->string('correo')->nullable();
             $table->string('rfc')->nullable()->unique();
-            $table->string('representante_legal');
+            
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id_cliente')->on('clientes');
             $table->timestamps();

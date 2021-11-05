@@ -21,8 +21,9 @@
           <i class="fas fa-bell"></i>
         </span>
         <span class="inline-block align-middle mr-8">
-          <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por ejercicio antes 
+          <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por periodo antes 
           <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
+           asi como al menos un cliente con fondo III disponible
         </span>
         <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
           <span>×</span>
@@ -77,19 +78,18 @@
           <span class="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
             <i class="fas fa-dollar-sign"></i>
           </span>
-        <input type="text" name="monto" id="monto" class="mt-1 pl-8 focus:ring-gray-500 focus:border-gray-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(Primero completar las opciones)" disabled>
+        <input type="text" name="monto" id="monto" class="mt-1 pl-8 focus:ring-gray-500 focus:border-gray-500 bg-white block w-full shadow-sm sm:text-sm  rounded-md" placeholder="(0.00)" required>
         </label>
         <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Por favor ingresar un monto</label>  
         <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
       </div>
     
-    
   </div>
   <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-    <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+    <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
       Regresar
     </a>
-    <button type="submit" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
+    <button type="submit" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
       Guardar
     </button>
   </div>
@@ -106,7 +106,6 @@ function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
     element.parentNode.parentNode.removeChild(element.parentNode);
   }
 $(document).ready(function() {
-
   //select muestra ejercicios disponibles por cliente
   $("#cliente_id").on('change', function () {
 
@@ -128,8 +127,8 @@ $(document).ready(function() {
     });
 
   });
-
-
+  
+//=================================================================
   $("#monto").on({
             "focus": function(event) {
                 $(event.target).select();
@@ -144,30 +143,29 @@ $(document).ready(function() {
         });
 
  //validar select ejercicio y cliente , consulta los ejercicios disponibles de ese cliente
- $("#ejercicio, #cliente_id").on('change', function () {
-        
-         if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
-          $('#monto').attr('disabled', true);
-          $('#monto').attr('placeholder','Primero completar las opciones');
-          $('#monto').val('');
-          $('#monto').addClass('bg-gray-100');
-          $('#monto').removeClass('bg-white');
-          $('#guardar').attr('disabled', true);
-          $('#guardar').removeClass('bg-orange-800');
-          $('#guardar').addClass('bg-gray-700');
+ $("#ejercicio, #cliente_id, #gasto_indirecto").on('change', function () {
+        //  if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
+          //$('#monto').attr('disabled', true);
+          // $('#monto').attr('placeholder','Primero completar las opciones');
+          // $('#monto').val('');
+          // $('#monto').addClass('bg-gray-100');
+          // $('#monto').removeClass('bg-white');
+          // $('#guardar').attr('disabled', true);
+          // $('#guardar').removeClass('bg-orange-800');
+          // $('#guardar').addClass('bg-gray-700');
           
-          }else{
-          $('#monto').removeAttr('disabled'); //habilitar input y boton
-          $('#monto').removeAttr('placeholder');
-          $('#monto').attr('placeholder','0.00')
+          // }else{
+          // $('#monto').removeAttr('disabled'); //habilitar input y boton
+          // $('#monto').removeAttr('placeholder');
+          // $('#monto').attr('placeholder','0.00')
           
-          $('#monto').removeClass('bg-gray-100');
-          $('#monto').addClass('bg-white');
-          $('#guardar').removeAttr('disabled');
-          $('#guardar').removeClass('bg-gray-700');
-          $('#guardar').addClass('bg-orange-800');
+          // $('#monto').removeClass('bg-gray-100');
+          // $('#monto').addClass('bg-white');
+          // $('#guardar').removeAttr('disabled');
+          // $('#guardar').removeClass('bg-gray-700');
+          // $('#guardar').addClass('bg-orange-800');
 
-          }
+          // }
           ejercicio=$('#ejercicio').val();
           cliente=$('#cliente_id').val();
         
@@ -175,8 +173,31 @@ $(document).ready(function() {
           var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
           consulta(direccion);
         }
+        gasto = $('#gasto_indirecto').val();
+        fuente_id = $('#fuenteCliente_id').val();
+        if(gasto.length>0 && fuente_id.length>0){
+          //console.log(fuente_id);
+          existe(direccion,fuente_id,gasto);
+        }
         //ejercicio
       });
+
+      function existe(direccion,fuente_id,gasto){  //metodo para consultar si existe el registro
+              url: direccion,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                $.each(data,function(key, item) {
+
+                  //$('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
+                  //console.log('a '+ $('#fuenteCliente_id').val());
+                });
+                
+              },
+              cache: false
+        });
+      }  
 
       function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
         $.ajax({
@@ -201,6 +222,8 @@ $(document).ready(function() {
             onfocusout: false,
             onclick: false,
             rules: {
+              cliente_id: {required: true },
+              ejercicio: {required: true },
               monto: { required: true, minlength: 2 },
               gasto_indirecto: { required: true},
             

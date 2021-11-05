@@ -52,8 +52,8 @@
                 </div>
 
                 <div class="col-span-4 lg:col-span-3">
-                  <label for="ejercicio" class="block text-sm font-medium text-gray-700">Periodo</label>
-                  <label id="label_ejercicio" class="block text-base bg-gray-100 font-medium text-gray-700 py-3 px-2 border rounded-md">{{ $cliente[0]->anio_inicio.' - '.$cliente[0]->anio_fin }}</label>
+                  <label for="periodo" class="block text-sm font-medium text-gray-700">Periodo</label>
+                  <label id="label_periodo" class="block text-base bg-gray-100 font-medium text-gray-700 py-3 px-2 border rounded-md">{{ $cliente[0]->anio_inicio.' - '.$cliente[0]->anio_fin }}</label>
                 </div>
 
                 <div class="col-span-4 lg:col-span-3">
@@ -72,6 +72,7 @@
                     <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7 mt-1 text-base focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md myDIV" value="{{($fuenteCliente->monto_proyectado)}}" onclick="" >
                   </div>
                   <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Introduzca un monto proyectado</label>
+                  <label id="error_monto_mayor" name="error_monto_mayor" class="hidden text-base font-normal text-red-500" >El monto proyectado no puede ser menor que el comprometido</label>
                 </div>
                 
                 <div class="col-span-10 lg:col-span-3">
@@ -270,6 +271,33 @@
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>    
   <script>
+    window.onload =function(){
+    if($('#fuente_financiamiento_id').val() == '2'){
+      $('#titulo_anexo').removeClass('hidden');
+      $('#anexos').removeClass('hidden');
+    }else{
+      $('#titulo_anexo').addClass('hidden');
+      $('#anexos').addClass('hidden');
+    }
+    var anio = $('#label_ejercicio').text();
+    console.log(anio)
+   var fechaMin = anio+'-01'+'-01';
+   var fechaMax = anio+'-12'+'-31';
+   $('#acta_integracion').attr('min',fechaMin);
+  $('#acta_integracion').attr('max',fechaMax);
+  $('#acta_priorizacion').attr('min',fechaMin);
+  $('#acta_priorizacion').attr('max',fechaMax);
+  $('#adendum').attr('min',fechaMin);
+  $('#adendum').attr('max',fechaMax);
+
+  var proyectado = parseFloat($('#monto_proyectado').val());
+  var comprometido = parseFloat($('#monto_comprometido').val());
+  console.log(proyectado)
+  if(proyectado<comprometido)
+    $('#error_monto_mayor').removeClass('hidden');
+  //else
+    //$('#error_monto_mayor').addClass('hidden');
+  }
     
 //colocar opcion registrada en los selected
     $(document).ready(function(){
@@ -299,7 +327,15 @@
           }
       });
 
-      $('#monto_proyectado').keyup();
+      $('#monto_proyectado').on('keyup', function(){
+        var proyectado = parseFloat($('#monto_proyectado').val());
+        var comprometido = parseFloat($('#monto_comprometido').val());
+        console.log(proyectado)
+        if(proyectado<comprometido)
+          $('#error_monto_mayor').removeClass('hidden');
+        else
+          $('#error_monto_mayor').addClass('hidden');
+      });
 
      // $('#monto_comprometido').keyup();
 
@@ -353,15 +389,7 @@ $(document).ready(function() {
     }
   });
 
-  window.onload =function(){
-    if($('#fuente_financiamiento_id').val() == '2'){
-      $('#titulo_anexo').removeClass('hidden');
-      $('#anexos').removeClass('hidden');
-    }else{
-      $('#titulo_anexo').addClass('hidden');
-      $('#anexos').addClass('hidden');
-    }
-  }
+  
 
   $('#fuente_financiamiento_id').on('change',function(){
     if($('#fuente_financiamiento_id').val() == '2'){

@@ -130,8 +130,13 @@
 
 <script>
     //ejecucion del datatable
+    res = '{{ request()->filled('r') }}'
+    //console.log(res)
+    var busqueda= '{{ request()->r }}';
+  //console.log(busqueda);
   $(document).ready(function() {
       $('#example').DataTable({
+          "oSearch": {"sSearch": busqueda},
           "autoWidth" : true,
           "responsive" : true,
           language: {
