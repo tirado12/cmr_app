@@ -114,3 +114,4 @@ Route::get('/proveedorRfc/{rfc},{municipio_id}',[ProveedorController::class,'exi
 Route::get('/ejerciciosIntegrantes/{municipio}',[IntegrantesCabildoController::class,'ejerciciosCabildo']); //integrantes cabildo
 Route::get('/clienteEjercicio/{id_municipio}',[ClienteController::class,'clienteXejercicio']); //fuentes cliente, integrantes
 Route::get('/existeGastoFuente/{fuente_id},{gasto}',[GastosIndirectosFuentesController::class,'existeRegistro']); //ya existe registro
+Route::get('/obtenerEjerciciosPorCliente/{municipio}',[GastosIndirectosFuentesController::class,'obtenerEjercicios']); //obtiene ejercicios disponibles por cliente

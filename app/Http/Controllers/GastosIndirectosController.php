@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\GastosIndirectos;
 use App\Models\GastosIndirectosFuentes;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class GastosIndirectosController extends Controller
 {
@@ -85,7 +86,7 @@ class GastosIndirectosController extends Controller
     public function update(Request $request, GastosIndirectos $gastosIndirecto)
     {
         $request->validate([
-            'clave' => 'required',
+            'clave' => ['required',Rule::unique('gastos_indirectos')->ignore($gastosIndirecto)],
             'nombre' => 'required',
         ]);
         $gastosIndirecto->update($request->all());

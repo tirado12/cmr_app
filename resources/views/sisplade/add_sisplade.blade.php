@@ -77,7 +77,7 @@
             <select id="cliente_id" name="cliente_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
                 @foreach ($clientes as $item)
-                <option value="{{$item->cliente_id}}"> {{$item->nombre}} </option>
+                <option value="{{$item->id_municipio}}"> {{$item->nombre}} </option>
                 @endforeach
             </select>
             <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
@@ -296,9 +296,10 @@
           dataType:'json',
           type:'get',
           success: function(data){
-            $.each(data,function(key, item) {
-              $("#ejercicio").append('<option value='+item.ejercicio+'>'+item.ejercicio+'</option>');
-            });
+            console.log(data);
+            // $.each(data,function(key, item) {
+            //   $("#ejercicio").append('<option value='+item.ejercicio+'>'+item.ejercicio+'</option>');
+            // });
           },
           cache: false
         });

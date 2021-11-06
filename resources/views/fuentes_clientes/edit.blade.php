@@ -164,13 +164,13 @@
                   <div class="col-span-2">
                     <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
                     <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_integracion_consejo }}">
-                    
+                    <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                   </div>
                 
                   <div class="col-span-2">
                     <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
                     <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_priorizacion }}">
-                    
+                    <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                   </div>
     
                   <div class="col-span-2">
@@ -205,13 +205,13 @@
                 <div class="col-span-2">
                   <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
                   <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                  
+                  <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                 </div>
               
                 <div class="col-span-2">
                   <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
                   <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                  
+                  <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                 </div>
   
                 <div class="col-span-2">
@@ -450,7 +450,8 @@ $().ready(function() {
 			monto_proyectado: { required: true},
       monto_comprometido: { required: true},
       ejercicio: { required: true},
-      
+      acta_integracion: {required : true},
+      acta_priorizacion:{ required: true},
       
       
       fuente_financiamiento_id: { required: true},

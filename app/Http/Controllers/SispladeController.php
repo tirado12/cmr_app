@@ -29,7 +29,7 @@ class SispladeController extends Controller
        $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //return $clientes->find($fuentesCliente[1]->cliente_id)->nombre;
         
-        //return $fuentesCliente;
+        //return $clientes;
         return view('sisplade.index',compact('fuentes','sisplade','fuentesCliente','clientes'));
     }
 
@@ -39,17 +39,14 @@ class SispladeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-      
-       
-       
+    {       
        $clientesDisponibles = FuentesCliente::join('clientes','cliente_id','id_cliente')
        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
        ->where('fuente_financiamiento_id', 2)
-       ->select('cliente_id','nombre')
+       ->select('cliente_id','nombre','id_municipio')
        ->get(); //tabla fuenteClientes segun existentes 
 
-       $clientes = $clientesDisponibles->unique('cliente_id');
+       $clientes = $clientesDisponibles->unique('id_municipio');
        
       // $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //$cli = Cliente::has('municipio')->get();
@@ -171,11 +168,17 @@ class SispladeController extends Controller
     }
 
     public function selectEjercicio($cliente){ //obtiene los ejercicios disponibles del cliente seleccionado
-        $fuenteClie = FuentesCliente::whereHas('clientes', function(Builder $query) use($cliente) { 
-            $query->where('cliente_id', $cliente)->where('fuente_financiamiento_id', 2);
-        })
-        ->select('ejercicio','cliente_id')
-        ->get();  
+        // $fuenteClie = FuentesCliente::whereHas('clientes', function(Builder $query) use($cliente) { 
+        //     $query->where('cliente_id', $cliente)->where('fuente_financiamiento_id', 2);
+        // })
+        // ->select('ejercicio','cliente_id')
+        // ->get();  
+        $fuenteClie = FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->where('municipio_id',$cliente)
+        ->select('cliente_id','nombre','ejercicio')
+        ->get(); //tabla fuenteClientes segun existentes  
         return $fuenteClie;
     }
 

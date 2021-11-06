@@ -63,14 +63,7 @@
                   
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_gasto_indirecto" for="gasto_indirecto" class="block text-sm font-medium text-gray-700">Gasto Indirecto *</label>
-                    <select id="indirectos_id" name="indirectos_id" onchange="validarSelect()" class="clickable mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm">
-                      <option value=""> Elija una opción </option>
-                      @foreach($indirectos as $item)  
-                        <option value='{{ $item->id_indirectos }}' {{ ($gastoIndirecto->indirectos_id == $item->id_indirectos) ? 'selected' : '' }}>
-                          {{$item->nombre}}
-                        </option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="indirectos_id" id="indirectos_id" class="mt-1 focus:ring-gray-500 focus:border-gray-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md myDIV" value="{{$indirectos->find($gastoIndirecto->indirectos_id)->nombre}}" disabled>
                     <label id="error_gasto_indirecto" name="error_gasto_indirecto" class="hidden text-base font-normal text-red-500" >Introduzca un gasto</label>
                 </div>
 
@@ -130,7 +123,7 @@ $(document).ready(function() {
       $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
     }
   });
-
+//======================================================================================
   $("#formulario").validate({ //validacion con el btn guardar
             onfocusout: false,
             onclick: false,
@@ -150,14 +143,14 @@ $(document).ready(function() {
           }); 
 
 });
-
+//======================================================================================
 const formato = new Intl.NumberFormat('es-MX', { //dar formato a la cantidad 
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-
+//======================================================================================
   $("#monto").val(formato.format('{{ $gastoIndirecto->monto}}').replace(/\D00(?=\D*$)/, ''));  
-
+//======================================================================================
 $("#monto").on({
             "focus": function(event) {
                 $(event.target).select(); //formato al escribir el monto
@@ -171,7 +164,7 @@ $("#monto").on({
             }
         });
 
-
+//======================================================================================
       //validar selected del cliente
 function validarSelect() {
     var valor = document.getElementById("gasto_indirecto").value;

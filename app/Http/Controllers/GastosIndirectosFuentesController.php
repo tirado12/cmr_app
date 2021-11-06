@@ -52,13 +52,13 @@ class GastosIndirectosFuentesController extends Controller
         $fuenteCliente= FuentesCliente::join('clientes','cliente_id','id_cliente')
         ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
         ->where('fuente_financiamiento_id', 2)
-        ->select('cliente_id','nombre')
+        ->select('cliente_id','nombre','municipio_id')
         ->get(); //tabla fuenteClientes segun existentes           
-        $clientes = $fuenteCliente->unique('cliente_id');
+        $clientes = $fuenteCliente->unique('municipio_id');
 
         $indirectos = GastosIndirectos::all();
 
-         //return $indirectos;
+         //return $fuenteCliente;
          return view('fuentes_gastos.add_fuentes_gastos',compact('clientes','indirectos'));
     }
 
@@ -125,7 +125,7 @@ class GastosIndirectosFuentesController extends Controller
     {
         $gasto= GastosIndirectosFuentes::find($id);
         $request->validate([
-            'indirectos_id' => 'required',
+            //'indirectos_id' => 'required',
             'monto' => 'required',
         ]);
         $request['monto'] = str_replace(",", '', $request['monto']);
@@ -154,6 +154,15 @@ class GastosIndirectosFuentesController extends Controller
         return 0;
         else
         return 1;
+    }
+    public function obtenerEjercicios($municipio){
+        $consulta= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->where('municipio_id',$municipio)
+        ->select('cliente_id','nombre','ejercicio')
+        ->get(); //tabla fuenteClientes segun existentes  
+        return $consulta;
     }
     // ================= Funciones API ====================== //
     public function getDesgloseGI($cliente_id, $anio){

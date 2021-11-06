@@ -214,12 +214,11 @@ $(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
-
+//=========================================================================
 
 $(document).ready(function() {
     //validacion de campos del modal
     $("#modal-id input").keyup(function() {
-  
       var dato = $(this).val();
       
       if(dato != ''){
@@ -236,7 +235,7 @@ $(document).ready(function() {
       }
     
     });
-
+//=========================================================================
     $("#formulario").validate({ //valdiacion del formulario
     onfocusout: false,
     onclick: false,
@@ -253,7 +252,7 @@ $(document).ready(function() {
      
     },
 	});
-
+//=========================================================================
       //datatable
       $('#example').DataTable({
           "autoWidth" : false,

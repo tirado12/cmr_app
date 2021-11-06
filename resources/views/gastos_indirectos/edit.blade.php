@@ -9,6 +9,31 @@
     <h1 class="text-xl font-bold ml-2">Editar Gastos Indirectos</h1>
 </div>
 
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
+
 <div class="mt-20 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
     <div class="mt-5 md:mt-0 md:col-span-2">
