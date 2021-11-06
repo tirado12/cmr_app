@@ -177,22 +177,24 @@ $(document).ready(function() {
         fuente_id = $('#fuenteCliente_id').val();
         if(gasto.length>0 && fuente_id.length>0){
           //console.log(fuente_id);
-          existe(direccion,fuente_id,gasto);
+          existe(fuente_id,gasto);
         }
         //ejercicio
       });
 
-      function existe(direccion,fuente_id,gasto){  //metodo para consultar si existe el registro
+      function existe(fuente_id,gasto){  //metodo para consultar si existe el registro
+        var direccion = '{{ url("/existeGastoFuente")}}/'+fuente_id+','+gasto;
+        $.ajax({
               url: direccion,
               dataType:'json',
               type:'get',
               success: function(data){
-                //console.log(data);
-                $.each(data,function(key, item) {
-
+                console.log(data);
+                // $.each(data,function(key, item) {
+                  
                   //$('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
                   //console.log('a '+ $('#fuenteCliente_id').val());
-                });
+                // });
                 
               },
               cache: false

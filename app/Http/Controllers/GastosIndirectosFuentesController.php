@@ -150,6 +150,10 @@ class GastosIndirectosFuentesController extends Controller
         $existeGasto = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente)
         ->where('indirectos_id', $gastoIndirecto)
         ->exists();
+        if($existeGasto == null)
+        return 0;
+        else
+        return 1;
     }
     // ================= Funciones API ====================== //
     public function getDesgloseGI($cliente_id, $anio){
