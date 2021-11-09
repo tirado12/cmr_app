@@ -73,14 +73,14 @@
     <div class="grid grid-cols-8 gap-4">
 
           <div class="col-span-4 ">
-            <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
-            <select id="cliente_id" name="cliente_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+            <label  id="label_id_municipio" for="id_municipio" class="block text-sm font-medium text-gray-700">Cliente *</label>
+            <select id="id_municipio" name="id_municipio"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
                 @foreach ($clientes as $item)
                 <option value="{{$item->id_municipio}}"> {{$item->nombre}} </option>
                 @endforeach
             </select>
-            <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+            <label id="error_id_municipio" name="error_id_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
           </div>
 
           <div class="col-span-4">
@@ -91,7 +91,7 @@
             <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio.</label>  <br>
             <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro en este ejercicio</label>
           </div>
-        
+        <input id="cliente_id" name="cliente_id" type="text" class="hidden">
           
       </div>
       
@@ -103,12 +103,12 @@
 
   
       <div class="mt-5 md:mt-0 md:col-span-2 hidden" id="form_sisplade">
-        <form id="formulario" name="formulario">
+        <form id="formulario" name="formulario" action="{{ route('sisplade.store') }}" method="POST">
+          @csrf
+          @method('POST')
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
               <fieldset class="grid grid-cols-8 gap-4 p-5">
-
-                
 
                 <div class="col-span-4">
                   <legend class="text-base font-medium text-gray-900 ">Estado</legend>
@@ -143,26 +143,23 @@
                           
                           <div class="mr-3 text-sm">
                             <input id="fecha_capturado" name="fecha_capturado" type="date" class="focus:ring-gray-500 bg-gray-100 text-gray-600 border-gray-300 rounded w-full" disabled>
-                            
                           </div>
                           <div class="flex items-center h-5">
                             <label for="fecha_capturado" class="font-medium text-gray-700">Fecha de captura</label>
                             
                           </div>
                         </div>
-
+                        <label id="error_fecha_capturado" name="error_fecha_capturado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una fecha</label>
                         <div class="flex items-center ">
-                          
                           <div class="mr-3 text-sm">
-                            
                             <input id="fecha_validado" name="fecha_validado" type="date" class="focus:ring-gray-500 bg-gray-100 text-gray-600 border-gray-300 rounded w-full" disabled>
                           </div>
                           <div class="flex items-center h-5">
                             <label for="fecha_validado" class=" block font-medium text-gray-700">Fecha de validación</label>
                             
                           </div>
-                          
                         </div>
+                        <label id="error_fecha_validado" name="error_fecha_validado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una fecha</label>
                       </div>
                 </div>
 
@@ -173,7 +170,7 @@
               <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-400 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Regresar
               </a>
-              <button type="buttom" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
+              <button type="submit" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
                 Guardar
               </button>
             </div>
@@ -204,92 +201,90 @@
 
 <script>
 
+// $("#guardar").on('submit', function (event) {
+//       var validado,capturado,fecha_capturado,fecha_validado;
+//       var fuentes_clientes_id= $("#fuenteCliente_id").val();
+      
+//       if($('#capturado').prop("checked"))
+//       {
+//         capturado=1;
+//         fecha_capturado= $('#fecha_capturado').val();
+//       }
+//       else
+//       {
+//         capturado=0;
+//         fecha_capturado='';
+//       }
+      
+//       if($('#validado').prop("checked"))
+//       {
+//         validado= 1;
+//         fecha_validado= $('#fecha_validado').val();
+//       }
+//       else
+//       {
+//         validado=0;
+//         fecha_validado ='';
+//       }
+
+//       var direccion= '{{ route("sisplade.store") }}';
+//       var token = '{{ csrf_token() }}';
+//       var data= {
+//         fuentes_clientes_id:fuentes_clientes_id,
+//         capturado:capturado,
+//         fecha_capturado:fecha_capturado, 
+//         validado:validado,
+//         fecha_validado:fecha_validado,
+//         _token:token,
+//         };
+        
+//         $.ajax({
+//           type: 'POST',
+//           url: direccion,
+//           data: data,
+//           success: function(data){
+//               window.location = data.url;
+//           },
+//           cache: false
+//         });
+//     });
+
   //metodo ajax obtener el registro fuenteCliente exacto
   $(document).ready(function() {
     var fuente,ejercicio,cliente;
-    
-    //guardar registro sisplade
-    $("#guardar").on('click', function () {
-      var validado,capturado,fecha_capturado,fecha_validado;
-      var fuentes_clientes_id= $("#fuenteCliente_id").val();
-      if($('#capturado').prop("checked"))
-      {
-        capturado=1;
-        fecha_capturado= $('#fecha_capturado').val();
-      }
-      else
-      {
-        capturado=0;
-        fecha_capturado='';
-      }
-      
-      if($('#validado').prop("checked"))
-      {
-        validado= 1;
-        fecha_validado= $('#fecha_validado').val();
-      }
-      else
-      {
-        validado=0;
-        fecha_validado ='';
-      }
-      
-      
-      var direccion= '{{ route("sisplade.store") }}';
-      var token = '{{ csrf_token() }}';
-      var data= {
-        fuentes_clientes_id:fuentes_clientes_id,
-        capturado:capturado,
-        fecha_capturado:fecha_capturado, 
-        validado:validado,
-        fecha_validado:fecha_validado,
-        _token:token,
-        };
-        
-        $.ajax({
-          type: 'POST',
-          url: direccion,
-          data: data,
-          success: function(data){
-              window.location = data.url;
-          },
-          cache: false
-        });
-    });
-
     //evento de los checkbox
     $('#capturado').on('click',function(){
             if($(this).prop("checked")) {
-                
                 $('#fecha_capturado').removeAttr('disabled');
                 $('#fecha_capturado').removeClass('bg-gray-100');
+                $('#fecha_capturado').prop('required',true);
             }else{
                 $('#fecha_capturado').attr('disabled', true);
                 $('#fecha_capturado').addClass('bg-gray-100');
+                $('#fecha_capturado').prop('required',false);
             }
         });
-
+//======================================================
         $('#validado').on('click',function(){
             if($(this).prop("checked")) {
-                
                 $('#fecha_validado').removeAttr('disabled');
                 $('#fecha_validado').removeClass('bg-gray-100');
+                $('#fecha_validado').prop('required',true);
             }else{
                 $('#fecha_validado').attr('disabled', true);
                 $('#fecha_validado').addClass('bg-gray-100');
+                $('#fecha_validado').prop('required',false);
             }
         });
-
+//======================================================
     //select ejercicio disponible por cliente
-    $("#cliente_id").on('change', function () {
-
+    $("#id_municipio").on('change', function () {
          cliente=$(this).val();
          $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
          $("#fuente").empty();
          $("#ejercicio").append('<option value="">Elija un cliente</option>');
          $("#fuente").append('<option value="">Elija un cliente y ejercicio</option>');
          
-          
          var link = '{{ url("/selectEjercicio")}}/'+cliente;
          $.ajax({
           url: link,
@@ -297,27 +292,26 @@
           type:'get',
           success: function(data){
             console.log(data);
-            // $.each(data,function(key, item) {
-            //   $("#ejercicio").append('<option value='+item.ejercicio+'>'+item.ejercicio+'</option>');
-            // });
+            $.each(data,function(key, item) {
+              $("#ejercicio").append('<option value='+item.cliente_id+'>'+item.ejercicio+'</option>');
+            });
           },
           cache: false
         });
-
     });
-  
+  //======================================================
       //validar select ejercicio y cliente , consulta los ejercicios disponibles de ese cliente
-      $("#ejercicio, #cliente_id").on('change', function () {
-        
-        if($("#cliente_id").val()== '' || $("#ejercicio").val()== ''){
+      $("#ejercicio, #id_municipio").on('change', function () {
+        if($("#id_municipio").val()== '' || $("#ejercicio").val()== ''){
           $('#titulo_sisplade').addClass('hidden');
           $('#form_sisplade').addClass('hidden'); //esconde formulario sisplade
         }else{
           $('#titulo_sisplade').removeClass('hidden'); //mostrar el formulario de sisplade
           $('#form_sisplade').removeClass('hidden');
         }
-          ejercicio=$('#ejercicio').val();
-          cliente=$('#cliente_id').val();
+          ejercicio = $('#ejercicio option:selected').text();
+          //ejercicio=$('#ejercicio').val();
+          cliente=$('#ejercicio').val();
         
         if(cliente.length>0 && ejercicio.length>0){  
           var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
@@ -325,26 +319,24 @@
         }
         //ejercicio
       }); 
-
+//======================================================
       function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar segun las opc de los select
         $.ajax({
               url: direccion,
               dataType:'json',
               type:'get',
               success: function(data){
-                //console.log(data);
+                console.log(data);
                 $.each(data,function(key, item) {
                   $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
                   //console.log('a '+ $('#fuenteCliente_id').val());
                   existe($('#fuenteCliente_id').val());
                 });
-                
               },
               cache: false
         });
-       
       }
-
+//======================================================
       function existe($id){ //valida si existe un registro con este mismo ejercicio
         $.ajax({
               url: '{{ url("/existeEnSisplade")}}/'+$id,
@@ -371,25 +363,23 @@
  
   //ejecucion del datatable
   $(document).ready(function() {
-          var table = $('#example').DataTable({
-            "autoWidth": true,
-              "responsive" : true,
-              columnDefs: [
-            { responsivePriority: 1, targets: 4 },
-            { responsivePriority: 1, targets: 1 },
-            { responsivePriority: 10001, targets: 4 },
-            { responsivePriority: 2, targets: -2 }
-        ],
-              language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+    $("#formulario").validate({
+            onfocusout: false,
+            onclick: false,
+            rules: {
+              fuenteCliente_id: {required: true },
+              
+            },
+            errorPlacement: function(error, element) {
+              if(error != null){
+              $('#error_'+element.attr('id')).fadeIn();
+              }else{
+                $('#error_'+element.attr('id')).fadeOut();
               }
-            }).columns.adjust().draw();
-           
-          
+            },
+          }); 
 
+       
 });
-     
-      
 </script>
-
 @endsection

@@ -51,7 +51,6 @@ class SispladeController extends Controller
       // $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //$cli = Cliente::has('municipio')->get();
        //return $clientes->find($fuenteClientes[0]->cliente_id)->nombre;
-       
         //return $clientes;
         return view('sisplade.add_sisplade',compact('clientes'));
     }
@@ -64,21 +63,38 @@ class SispladeController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->capturado == 'on'){
+            $capturado = 1;
+        }else{
+             $capturado = 0;
+             $request['fecha_capturado']=null;
+        }
+        if($request->validado == 'on'){
+              $validado = 1;
+         }else{
+              $validado = 0;
+              $request['fecha_validacion']=null;
+         }
+         $request->merge([
+             'capturado' => $capturado,
+             'validado' => $validado
+         ]);
         $request->validate([
-            'fuentes_clientes_id' => 'required',
+            'fuenteCliente_id' => 'required',
             'capturado' => 'nullable',
             'fecha_capturado' => 'nullable',
             'validado' =>'nullable',
             'fecha_validado'=> 'nullable'
         ]);
         Sisplade::create([
-            'fuentes_clientes_id' => $request->fuentes_clientes_id,
+            'fuentes_clientes_id' => $request->fuenteCliente_id,
             'capturado' => $request->capturado,
             'fecha_capturado' => $request->fecha_capturado,
             'validado' => $request->validado,
             'fecha_validado'=> $request->fecha_validado
             ]);
-            return response()->json(['url'=>url('/sisplade')]);
+            //return response()->json(['url'=>url('/sisplade')]);
+            return redirect()->route('sisplade.index');
     }
     /**
      * Display the specified resource.
@@ -106,7 +122,7 @@ class SispladeController extends Controller
        ->select('clientes.id_cliente', 'municipios.nombre')
        ->get();
         $fuentes=FuentesFinanciamiento::all();
-       //return $fuentesClientes;
+       //return $sisplade;
        return view('sisplade.edit', compact('fuentesClientes','clientes','fuentes','sisplade'));
     }
 
@@ -119,10 +135,8 @@ class SispladeController extends Controller
      */
     public function update(Request $request, Sisplade $sisplade)
     {   
-
-        
        if($request->capturado == 'on'){
-           $capturado = 1;
+            $capturado = 1;
        }else{
             $capturado = 0;
             $request['fecha_capturado']=null;
@@ -163,7 +177,6 @@ class SispladeController extends Controller
         ->select('id_fuente_financ_cliente','nombre_corto')
         ->get();        
         return response()->json($fuenteCli);
-
         //return $fuenteCli;
     }
 
@@ -177,7 +190,7 @@ class SispladeController extends Controller
         ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
         ->where('fuente_financiamiento_id', 2)
         ->where('municipio_id',$cliente)
-        ->select('cliente_id','nombre','ejercicio')
+        ->select('cliente_id','ejercicio')
         ->get(); //tabla fuenteClientes segun existentes  
         return $fuenteClie;
     }

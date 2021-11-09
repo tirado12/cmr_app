@@ -159,6 +159,7 @@
               "autoWidth" : true,
               "responsive" : true,
               columnDefs: [ 
+                { width: 90, targets: 0 }
               ],
               language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'

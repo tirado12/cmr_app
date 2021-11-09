@@ -203,14 +203,13 @@ function existe(){  //metodo para consultar si existe el registro
                     existe();
                   //console.log('a '+ $('#fuenteCliente_id').val());
                 });
-                
               },
               cache: false
         });
       }  
 //======================================================================================
       //validacion del formulario con el btn guardar
-        $().ready(function() {
+     $().ready(function() {
           $("#formulario").validate({
             onfocusout: false,
             onclick: false,
@@ -219,7 +218,6 @@ function existe(){  //metodo para consultar si existe el registro
               ejercicio: {required: true },
               monto: { required: true },
               gasto_indirecto: { required: true},
-            
             },
             errorPlacement: function(error, element) {
               if(error != null){
@@ -227,10 +225,8 @@ function existe(){  //metodo para consultar si existe el registro
               }else{
                 $('#error_'+element.attr('id')).fadeOut();
               }
-            
             },
           }); 
-
 //======================================================================================
       //validacion de input 
       $("input").keyup(function() {

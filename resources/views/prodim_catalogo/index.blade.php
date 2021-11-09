@@ -25,6 +25,31 @@
     </div>
 </div>
 
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
+
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
 
@@ -60,7 +85,7 @@
                   
                   @csrf
                   @method('DELETE')
-              <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
+                   <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
                   </div>
                   
                   </form>
@@ -149,14 +174,24 @@
     )
   </script>
 @endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este registro esta relacionado con otro.<br> No es posible eliminarlo.'
+    });
+  </script>
+@endif
 
 <script>
 $(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia eliminar
     e.preventDefault();
     Swal.fire({
       customClass: {
-      title: 'swal_title_modificado',
-      cancelButton: 'swal_button_cancel_modificado'
+        title: 'swal_title_modificado',
+        cancelButton: 'swal_button_cancel_modificado'
       },
       title: '¿Seguro que desea eliminar este registro?',
       text: "¡Aviso, esta acción es irreversible!",
@@ -172,56 +207,47 @@ $(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia
       }
     })
 });
- 
-     function toggleModal(modalID){ //mostrar y ocultar modal 
+//===================================================
+  function toggleModal(modalID){ //mostrar y ocultar modal 
     document.getElementById(modalID).classList.toggle("hidden");
     document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
   }
-
-
+//===================================================
   $(document).ready(function() {
     //validacion de campos del modal
     $("#modal-id input").keyup(function() {
-  
       var dato = $(this).val();
-      
       if(dato != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
-      //$('#guardar').removeAttr("disabled");
+        $('#error_'+$(this).attr('id')).fadeOut();
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       }
       else{
-      //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).fadeIn();
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
       }
-    
     });
-
-
+//===================================================
     $("#formulario").validate({ //validar inputs del formulario
-    onfocusout: false,
-    onclick: false,
-		rules: {
-            clave: { required: true},
-            nombre: { required: true},
-		},
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-      $('#error_'+element.attr('id')).fadeOut();
-      }
-     
-    },
-	});
+      onfocusout: false,
+      onclick: false,
+      rules: {
+          clave: { required: true},
+          nombre: { required: true},
+      },
+      errorPlacement: function(error, element) {
+        if(error != null){
+          $('#error_'+element.attr('id')).fadeIn();
+        }else{
+          $('#error_'+element.attr('id')).fadeOut();
+        }
+      },
+    });
   });
 </script>
 
 <script>
-  
     $(document).ready(function() { //llamar datatable
           $('#example').DataTable({
               "autoWidth" : true,
@@ -229,7 +255,6 @@ $(".form-eliminar").submit(function(e){ //propiedades del mensaje de advertencia
               language: {
                  url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
               }
-              
           }).columns.adjust();
     });
 </script>

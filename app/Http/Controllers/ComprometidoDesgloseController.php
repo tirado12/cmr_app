@@ -14,7 +14,8 @@ class ComprometidoDesgloseController extends Controller
      */
     public function index()
     {
-        return "comprometido desglose";
+        //return "comprometido desglose";
+        return view('comprometido_desglose.index');
     }
 
     /**

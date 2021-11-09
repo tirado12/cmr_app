@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProdimCatalogo;
+use App\Models\ProdimComprometido;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProdimCatalogoController extends Controller
 {
@@ -39,7 +41,7 @@ class ProdimCatalogoController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'clave' => 'required',
+            'clave' => 'required|unique:prodim_catalogo,clave',
             'nombre' => 'required',
         ]);
         ProdimCatalogo::create([
@@ -79,7 +81,7 @@ class ProdimCatalogoController extends Controller
     public function update(Request $request, ProdimCatalogo $prodimCatalogo)
     {
         $request->validate([
-            'clave' => 'required',
+            'clave' => ['required',Rule::unique('prodim_catalogo')->ignore($prodimCatalogo)],
             'nombre' => 'required',
         ]);
         $prodimCatalogo->update($request->all());
@@ -94,7 +96,12 @@ class ProdimCatalogoController extends Controller
      */
     public function destroy(ProdimCatalogo $prodimCatalogo)
     {
-        $prodimCatalogo->delete();   
-        return redirect()->route('prodimCatalogo.index')->with('eliminar','ok');
+        $existeEnProdimComprometido = ProdimComprometido::where('prodim_catalogo_id', $prodimCatalogo->id_prodim_catalogo)->exists();
+        if($existeEnProdimComprometido == null){ //si no hay existe
+            $prodimCatalogo->delete();   
+            return redirect()->route('prodimCatalogo.index')->with('eliminar','ok');
+        }else{
+            return redirect()->route('prodimCatalogo.index')->with('eliminar','error');
+        }
     }
 }

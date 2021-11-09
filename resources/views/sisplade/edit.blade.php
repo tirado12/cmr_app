@@ -29,7 +29,6 @@
                             <div class="alert-content ml-4 ">
                               <p class="font-bold sm:text-sm">Editar Sisplade</p>
                             </div>
-
                             
                         </div>
                         <div class=" flex flex-row items-center justify-center p-2 col-span-6">
@@ -38,23 +37,25 @@
                         
                         <div class="col-span-6 sm:col-span-3 ml-10">
                             
-                            <input id="capturado" name="capturado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded" {{ ($sisplade->validado == 1)? 'checked' : '' }}>
+                            <input id="capturado" name="capturado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded" {{ ($sisplade->capturado == 1)? 'checked' : '' }}>
                             <label for="capturado" class=" font-medium text-gray-700">Capturado</label>
                         </div>
 
                         <div class="col-span-6 sm:col-span-3 ml-10 ">
-                            <input id="validado" name="validado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded" {{ ($sisplade->capturado == 1)? 'checked' : '' }}>
+                            <input id="validado" name="validado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded" {{ ($sisplade->validado == 1)? 'checked' : '' }}>
                             <label for="validado" class=" font-medium text-gray-700">Validación</label>
                         </div>
 
                         <div class="col-span-6 sm:col-span-3 mb-4">
                             <label for="fecha_capturado" id="label_fecha_capturado" class="hidden block font-medium text-gray-700">Fecha de captura</label>
                             <input id="fecha_capturado" name="fecha_capturado" type="date" class="hidden block focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" value="{{ $sisplade->fecha_capturado }}">
+                            <label id="error_fecha_capturado" name="error_fecha_capturado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una fecha</label>
                         </div>
 
                         <div class="col-span-6 sm:col-span-3 mb-4">
                             <label for="fecha_validacion" id="label_fecha_validacion" class="hidden block font-medium text-gray-700">Fecha de validación</label>
                             <input id="fecha_validacion" name="fecha_validacion" type="date" class="hidden block focus:ring-gray-500 text-gray-600 border-gray-300 rounded w-full" value="{{ $sisplade->fecha_validado }}">
+                            <label id="error_fecha_validacion" name="error_fecha_validacion" class="hidden text-base font-normal text-red-500" >Por favor ingresar una fecha</label>
                         </div>
                         
                     </div>
@@ -67,37 +68,65 @@
                         </button>
                       </div>
                 </div>
-
             </div>
         </form>
     </div>
 </div>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
 <script>
-    $(document).ready(function() {
-
-
-        $('#capturado').on('click',function(){
-            if($(this).prop("checked")) {
-                
+    window.onload = function(){
+            if($('#capturado').prop("checked")) {
                 $('#fecha_capturado').removeClass('hidden');
                 $('#label_fecha_capturado').removeClass('hidden');
+                $('#fecha_capturado').prop('required',true);
+            }
+            if($('#validado').prop("checked")) {
+                $('#fecha_validacion').removeClass('hidden');
+                $('#label_fecha_validacion').removeClass('hidden');
+                $('#fecha_validacion').prop('required',true);
+            }
+    };
+
+    $(document).ready(function() {
+        $('#capturado').on('click',function(){
+            if($(this).prop("checked")) {
+                $('#fecha_capturado').removeClass('hidden');
+                $('#label_fecha_capturado').removeClass('hidden');
+                $('#fecha_capturado').prop('required',true);
             }else{
                 $('#fecha_capturado').addClass('hidden');
                 $('#label_fecha_capturado').addClass('hidden');
+                $('#fecha_capturado').prop('required',false);
             }
         });
         $('#validado').on('click',function(){
             if($(this).prop("checked")) {
-                
                 $('#fecha_validacion').removeClass('hidden');
                 $('#label_fecha_validacion').removeClass('hidden');
+                $('#fecha_validacion').prop('required',true);
             }else{
                 $('#fecha_validacion').addClass('hidden');
                 $('#label_fecha_validacion').addClass('hidden');
+                $('#fecha_validacion').prop('required',false);
             }
         });
 
+        $("#formulario").validate({
+            onfocusout: false,
+            onclick: false,
+            rules: {
+                fecha_capturado: { date: true},
+                fecha_validacion: {date: true},
+            },
+            errorPlacement: function(error, element) {
+              if(error != null){
+              $('#error_'+element.attr('id')).fadeIn();
+              }else{
+                $('#error_'+element.attr('id')).fadeOut();
+              }
+            },
+          }); 
     });
 </script>
 @endsection
