@@ -5,7 +5,7 @@
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
     </svg>
-    <h1 class="font-bold text-xl ml-2">Editar Fuente financiamiento</h1>
+    <h1 class="font-bold text-xl ml-2">Editar Sisplade</h1>
 </div>
 
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
@@ -21,8 +21,8 @@
                             <input type="text" name="cliente" id="cliente" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $clientes->find($fuentesClientes[0]->cliente_id)->nombre }}" disabled>
                         </div>
                         <div class="col-span-6 sm:col-span-3">
-                            <label for="first_name" class="block text-sm font-medium text-gray-700">Fuente *</label>
-                            <input type="text" name="fuente" id="fuente" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuentes->find($fuentesClientes[0]->fuente_financiamiento_id)->nombre_corto }}" disabled>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
+                            <input type="text" name="ejercicio" id="ejercicio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuentesClientes[0]->ejercicio }}" disabled>
                         </div>
 
                         <div class=" flex flex-row items-center justify-center bg-gray-100 p-2 mt-2  shadow col-span-6">
@@ -80,6 +80,15 @@
                 $('#fecha_capturado').removeClass('hidden');
                 $('#label_fecha_capturado').removeClass('hidden');
                 $('#fecha_capturado').prop('required',true);
+                fechaMin= $('#ejercicio').val() + '-01-01';
+                fechaMax= $('#ejercicio').val() + '-12-31';
+                $('#fecha_capturado').attr('min',fechaMin);
+                $('#fecha_capturado').attr('max',fechaMax);
+                $('#fecha_validacion').attr('min',$('#fecha_capturado').val());
+                $('#fecha_validacion').attr('max',fechaMax);
+                $('#validado').attr('disabled', false);
+            }else{
+                $('#validado').attr('disabled', true);
             }
             if($('#validado').prop("checked")) {
                 $('#fecha_validacion').removeClass('hidden');
@@ -87,14 +96,16 @@
                 $('#fecha_validacion').prop('required',true);
             }
     };
-
+//===========================================================
     $(document).ready(function() {
         $('#capturado').on('click',function(){
             if($(this).prop("checked")) {
                 $('#fecha_capturado').removeClass('hidden');
                 $('#label_fecha_capturado').removeClass('hidden');
                 $('#fecha_capturado').prop('required',true);
+                $('#validado').attr('disabled', false);
             }else{
+                $('#validado').attr('disabled', true);
                 $('#fecha_capturado').addClass('hidden');
                 $('#label_fecha_capturado').addClass('hidden');
                 $('#fecha_capturado').prop('required',false);
@@ -111,6 +122,13 @@
                 $('#fecha_validacion').prop('required',false);
             }
         });
+        $('#fecha_capturado').on('change',function(){
+            fechaMin =$(this).val();
+            fechaMax= $('#ejercicio').val() + '-12-31';
+            
+            $('#fecha_validacion').attr('min',fechaMin);
+            $('#fecha_validacion').attr('max',fechaMax);
+        });
 
         $("#formulario").validate({
             onfocusout: false,
@@ -121,9 +139,9 @@
             },
             errorPlacement: function(error, element) {
               if(error != null){
-              $('#error_'+element.attr('id')).fadeIn();
+                 $('#error_'+element.attr('id')).fadeIn();
               }else{
-                $('#error_'+element.attr('id')).fadeOut();
+                 $('#error_'+element.attr('id')).fadeOut();
               }
             },
           }); 

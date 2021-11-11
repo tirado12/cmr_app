@@ -19,8 +19,8 @@
 
 <div class="flex flex-col mt-6">
   <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-  <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal', {{$fuenteClientes}})">
-  Agregar
+  <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal')">
+    Agregar
   </button>
   
       <!-- div de tabla -->
@@ -62,7 +62,7 @@
           <th>Municipio</th>
           <th>Monto proyectado</th>
           <th>Monto comprometido</th>
-          <th>Periodo</th>
+          
           <th>Ejercicio</th>
           <th>Fuente de financiamiento</th>
           <th class="flex justify-center">Acción</th>
@@ -90,12 +90,7 @@
             </div>
             
           </td>
-          <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
-              {{ $listaClientes->find($index->cliente_id)->anio_inicio.' - '.$listaClientes->find($index->cliente_id)->anio_fin}}
-            </div>
-            
-          </td>
+          
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
                 {{$index->ejercicio}}
@@ -110,6 +105,7 @@
           </td>
           <td>
             <div class="flex justify-center">
+              
             <form action="{{ route('fuenteCliente.destroy', $index->id_fuente_financ_cliente) }}" method="POST" class="form-eliminar" >
               <div>
               <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm p-1 text-blue-500 font-normal text-ms rounded rounded-lg">Editar</a> 
@@ -117,7 +113,10 @@
                 Detalles
               </button> -->
               @if($index->fuente_financiamiento_id == 2)
-              <a type="button"  href="{{ route('anexos.index').'?r='.$nombre_cliente }}" class="bg-white text-sm text-blue-500 p-1 font-normal text-ms rounded rounded-lg">Anexos</a> 
+              
+              <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
+                Detalles
+              </button>
               @endif
               @csrf
               @method('DELETE')
@@ -128,15 +127,9 @@
             </div>
           </td>
       </tr>
+      
       @endforeach
   </tbody>
-  <!--<tfoot>
-      <tr>
-        <th>Usuario</th>
-        <th>Rol</th>
-        <th></th>
-      </tr>
-  </tfoot>-->
 </table>
 
 </div>
@@ -149,7 +142,7 @@
       <!--header-->
       <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
         <h4 class="text-xl font-semibold">
-          Fuente de financiamiento
+          Fuente de financiamiento - Clientes
         </h4>
         <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal_1('modal-id')">
           <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
@@ -189,7 +182,19 @@
               </div>
               <div class="col-span-8">
                 <label for="gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
-                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">Pendiente</span>
+                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full "></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
+                <span id="ver_acta_integracion_consejo" class=" "></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta de priorización: </label>
+                <span id="ver_acta_priorizacion" class=" "></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
+                <span id="ver_adendum_priorizacion" class=" "></span>
               </div>
              
           </div>
@@ -217,7 +222,7 @@
         </button>
       </div>
       <!--body-->
-      <form action="{{ route('fuenteCliente.store') }}" method="POST" id="formulario" name="formulario">
+      <form action="{{ route('fuenteCliente.store') }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">
@@ -561,15 +566,15 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
 //====================================================
   $('#fuente_financiamiento_id, #ejercicio').on('keyup change',function(){
    $('#ejercicio').val($('#ejercicio').val().slice(0,4));//copia de array de caracteres
-   var anio = $('#ejercicio').val();
-   var fechaMin = anio+'-01'+'-01';
-   var fechaMax = anio+'-12'+'-31';
-   $('#acta_integracion').attr('min',fechaMin);
-  $('#acta_integracion').attr('max',fechaMax);
-  $('#acta_priorizacion').attr('min',fechaMin);
-  $('#acta_priorizacion').attr('max',fechaMax);
-  $('#adendum').attr('min',fechaMin);
-  $('#adendum').attr('max',fechaMax);
+    var anio = $('#ejercicio').val();
+    var fechaMin = anio+'-01'+'-01';
+    var fechaMax = anio+'-12'+'-31';
+    $('#acta_integracion').attr('min',fechaMin);
+    $('#acta_integracion').attr('max',fechaMax);
+    // $('#acta_priorizacion').attr('min',fechaMin);
+    // $('#acta_priorizacion').attr('max',fechaMax);
+    // $('#adendum').attr('min',fechaMin);
+    // $('#adendum').attr('max',fechaMax);
     cliente = $('#cliente_id').val();
     fuente= $('#fuente_financiamiento_id').val();
     ejercicio= $('#ejercicio').val();
@@ -582,7 +587,7 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
               type:'get',
               success: function(data){
                 //console.log(data);
-                if(data== 1){
+                if(data.length != 0){
                   $('#error_existe').removeClass('hidden');
                   $('#guardar').attr("disabled", true);
                   $("#guardar").removeClass('bg-green-500');
@@ -598,6 +603,23 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
             });
     }
     
+  });
+  $('#acta_integracion').on('change', function(){
+      fechaMin = $('#acta_integracion').val();
+      var anio = $('#ejercicio').val();
+      var fechaMax = anio+'-12'+'-31';
+      $('#acta_priorizacion').val('');
+      $('#adendum').val('');
+      $('#acta_priorizacion').attr('min',fechaMin);
+      $('#acta_priorizacion').attr('max',fechaMax);
+  });
+  $('#acta_priorizacion').on('change', function(){
+      fechaMin = $('#acta_priorizacion').val();
+      var anio = $('#ejercicio').val();
+      var fechaMax = anio+'-12'+'-31';
+      $('#adendum').val('');
+      $('#adendum').attr('min',fechaMin);
+      $('#adendum').attr('max',fechaMax);
   });
 //================================================
    $("#modal input").keyup(function() {
@@ -627,11 +649,11 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                         .replace(/([0-9])([0-9]{2})$/, '$1.$2')
                         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
                         
-                });
+                }); 
                 
             }
         });
-
+//editar adm el ejercicio
       $("#monto_proyectado").on('keyup', function(){ //validar montos
                 //obtener el monto para eliminar formato y pasar a float
                 proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
@@ -641,19 +663,10 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 comprometido = parseFloat(comprometido) || 0;
                 
                 if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
-                  $('#error_monto_menor').removeClass('hidden');
-                  $('#guardar').attr("disabled", true);
-                  $("#guardar").removeClass('bg-green-500');
-                  $("#guardar").addClass('bg-gray-700');
-                  //$('#guardar').attr("disabled", true);
-                 
+                  $('#error_monto_menor').removeClass('hidden');                  
                 }else{
                   $('#error_monto_menor').addClass('hidden');
-                  $('#guardar').removeAttr("disabled");
-                  $("#guardar").removeClass('bg-gray-700');
-                  $("#guardar").addClass('bg-green-500');
-                  //$('#guardar').removeAttr("disabled");
-                  
+                 
                 }
       });
 //================================================
@@ -700,16 +713,18 @@ $().ready(function($) {
 //================================================
 });
 
-
 //Codigo de Modal detalles
 $(".btn-AddDate").on("click",function() {
   document.getElementById('modal-id').classList.toggle("hidden");
   document.getElementById('modal-id' + "-backdrop").classList.toggle("hidden");
     
 });
-  function toggleModal(modalID, index, cliente, fuente, key){
+function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+
+  function toggleModal(modalID, index, cliente, fuente, key){ //modal detalles 
       
-        //console.log(index)
         for(item in cliente){
           if(index.cliente_id == cliente[item].id_cliente){
             // console.log(cliente[index].nombre)
@@ -717,11 +732,20 @@ $(".btn-AddDate").on("click",function() {
           }
         }
         
-    $('#ver_monto_proyectado').html(index.monto_proyectado); 
-    $('#ver_monto_comprometido').html(index.monto_comprometido); 
-    $('#ver_acta_integracion_consejo').html(index.acta_integracion_consejo); 
-    $('#ver_acta_priorizacion').html(index.acta_priorizacion); 
-    $('#ver_adendum_priorizacion').html(index.adendum_priorizacion);
+    $('#ver_monto_proyectado').html(moneda(index.monto_proyectado)); 
+    $('#ver_monto_comprometido').html(moneda(index.monto_comprometido)); 
+    if(index.acta_integracion_consejo == null)
+    { }
+    else
+    {$('#ver_acta_integracion_consejo').html(index.acta_integracion_consejo);} 
+    if(index.acta_priorizacion == null)
+    {$('#ver_acta_priorizacion').html('-');} 
+    else
+    {$('#ver_acta_priorizacion').html(index.acta_priorizacion);}
+    if(index.adendum_priorizacion == null)
+    {$('#ver_adendum_priorizacion').html('-');}
+    else
+    {$('#ver_adendum_priorizacion').html(index.adendum_priorizacion); }
     $('#ver_ejercicio').html(index.ejercicio);
     $('#ver_fuente_financiamiento').html(fuente);
     
@@ -733,20 +757,25 @@ $(".btn-AddDate").on("click",function() {
   }
   function styleValue(id,valor){ //funcion para determinar status de prodim y gastos indirectos
     if(valor == 1){
-      $(id).html('Terminado');
+      html='<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+                    </span>';
+      $(id).html(html);
       $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800');
-      console.log(valor);
-    }else if(valor == 2){
-      $(id).html('Pendiente');
+      //$(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800');
+     // console.log(valor);
+    }else if(valor == 0){
+      html='<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+                    </span>';
+      $(id).html(html);
       $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800');
+      //$(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800');
       
-    }else if(valor == 3){
-      $(id).html('No Aplica');
-      $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800');
-     
     }
   }
 
@@ -760,12 +789,24 @@ $(".btn-AddDate").on("click",function() {
 </style>
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
-
-
+<script>
+  function validar(){
+      proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+      proyectado = parseFloat(proyectado) || 0;
+              
+      comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+      comprometido = parseFloat(comprometido) || 0;
+      if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
+              $('#error_monto_menor').removeClass('hidden');
+              return false;
+      }else{ 
+              return true;
+        }
+    }
+</script>
 
 <script>
-  //ejecucion del datatable
-  
+  //ejecucion del datatable  
 $(document).ready(function() {
     $('#example').DataTable({
         "oSearch": {"sSearch": "" },

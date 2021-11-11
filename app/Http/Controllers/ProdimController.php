@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FuentesCliente;
+use App\Models\Prodim;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +16,22 @@ class ProdimController extends Controller
      */
     public function index()
     {
-        return "prodim";
+        $fuenteCliente= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->select('cliente_id','nombre','municipio_id')
+        ->get(); //tabla fuenteClientes segun existentes           
+        $clientes = $fuenteCliente->unique('municipio_id');
+
+        $consulta= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->where('municipio_id',10)
+        ->select('cliente_id','nombre','ejercicio','id_fuente_financ_cliente')
+        ->get(); //tabla fuenteClientes segun existentes  
+
+        //return $clientes;
+        return view('prodim.index', compact('clientes'));
     }
 
     /**
@@ -35,7 +52,20 @@ class ProdimController extends Controller
      */
     public function store(Request $request)
     {
-      
+      return $request;
+      $request->validate([
+        'firma_electronica' => 'required',
+        'revisado' => 'required',
+        'fuenteCliente_id' => 'required',
+      ]);
+      Prodim::create([
+          'firma_electronica' => $request->firma_electronica,
+          'revisado' => $request->revisado,
+          'fecha_revisado' => $request->fecha_revisado,
+          'validado' => $request->validado,
+          'fecha_validado' => $request->fecha_validado,
+          'convenio' => $request->convenio, //modificar porque recibe checkslists
+      ]);
     }
     /**
      * Display the specified resource.

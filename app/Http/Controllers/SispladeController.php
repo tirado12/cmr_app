@@ -122,7 +122,7 @@ class SispladeController extends Controller
        ->select('clientes.id_cliente', 'municipios.nombre')
        ->get();
         $fuentes=FuentesFinanciamiento::all();
-       //return $sisplade;
+       //return $fuentesClientes;
        return view('sisplade.edit', compact('fuentesClientes','clientes','fuentes','sisplade'));
     }
 

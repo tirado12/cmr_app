@@ -183,7 +183,7 @@
               <div class="col-span-8">
                 <label id="label_rfc" for="rfc" class="block text-sm font-medium text-gray-700">RFC *</label>
                 <input type="text" name="rfc" id="rfc" placeholder="BDS140512XXXX" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" required />
-                <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresa al menos un RFC generico con 12 caracteres</label>
+                <label id="error_rfc" name="error_rfc" class="hidden text-base font-normal text-red-500" >Por favor ingresa al menos un RFC generico con 13 caracteres</label>
                 <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este RFC</label>
               </div>
 
@@ -194,7 +194,8 @@
               </div>
               <div class="col-span-8">
                   <label id="eti_telefono" for="telefono" class="block text-sm font-medium text-gray-700">Telefono</label>
-                  <input type="tel" name="telefono" id="telefono" placeholder="9519999999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" />   
+                  <input type="text" name="telefono" id="telefono" placeholder="9519999999" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" maxlength="13" />   
+                  <label id="label_error_telefono" name="label_error_telefono" class="hidden text-base font-normal text-red-500" >Por favor ingresa un numero telefonico valido</label>
               </div>
               
               <div class="col-span-8">
@@ -445,13 +446,21 @@ $('#ejercicio').on('change', function(){ //se asigna el valor del id cliente des
         rfc = rfc.trim(); // espacios en blanco
         $('#rfc').val(rfc);  
       }
+
     });
     
 //==============================================
     $("input[name='telefono']").keyup(function() { //dar formato y limite de caracteres al input telefono
-        if($(this).val()>10){
+      if($(this).val().length>0){
+          //$(this).attr('minlength',13);
+        }else{
+          //$(this).removeAttr('minlength');
+        }
+        if($(this).val().length>10){
           telefono = $(this).val();
+          telefono= telefono.replace(/[^0-9 ]/g, "");
           telefono= telefono.slice(0,10); //copia de array de caracteres 
+          
           $(this).val(telefono.replace(/^(\d{3})(\d{3})(\d+)$/, "($1)$2-$3"));
         }
         else{
@@ -491,8 +500,10 @@ $().ready(function() {
     errorPlacement: function(error, element) {
       if(error != null){
       $('#error_'+element.attr('id')).fadeIn();
+      $('#label_error_'+element.attr('id')).fadeIn();
       }else{
       $('#error_'+element.attr('id')).fadeOut();
+      $('#label_error_'+element.attr('id')).fadeOut();
       }
     },
 	}); 

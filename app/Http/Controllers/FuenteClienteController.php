@@ -13,7 +13,7 @@ use App\Models\Prodim;
 use App\Models\Sisplade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Validation\Rule;
 
 
 
@@ -27,15 +27,18 @@ class FuenteClienteController extends Controller
      */
     public function index()
     {
-        $fuenteClientes = FuentesCliente::with('clientes','fuente')->get(); //tabla fuenteClientes segun existentes 
-        
+        //$fuenteClientes = FuentesCliente::with('clientes','fuente')->get(); //tabla fuenteClientes segun existentes 
+        $fuenteClientes= FuentesCliente::join('clientes','id_cliente','cliente_id')
+        ->join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
+        ->leftjoin('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
+        ->get();
         $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
         //$municipios = Municipio::all(); //todos los municipios
         $listaClientes = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
         ->select('clientes.id_cliente', 'municipios.nombre','municipios.id_municipio','clientes.anio_inicio','clientes.anio_fin')
         ->get();
         $cliente= $listaClientes->unique('id_municipio');
-        
+        //return $fuenteClientes;
         return view('fuentes_clientes.index', compact('fuenteClientes', 'cliente', 'fuentes','listaClientes'));
     }
 
@@ -144,7 +147,7 @@ class FuenteClienteController extends Controller
         //return $fuenteCliente;
         $request->validate([
             'monto_proyectado' => 'required',
-            'fuente_financiamiento_id' => 'required'
+            'fuente_financiamiento_id' => 'required',
         ]);
         $fuenteCliente->monto_proyectado = str_replace(",", '',$request->monto_proyectado);
         $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
@@ -250,8 +253,8 @@ class FuenteClienteController extends Controller
         $existe = FuentesCliente::where('cliente_id',$cliente_id)
         ->where('ejercicio',$ejercicio)
         ->where('fuente_financiamiento_id',$fuente)
-        ->exists();
-
+        ->get();
+        return $existe;
         if($existe == 1)
         return $existe;
         else

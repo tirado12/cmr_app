@@ -39,7 +39,7 @@
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
       <div class="mt-5 md:mt-0 md:col-span-2">
-        <form action="{{ route('fuenteCliente.update', $fuenteCliente) }}" method="POST" id="formulario" name="formulario">
+        <form action="{{ route('fuenteCliente.update', $fuenteCliente) }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
           @csrf
           @method('PUT')
           <div class="shadow overflow-hidden sm:rounded-md">
@@ -58,7 +58,13 @@
 
                 <div class="col-span-4 lg:col-span-3">
                   <label for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio</label>
-                  <label id="label_ejercicio" class="block text-base bg-gray-100 font-medium text-gray-700 py-3 px-2 border rounded-md">{{ $fuenteCliente->ejercicio }}</label>
+                  @role('Administrador')
+                  <input type="number" name="ejercicio" id="ejercicio" class="mt-1 text-base focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md" value="{{ $fuenteCliente->ejercicio }}" required>
+                  <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Introduzca un ejercicio valido</label>
+                  @endrole
+                  @role('Usuario')
+                  <input type="number" name="ejercicio" id="ejercicio" class="mt-1 text-base bg-gray-100 focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md" value="{{ $fuenteCliente->ejercicio }}" readonly>
+                  @endrole
                 </div>
   
                 <div class="col-span-10 lg:col-span-3">
@@ -72,7 +78,7 @@
                     <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7 mt-1 text-base focus:ring-indigo-500 block text-gray-700 w-full shadow-sm border-gray-300 rounded-md myDIV" value="{{($fuenteCliente->monto_proyectado)}}" onclick="" >
                   </div>
                   <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Introduzca un monto proyectado</label>
-                  <label id="error_monto_mayor" name="error_monto_mayor" class="hidden text-base font-normal text-red-500" >El monto proyectado no puede ser menor que el comprometido</label>
+                  
                 </div>
                 
                 <div class="col-span-10 lg:col-span-3">
@@ -191,7 +197,7 @@
             
               <div class="flex flex-col-2 justify-center " >
                 <div class="flex flex-row  p-2">
-                    <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                    <label id="label_prodim" for="prodim" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
                     <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" >
                 </div>
                 <div class="flex flex-row  p-2">
@@ -271,16 +277,36 @@
   <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>    
   <script>
+    
     window.onload =function(){
     if($('#fuente_financiamiento_id').val() == '2'){
       $('#titulo_anexo').removeClass('hidden');
       $('#anexos').removeClass('hidden');
+      valor_comprometido= $("#monto_comprometido").val();
+      $("#monto_comprometido").val(moneda(valor_comprometido));
+      valor_proyectado = $("#monto_proyectado").val();
+      $("#monto_proyectado").val(moneda(valor_proyectado));
     }else{
       $('#titulo_anexo').addClass('hidden');
       $('#anexos').addClass('hidden');
+      valor_comprometido= $("#monto_comprometido").val();
+      $("#monto_comprometido").val(moneda(valor_comprometido));
+      valor_proyectado = $("#monto_proyectado").val();
+      $("#monto_proyectado").val(moneda(valor_proyectado));
     }
-    var anio = $('#label_ejercicio').text();
-    console.log(anio)
+    //=================================================
+    periodo = $('#label_periodo').text();
+    anioMin=periodo.substring(0,4);
+    anioMax=periodo.substring(7,11);
+    $('#ejercicio').attr('min',anioMin);
+    $('#ejercicio').attr('max',anioMax);
+    //=================================================
+    function moneda(valor){
+      return valor.replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+    //=================================================
+    var anio = $('#ejercicio').val();
+    //console.log(anio)
    var fechaMin = anio+'-01'+'-01';
    var fechaMax = anio+'-12'+'-31';
    $('#acta_integracion').attr('min',fechaMin);
@@ -289,14 +315,14 @@
   $('#acta_priorizacion').attr('max',fechaMax);
   $('#adendum').attr('min',fechaMin);
   $('#adendum').attr('max',fechaMax);
-
-  var proyectado = parseFloat($('#monto_proyectado').val());
-  var comprometido = parseFloat($('#monto_comprometido').val());
-  console.log(proyectado)
-  if(proyectado<comprometido)
-    $('#error_monto_mayor').removeClass('hidden');
-  //else
-    //$('#error_monto_mayor').addClass('hidden');
+//=================================================
+  // var proyectado = parseFloat($('#monto_proyectado').val());
+  // var comprometido = parseFloat($('#monto_comprometido').val());
+  // //console.log(proyectado)
+  // if(proyectado<comprometido)
+  //   $('#error_monto_mayor').removeClass('hidden');
+  // else
+  //   $('#error_monto_mayor').addClass('hidden');
   }
     
 //colocar opcion registrada en los selected
@@ -330,7 +356,7 @@
       $('#monto_proyectado').on('keyup', function(){
         var proyectado = parseFloat($('#monto_proyectado').val());
         var comprometido = parseFloat($('#monto_comprometido').val());
-        console.log(proyectado)
+        //console.log(proyectado)
         if(proyectado<comprometido)
           $('#error_monto_mayor').removeClass('hidden');
         else
@@ -338,7 +364,6 @@
       });
 
      // $('#monto_comprometido').keyup();
-
       var statusProdim =  '{{ $fuenteCliente->prodim }}';
       var statusGastos =  '{{ $fuenteCliente->gastos_indirectos }}';
       $("#prodim option").each(function(){
@@ -359,20 +384,24 @@
 //validacion de campos del formulario
 $(document).ready(function() {
   //fuente_financiamiento_id
-  $('#fuente_financiamiento_id').on('change', function(){
+  $('#fuente_financiamiento_id, #ejercicio').on('keyup change', function(){
     cliente = '{{ $fuenteCliente->cliente_id }}';
     fuente= $('#fuente_financiamiento_id').val();
-    ejercicio= '{{ $fuenteCliente->ejercicio }}';
-    
+    ejercicio= $('#ejercicio').val();
+    fuenteCli = '{{ $fuenteCliente->id_fuente_financ_cliente}}';
     var link = '{{ url("/ejercicioDisponible")}}/'+cliente+','+ejercicio+','+fuente;
-    if($(this).val()!=cliente  &&cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
+    if(cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
+      
         $.ajax({
               url: link,
               dataType:'json',
               type:'get',
               success: function(data){
                 //console.log(data);
-                if(data== 1){
+                $.each(data,function(key, item) {
+                  //console.log(item.cliente_id);
+                  if(item.cliente_id != null && item.id_fuente_financ_cliente != fuenteCli){
+                  
                   $('#error_existe').removeClass('hidden');
                   $('#enviar_datos').attr("disabled", true);
                   $("#enviar_datos").removeClass('bg-orange-800');
@@ -383,14 +412,14 @@ $(document).ready(function() {
                   $("#enviar_datos").removeClass('bg-gray-700');
                   $("#enviar_datos").addClass('bg-orange-800');
                 }
+                });
+               
               },
               cache: false
             });
     }
   });
-
-  
-
+//===================================================
   $('#fuente_financiamiento_id').on('change',function(){
     if($('#fuente_financiamiento_id').val() == '2'){
       $('#titulo_anexo').removeClass('hidden');
@@ -450,8 +479,7 @@ $().ready(function() {
 			monto_proyectado: { required: true},
       monto_comprometido: { required: true},
       ejercicio: { required: true},
-      acta_integracion: {required : true},
-      acta_priorizacion:{ required: true},
+     
       
       
       fuente_financiamiento_id: { required: true},
@@ -467,24 +495,34 @@ $().ready(function() {
      // console.log(element.attr('id'));
     },
 	});
-  $("#enviar_datos").click(function () {
-      var $m_p = $("#monto_proyectado").val().replaceAll(",", "");
-      var $m_c = $("#label_comprometido").text().replaceAll(",","").replaceAll("$", "");
+  // $("#enviar_datos").click(function () {
+  //     var $m_p = $("#monto_proyectado").val().replaceAll(",", "");
+  //     var $m_c = $("#label_comprometido").text().replaceAll(",","").replaceAll("$", "");
       
-      if($m_p < $m_c){
-        $("#error_monto").removeClass("hidden");
-        return false;
-      }else{
-        $("#error_monto").addClass("hidden");
-        return true;
-      }
-
-        
-        
-    });
+  //     if($m_p < $m_c){
+  //       $("#error_monto").removeClass("hidden");
+  //       return false;
+  //     }else{
+  //       $("#error_monto").addClass("hidden");
+  //       return true;
+  //     }
+  //   });
 });
   </script>
   
-  
+  <script>
+    function validar(){
+        proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+        proyectado = parseFloat(proyectado) || 0;
+        comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+        comprometido = parseFloat(comprometido) || 0;
+        if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
+                $("#error_monto").removeClass("hidden");
+                return false;
+        }else{ 
+                return true;
+          }
+      }
+  </script>
   
 @endsection

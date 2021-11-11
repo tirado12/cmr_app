@@ -1,6 +1,9 @@
 @extends('layouts.plantilla')
 @section('title','Contratistas')
 @section('contenido')
+<link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
+<link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style_alert.css') }}">
 
 <div class="flex flex-row">
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -36,6 +39,93 @@
 
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
-    
+  <table id="example" class="table table-striped bg-white" style="width:100%;">
+    <thead>
+        <tr>
+            <th>Contratista</th>
+            <th>Telefono</th>
+            <th>Correo</th>
+            <th>Tipo de contribuyente</th>          
+            <th>Municipio</th>
+            <th class="flex justify-center">Acción</th>
+        </tr>
+    </thead>
+    <tbody> 
+      
+        <tr>
+            
+            <td>
+              <div class="flex items-center">
+                <div>
+                    <div class="text-sm leading-5 font-medium text-gray-900"></div>
+                    <div class="text-sm leading-5 text-gray-500"></div>
+                </div>
+            </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+              
+              </div>
+              
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+              
+              </div>
+              
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900">
+                  
+              </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                 
+              </div>
+            </td>
+  
+            <td>
+              <div class="flex justify-center">
+              <form action="" method="POST" class="form-eliminar" >
+                <div>
+                <a type="button"  href="" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
+                <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150"  type="button" onclick="toggleModal1('modal-contratista')">
+                  Detalles
+                </button>
+                @csrf
+                @method('DELETE')
+                  <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
+                </div>
+                
+                </form>
+              </div>
+            </td>
+        </tr>
+        
+    </tbody>
+    <!--<tfoot>
+        <tr>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th></th>
+        </tr>
+    </tfoot>-->
+  </table>
 </div>
+<!-- librerias -->
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
+<!-- librerias -->
+<script>
+  $(document).ready(function() { //llamada al datatable
+    $('#example').DataTable({
+        "autoWidth" : true,
+        "responsive" : true,
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+        }
+    }).columns.adjust();
+});
+</script>
 @endsection

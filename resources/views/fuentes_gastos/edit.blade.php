@@ -55,11 +55,6 @@
                   <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Introduzca un monto proyectado</label>
                 </div>
                 
-                <div class="col-span-6 sm:col-span-3">
-                    <label id="label_fuente_financiamiento" for="fuente_financiamiento" class="block text-sm font-medium text-gray-700">Fuente financiamiento *</label>
-                    <input type="text" name="fuente_financiamiento" id="fuente_financiamiento" class="mt-1 focus:ring-gray-500 focus:border-gray-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md myDIV" value="{{$gastoIndirecto->nombre_corto}}" disabled>
-                    <label id="error_fuente_financiamiento" name="error_fuente_financiamiento" class="hidden text-base font-normal text-red-500" >Introduzca un monto comprometido</label>
-                </div>
                   
                 <div class="col-span-6 sm:col-span-3">
                     <label id="label_gasto_indirecto" for="gasto_indirecto" class="block text-sm font-medium text-gray-700">Gasto Indirecto *</label>

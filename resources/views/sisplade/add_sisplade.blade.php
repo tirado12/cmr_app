@@ -125,7 +125,7 @@
 
                         <div class="flex items-start mt-8">
                           <div class="flex items-center h-5">
-                            <input id="validado" name="validado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded">
+                            <input id="validado" name="validado" type="checkbox" class="focus:ring-green-500 h-6 w-6 text-green-600 border-gray-300 rounded" disabled>
                             <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
                            </div>
                           <div class="ml-3 text-sm">
@@ -258,13 +258,27 @@
                 $('#fecha_capturado').removeAttr('disabled');
                 $('#fecha_capturado').removeClass('bg-gray-100');
                 $('#fecha_capturado').prop('required',true);
+                fechaMin= $('#ejercicio option:selected').text() + '-01-01';
+                fechaMax= $('#ejercicio option:selected').text() + '-12-31';
+                $('#fecha_capturado').attr('min',fechaMin);
+                $('#fecha_capturado').attr('max',fechaMax);
+                $('#validado').attr('disabled', false);
             }else{
+                $('#validado').attr('disabled', true);
                 $('#fecha_capturado').attr('disabled', true);
                 $('#fecha_capturado').addClass('bg-gray-100');
                 $('#fecha_capturado').prop('required',false);
             }
         });
 //======================================================
+$('#fecha_capturado').on('change',function(){
+  fechaMin =$(this).val();
+  fechaMax= $('#ejercicio option:selected').text() + '-12-31';
+  
+  $('#fecha_validado').attr('min',fechaMin);
+  $('#fecha_validado').attr('max',fechaMax);
+});
+
         $('#validado').on('click',function(){
             if($(this).prop("checked")) {
                 $('#fecha_validado').removeAttr('disabled');
@@ -291,7 +305,7 @@
           dataType:'json',
           type:'get',
           success: function(data){
-            console.log(data);
+            //console.log(data);
             $.each(data,function(key, item) {
               $("#ejercicio").append('<option value='+item.cliente_id+'>'+item.ejercicio+'</option>');
             });
