@@ -430,8 +430,7 @@ $(document).ready(function() {
       $('#anexos').addClass('hidden');
     }
   });
-   
-
+   //==============================================
    $("#formulario input").keyup(function() {
   //console.log($(this).attr('id'));
       var monto = $(this).val();

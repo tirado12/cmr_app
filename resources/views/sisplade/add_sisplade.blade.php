@@ -279,17 +279,17 @@ $('#fecha_capturado').on('change',function(){
   $('#fecha_validado').attr('max',fechaMax);
 });
 
-        $('#validado').on('click',function(){
-            if($(this).prop("checked")) {
-                $('#fecha_validado').removeAttr('disabled');
-                $('#fecha_validado').removeClass('bg-gray-100');
-                $('#fecha_validado').prop('required',true);
-            }else{
-                $('#fecha_validado').attr('disabled', true);
-                $('#fecha_validado').addClass('bg-gray-100');
-                $('#fecha_validado').prop('required',false);
-            }
-        });
+$('#validado').on('click',function(){
+      if($(this).prop("checked")) {
+           $('#fecha_validado').removeAttr('disabled');
+           $('#fecha_validado').removeClass('bg-gray-100');
+           $('#fecha_validado').prop('required',true);
+      }else{
+           $('#fecha_validado').attr('disabled', true);
+           $('#fecha_validado').addClass('bg-gray-100');
+           $('#fecha_validado').prop('required',false);
+      }
+});
 //======================================================
     //select ejercicio disponible por cliente
     $("#id_municipio").on('change', function () {

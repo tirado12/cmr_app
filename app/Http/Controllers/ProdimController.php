@@ -23,15 +23,13 @@ class ProdimController extends Controller
         ->get(); //tabla fuenteClientes segun existentes           
         $clientes = $fuenteCliente->unique('municipio_id');
 
-        $consulta= FuentesCliente::join('clientes','cliente_id','id_cliente')
-        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
-        ->where('fuente_financiamiento_id', 2)
-        ->where('municipio_id',10)
-        ->select('cliente_id','nombre','ejercicio','id_fuente_financ_cliente')
-        ->get(); //tabla fuenteClientes segun existentes  
-
-        //return $clientes;
-        return view('prodim.index', compact('clientes'));
+        $listaProdim = Prodim::join('fuentes_clientes','fuente_id','id_fuente_financ_cliente')
+        ->join('clientes','cliente_id','id_cliente')
+        ->join('municipios','municipio_id','id_municipio')
+        ->select('prodim.*','ejercicio','nombre')
+        ->get();
+        //return $listaProdim;
+        return view('prodim.index', compact('clientes','listaProdim'));
     }
 
     /**
@@ -52,20 +50,44 @@ class ProdimController extends Controller
      */
     public function store(Request $request)
     {
-      return $request;
+      //return $request;
       $request->validate([
-        'firma_electronica' => 'required',
-        'revisado' => 'required',
+        'firma_electronica' => 'nullable',
+        'revisado' => 'nullable',
         'fuenteCliente_id' => 'required',
       ]);
+      if($request->firma_electronica == null){
+        $request->firma_electronica = false;
+      }else{
+        $request->firma_electronica = true;
+      }
+      if($request->revisado == null){
+          $request->revisado = false;
+      }else{
+          $request->revisado = true;
+      }
+      if($request->validado == null){
+          $request->validado = false;
+      }else{
+          $request->validado= true;
+      }
+      if($request->convenio == null){
+          $request->convenio =false;
+      }else{
+          $request->convenio =true;
+      }
       Prodim::create([
           'firma_electronica' => $request->firma_electronica,
           'revisado' => $request->revisado,
           'fecha_revisado' => $request->fecha_revisado,
           'validado' => $request->validado,
           'fecha_validado' => $request->fecha_validado,
-          'convenio' => $request->convenio, //modificar porque recibe checkslists
+          'convenio' => $request->convenio, 
+          'fecha_convenio' => $request->fecha_convenio,
+          'acuse_prodim' => $request->acuse,
+          'fuente_id' => $request->fuenteCliente_id
       ]);
+      return redirect()->route('prodim.index');
     }
     /**
      * Display the specified resource.
@@ -83,9 +105,16 @@ class ProdimController extends Controller
      * @param  User  $users
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(Prodim $prodim)
     {
-       
+        $listaProdim = Prodim::join('fuentes_clientes','fuente_id','id_fuente_financ_cliente')
+        ->join('clientes','cliente_id','id_cliente')
+        ->join('municipios','municipio_id','id_municipio')
+        ->where('id_prodim', $prodim->id_prodim)
+        ->select('prodim.*','ejercicio','nombre','anio_inicio','anio_fin')
+        ->get();
+      // return $listaProdim;
+       return view('prodim.edit',compact('listaProdim'));
     }
 
     /**

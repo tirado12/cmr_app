@@ -11,4 +11,16 @@ class Prodim extends Model
     protected $primaryKey = 'id_prodim';
 
     protected $table = "prodim";
+
+    protected $fillable = [
+        'firma_electronica',
+        'revisado',
+        'fecha_revisado',
+        'validado',
+        'fecha_validado',
+        'convenio',
+        'fecha_convenio',
+        'acuse_prodim',
+        'fuente_id'
+    ];
 }
