@@ -360,6 +360,27 @@
             document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
         }
         function toggleModal_1(modalID, prodim){
+<<<<<<< HEAD
+=======
+          console.log(prodim)
+          $('#detalles_cliente').text(prodim.nombre);
+          $('#detalles_acuse').text(prodim.acuse_prodim);
+          $('#detalles_ejercicio').text(prodim.ejercicio);
+          if(prodim.firma_electronica == 1){
+            $('#detalles_firma_electronica').text('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+             </svg>\
+            </span>'); //iconos de status
+          }
+          
+          $('#detalles_revisado').text();
+          $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
+          $('#detalles_validado').text();
+          $('#detalles_fecha_validado').text(prodim.fecha_validado);
+          $('#detalles_convenio').text();
+          $('#detalles_fecha_convenio').text(prodim.fecha_convenio);
+>>>>>>> e8917fcc9b694a4b7d38d5aaf8161532d2628aa6
           document.getElementById(modalID).classList.toggle("hidden");
           document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
           
