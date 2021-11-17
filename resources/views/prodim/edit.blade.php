@@ -37,7 +37,7 @@
   <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
     <div class="mt-5 md:mt-0 md:col-span-2">
-      <form action="" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
+      <form action="{{ route('prodim.update', $prodim) }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
         @csrf
         @method('PUT')
         <div class="shadow overflow-hidden sm:rounded-md">
@@ -52,15 +52,15 @@
 
                 <div class="col-span-3 ">
                     <label  id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio </label>
-                    <input type="text" name="cliente_id" id="cliente_id" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->ejercicio}}" readonly>
+                    <input type="text" name="ejercicio" id="ejercicio" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->ejercicio}}" readonly>
                     <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
                     <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
                 </div>
 
                 <div class="col-span-3 ">
-                    <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700">Acuse *</label>
-                    <input type="text" name="acuse" id="acuse" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodim->acuse_prodim}}" required>
-                    <label id="error_acuse" name="error_acuse" class="hidden text-base font-normal text-red-500" >Este dato es requerido</label>
+                    <label  id="label_acuse_prodim" for="acuse_prodim" class="block text-sm font-medium text-gray-700">Acuse *</label>
+                    <input type="text" name="acuse_prodim" id="acuse_prodim" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodim->acuse_prodim}}" required>
+                    <label id="error_acuse_prodim" name="error_acuse_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido</label>
                 </div>
 
                 <div class="col-span-3 p-4">
@@ -104,13 +104,13 @@
             
               <div class="col-span-2 p-2">
                 <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha validado *</label>
-                <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_valdiado}}" {{($prodim->validado == 1)? '' : 'disabled'}}>
+                <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_valdiado }}" {{($prodim->validado == 1)? '' : 'disabled'}}>
                 <label id="error_fecha_validado" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
               <div class="col-span-2 p-2">
                 <label id="label_fecha_convenio" for="fecha_convenio" class="block text-sm font-medium text-gray-700">Fecha convenio *</label>
-                <input type="date" name="fecha_convenio" id="fecha_convenio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_convenio}}" {{($prodim->covenio == 1)? '' : 'disabled'}}>
+                <input type="date" name="fecha_convenio" id="fecha_convenio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_convenio }}" {{($prodim->covenio == 1)? '' : 'disabled'}}>
                 
               </div>
 
@@ -140,11 +140,13 @@
     if($('#revisado').prop("checked")){
       $('#fecha_revisado').removeClass("bg-gray-100");
       $('#validado').removeAttr('disabled');
+      $('#fecha_validado').attr('min', $('#fecha_revisado').val());
+      $('#fecha_validado').attr('max', $('#ejercicio').val()+'-12-31');
     }else{
       $('#fecha_revisado').addClass("bg-gray-100");
       $('#validado').prop('disabled',true);
     }
-
+    
     if($('#validado').prop("checked")){
       $('#fecha_validado').removeClass("bg-gray-100");
       
@@ -173,6 +175,10 @@
           $('#fecha_revisado').prop("disabled",true);
           $('#validado').prop('disabled',true);
         }
+      });
+
+      $('#fecha_revisado').on('change',function(){
+        $('#fecha_validado').attr('min', $('#fecha_revisado').val());
       });
 
       $('#validado').on('click',function(){

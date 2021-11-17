@@ -53,6 +53,7 @@ class ProdimController extends Controller
       //return $request;
       $request->validate([
         'firma_electronica' => 'nullable',
+        'acuse' => 'required',
         'revisado' => 'nullable',
         'fuenteCliente_id' => 'required',
       ]);
@@ -114,7 +115,7 @@ class ProdimController extends Controller
         ->select('prodim.*','ejercicio','nombre','anio_inicio','anio_fin')
         ->get();
       // return $listaProdim;
-       return view('prodim.edit',compact('listaProdim'));
+       return view('prodim.edit',compact('listaProdim','prodim'));
     }
 
     /**
@@ -124,9 +125,42 @@ class ProdimController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Prodim $prodim)
     {
-       
+        $request->validate([
+            'firma_electronica' => 'nullable',
+            'revisado' => 'nullable',
+            'fecha_revisado' => 'nullable',
+            'validado' => 'nullable',
+            'fecha_validado' => 'nullable',
+            'convenio' => 'nullable',
+            'fecha_convenio' => 'nullable',
+            'acuse_prodim' => 'required',
+            
+          ]);
+          if($request->firma_electronica == null){
+            $request['firma_electronica'] = false;
+          }else{
+            $request['firma_electronica'] = true;
+          }
+          if($request->revisado == null){
+              $request['revisado'] = false;
+          }else{
+            $request['revisado'] = true;
+          }
+          if($request->validado == null){
+              $request['validado'] = false;
+          }else{
+            $request['validado']= true;
+          }
+          if($request->convenio == null){
+              $request['convenio'] =false;
+          }else{
+            $request['convenio'] =true;
+          }
+          //return $request;
+          $prodim->update($request->all());
+          return redirect()->route('prodim.index');
     }
 
     /**

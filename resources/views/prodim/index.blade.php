@@ -166,7 +166,7 @@
         <h4 class="text-xl font-semibold">
           Detalles Prodim
         </h4>
-        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal_1('modal')">
+        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal_1('modal', {{$index}})">
           <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
             ×
           </span>
@@ -178,48 +178,46 @@
         
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
-              <label for="first_name" class="text-base font-medium text-gray-700">Cliente: </label>
-              <label id="nombre_municipio" class="text-base font-bold text-gray-900"></label>
+              <label for="detalles_cliente" class="text-base font-medium text-gray-700">Cliente: </label>
+              <label id="detalles_cliente" class="text-base font-bold text-gray-900"></label>
             </div>
             <div class="col-span-8">
-              <label for="ver_monto_proyectado" class=" text-base font-medium text-gray-700">Acuse: </label>
-              <label id="ver_monto_proyectado" class="text-base font-bold text-gray-900 "></label>
+              <label for="detalles_acuse" class=" text-base font-medium text-gray-700">Acuse: </label>
+              <label id="detalles_acuse" class="text-base font-bold text-gray-900 "></label>
             </div>
             <div class="col-span-8">
-              <label for="ver_monto_comprometido" class=" text-base font-medium text-gray-700">Ejercicio: </label>
-              <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 "></label>
+              <label for="detalles_ejercicio" class=" text-base font-medium text-gray-700">Ejercicio: </label>
+              <label id="detalles_ejercicio" class="text-base font-bold text-gray-900 "></label>
             </div>
            
             <div class="col-span-8">
-                <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Firma electronica: </label>
-                <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_firma_electronica" class="text-base font-medium text-gray-700">Firma electronica: </label>
+                <label id="detalles_firma_electronica" class="text-base font-bold text-gray-900"></label>
               </div>
             <div class="col-span-8">
-                <label for="fuente_financiamiento" class="text-base font-medium text-gray-700">Revisado: </label>
-                <label id="ver_fuente_financiamiento" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_revisado" class="text-base font-medium text-gray-700">Revisado: </label>
+                <label id="detalles_revisado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="fuente_financiamiento" class="text-base font-medium text-gray-700">Fecha Revisado: </label>
-                <label id="ver_fuente_financiamiento" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_fecha_revisado" class="text-base font-medium text-gray-700">Fecha Revisado: </label>
+                <label id="detalles_fecha_revisado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="prodim" class="text-base font-medium text-gray-700">Validado: </label>
-                <span id="ver_prodim" class=" "></span>
+                <label for="detalles_validado" class="text-base font-medium text-gray-700">Validado: </label>
+                <label id="detalles_validado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="gastos_indirectos" class="text-base font-medium text-gray-700">Fecha validado: </label>
-                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full "></span>
+                <label for="detalles_fecha_validado" class="text-base font-medium text-gray-700">Fecha validado: </label>
+                <label id="detalles_fecha_validado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Convenio: </label>
-                <span id="ver_acta_integracion_consejo" class=" "></span>
+                <label for="detalles_convenio" class="text-base font-medium text-gray-700">Convenio: </label>
+                <label id="detalles_convenio" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Fecha convenio: </label>
-                <span id="ver_acta_priorizacion" class=" "></span>
-              </div>
-              
-             
+                <label for="detalles_fecha_convenio" class="text-base font-medium text-gray-700">Fecha convenio: </label>
+                <label id="detalles_fecha_convenio" class="text-base font-bold text-gray-900"></label>
+              </div>             
           </div>
         
       </div>
@@ -362,9 +360,78 @@
             document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
         }
         function toggleModal_1(modalID, prodim){
-          console.log(prodim)
           document.getElementById(modalID).classList.toggle("hidden");
           document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
+          
+          $('#detalles_cliente').text(prodim.nombre);
+          $('#detalles_acuse').text(prodim.acuse_prodim);
+          $('#detalles_ejercicio').text(prodim.ejercicio);
+          if(prodim.firma_electronica == 1){
+          $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+          </span>'); //status
+          }else{
+            $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+                      </span>'); //status
+          }
+          if(prodim.revisado == 1){
+          $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+          </span>'); //status
+          }else{
+            $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+                      </span>'); //status
+          }
+          if(prodim.fecha_revisado != null)
+          $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
+          else
+          $('#detalles_fecha_revisado').text('-');
+          if(prodim.validado == 1){
+          $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+          </span>'); //status
+          }else{
+            $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+                      </span>'); //status
+          }
+          
+          if(prodim.fecha_validado != null)
+            $('#detalles_fecha_validado').text(prodim.fecha_validado);
+          else
+            $('#detalles_fecha_validado').text('-');
+          if(prodim.convenio == 1){
+          $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+          </span>'); //status
+          }else{
+            $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+                      </span>'); //status
+          }
+          if(prodim.fecha_convenio != null)
+          $('detalles_fecha_convenio').text(prodim.fecha_convenio);
+          else
+          $('#detalles_fecha_convenio').text('-');
+         
         }
 
         $(document).ready(function(){

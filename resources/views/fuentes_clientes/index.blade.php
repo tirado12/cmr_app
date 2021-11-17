@@ -569,6 +569,9 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
     var anio = $('#ejercicio').val();
     var fechaMin = anio+'-01'+'-01';
     var fechaMax = anio+'-12'+'-31';
+    $('#acta_integracion').val('');
+    //$('#acta_priorizacion').val();
+    //$('#adendum').val();
     $('#acta_integracion').attr('min',fechaMin);
     $('#acta_integracion').attr('max',fechaMax);
     // $('#acta_priorizacion').attr('min',fechaMin);
