@@ -4,6 +4,9 @@
 <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
 <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
 <link rel="stylesheet" href="{{ asset('css/style_alert.css') }}">
+<!--Responsive Extension Datatables CSS-->
+<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
 
 <div class="flex flex-row">
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -14,150 +17,168 @@
 
 <div class="flex flex-col mt-6">
     <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-    <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
+    <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-add')">
     Agregar
     </button>
         <!-- div de tabla -->
     </div>
 </div>
 
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
+
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
-
-    <table id="example" class="table table-striped bg-white" style="width:100%;">
+  <table id="example" class="table table-striped bg-white" style="width:100%;">
       <thead>
-          <tr>
-              <th>Cliente</th>
-              <th>Acuse</th>
-              <th>Ejercicio</th>
-              <th>Firma electronica</th>
-              <th>Revisado</th>
-              <th>Validado</th>          
-              <th>Convenio</th>
-              <th class="flex justify-center">Acción</th>
-          </tr>
+        <tr>
+            <th>Cliente</th>
+            <th>Acuse</th>
+            <th>Ejercicio</th>
+            <th>Firma electronica</th>
+            <th>Revisado</th>
+            <th>Validado</th>          
+            <th>Convenio</th>
+            <th class="flex justify-center">Acción</th>
+        </tr>
       </thead>
       <tbody> 
-          <tr>
-            @foreach( $listaProdim as $index)
-              <td>
-                <div class="flex items-center">
-                  <div>
-                      <div class="text-sm leading-5 font-medium text-gray-900">
-                        {{$index->nombre}}
-                      </div>
-                      
-                  </div>
+        @foreach( $listaProdim as $index)
+        <tr>
+            <td>
+              <div class="flex items-center">
+                <div>
+                    <div class="text-sm leading-5 font-medium text-gray-900">
+                      {{$index->nombre}}
+                    </div>
+                    
+                </div>
+            </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                {{$index->acuse_prodim}}
               </div>
-              </td>
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  {{$index->acuse_prodim}}
-                </div>
-                
-              </td>
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  {{$index->ejercicio}}
-                </div>
-                
-              </td>
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                    @if(($index->firma_electronica == 1) )
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                {{$index->ejercicio}}
+              </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                  @if(($index->firma_electronica == 1) )
+                  <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+                @else
+                  <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </span>
+                @endif
+              </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                    @if(($index->revisado == 1) )
                     <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                  </span>
-                  @else
-                    <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
+                    </span>
+                    @else
+                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    @endif
+              </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                @if(($index->validado == 1) )
+                    <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                  </span>
-                  @endif
+                    </span>
+                    @else
+                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    @endif
+              </div>
+            </td>
+            <td>
+              <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
+                @if(($index->convenio == 1) )
+                    <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </span>
+                    @else
+                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    @endif
+              </div>
+            </td>
+            <td>
+              <div class="flex justify-center">
+              <form action="{{ route('prodim.destroy', $index->id_prodim) }}" method="POST" class="form-eliminar" >
+                <div>
+                <a type="button"  href="{{ route('prodim.edit', $index->id_prodim) }}" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
+                <button class="bg-transparent text-blue-500 active:bg-transparent font-normal p-2 rounded outline-none focus:outline-none  ease-linear transition-all duration-150"  type="button" onclick="toggleDetalles('modal-detalles', {{$index}})">
+                  Detalles
+                </button>
+                @csrf
+                @method('DELETE')
+                  <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
                 </div>
                 
-              </td>
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                      @if(($index->revisado == 1) )
-                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </span>
-                      @else
-                        <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                      </span>
-                      @endif
-                </div>
-              </td>
-              
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  @if(($index->convenio == 1) )
-                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </span>
-                      @else
-                        <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                      </span>
-                      @endif
-                </div>
-              </td>
-              <td>
-                <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  @if(($index->convenio == 1) )
-                      <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </span>
-                      @else
-                        <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                      </span>
-                      @endif
-                </div>
-              </td>
-    
-              <td>
-                <div class="flex justify-center">
-                <form action="" method="POST" class="form-eliminar" >
-                  <div>
-                  <a type="button"  href="{{ route('prodim.edit', $index->id_prodim) }}" class="bg-white text-blue-500 p-2 rounded rounded-lg">Editar</a>
-                  <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150"  type="button" onclick="toggleModal_1('modal', {{$index}})">
-                    Detalles
-                  </button>
-                  @csrf
-                  @method('DELETE')
-                    <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
-                  </div>
-                  
-                  </form>
-                </div>
-              </td>
-          </tr>
-          @endforeach
+                </form>
+              </div>
+            </td>   
+        </tr>
+        @endforeach
       </tbody>
-     
-    </table>
+  </table>
     </div>
 
     <!-- inicio modal -->
-<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal">
+<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-detalles">
   <div class="relative w-auto my-6 mx-auto max-w-3xl">
     <!--content-->
     <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -166,7 +187,7 @@
         <h4 class="text-xl font-semibold">
           Detalles Prodim
         </h4>
-        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal_1('modal', {{$index}})">
+        <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleDetalles('modal-detalles')">
           <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
             ×
           </span>
@@ -227,7 +248,7 @@
 </div>
 
     <!-- inicio modal -->
-<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-id">
+<div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-add">
     <div class="relative w-auto my-6 mx-auto max-w-3xl">
       <!--content-->
       <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -236,7 +257,7 @@
           <h4 class="text-xl font-semibold">
             Agregar Nuevo Prodim
           </h4>
-          <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('modal-id')">
+          <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('modal-add')">
             <span class="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
               
             </span>
@@ -324,7 +345,7 @@
                       <div class="col-span-2 p-2">
                         <label id="label_fecha_convenio" for="fecha_convenio" class="block text-sm font-medium text-gray-700">Fecha convenio *</label>
                         <input type="date" name="fecha_convenio" id="fecha_convenio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
-                        
+                        <label id="error_fecha_convenio" class="hidden block text-md text-red-500">Se require de una fecha</label>
                       </div>
         
                     </div>
@@ -336,7 +357,7 @@
           
           <span class="block text-xs">Verifique los campos obligatorios marcados con un ( * )</span>
           <div class="text-right">
-          <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
+          <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-add')">
             Cancelar
           </button>
           <button type="submit" id="guardar" name="guardar" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
@@ -347,115 +368,137 @@
         </form>
       </div>
     </div>
-  </div>
-  <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
-  <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-backdrop"></div>
+</div>
 
-    <script  type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
+  <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-add-backdrop"></div>
+  <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-detalles-backdrop"></div>
+
+  <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+  <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
+
+  @if(session('eliminar')=='ok')
+  <script>
+    //ejecucion del modal de aviso eliminar
+    Swal.fire(
+      '¡Eliminado!',
+      'El usuario ha sido eliminado.',
+      'success'
+    )
+  </script>
+@endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este registro tiene relación con otro.<br> No es posible eliminarlo.'
+    });
+  </script>
+@endif
 
     <script type="text/javascript">
+    
         function toggleModal(modal){
             document.getElementById(modal).classList.toggle("hidden");
             document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
         }
-        function toggleModal_1(modalID, prodim){
-<<<<<<< HEAD
-=======
-          console.log(prodim)
-          $('#detalles_cliente').text(prodim.nombre);
-          $('#detalles_acuse').text(prodim.acuse_prodim);
-          $('#detalles_ejercicio').text(prodim.ejercicio);
-          if(prodim.firma_electronica == 1){
-            $('#detalles_firma_electronica').text('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-             </svg>\
-            </span>'); //iconos de status
-          }
-          
-          $('#detalles_revisado').text();
-          $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
-          $('#detalles_validado').text();
-          $('#detalles_fecha_validado').text(prodim.fecha_validado);
-          $('#detalles_convenio').text();
-          $('#detalles_fecha_convenio').text(prodim.fecha_convenio);
->>>>>>> e8917fcc9b694a4b7d38d5aaf8161532d2628aa6
+//===================================================
+      function toggleDetalles(modalID, prodim){
+        
+          if(prodim != null){
+            $('#detalles_cliente').text(prodim.nombre);
+            $('#detalles_acuse').text(prodim.acuse_prodim);
+            $('#detalles_ejercicio').text(prodim.ejercicio);
+            if(prodim.firma_electronica == 1){
+            $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+            </span>'); //status
+            }else{
+              $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                            </svg>\
+                        </span>'); //status
+            }
+            if(prodim.revisado == 1){
+            $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+            </span>'); //status
+            }else{
+              $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                            </svg>\
+                        </span>'); //status
+            }
+            if(prodim.fecha_revisado != null)
+            $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
+            else
+            $('#detalles_fecha_revisado').text('-');
+            if(prodim.validado == 1){
+            $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+            </span>'); //status
+            }else{
+              $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                            </svg>\
+                        </span>'); //status
+            }
+            
+            if(prodim.fecha_validado != null)
+              $('#detalles_fecha_validado').text(prodim.fecha_validado);
+            else
+              $('#detalles_fecha_validado').text('-');
+            if(prodim.convenio == 1){
+            $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                          </svg>\
+            </span>'); //status
+            }else{
+              $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                            </svg>\
+                        </span>'); //status
+            }
+            if(prodim.fecha_convenio != null)
+            $('#detalles_fecha_convenio').text(prodim.fecha_convenio);
+            else
+            $('#detalles_fecha_convenio').text('-');
+        }
           document.getElementById(modalID).classList.toggle("hidden");
           document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
-          
-          $('#detalles_cliente').text(prodim.nombre);
-          $('#detalles_acuse').text(prodim.acuse_prodim);
-          $('#detalles_ejercicio').text(prodim.ejercicio);
-          if(prodim.firma_electronica == 1){
-          $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                        </svg>\
-          </span>'); //status
-          }else{
-            $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                          </svg>\
-                      </span>'); //status
-          }
-          if(prodim.revisado == 1){
-          $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                        </svg>\
-          </span>'); //status
-          }else{
-            $('#detalles_revisado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                          </svg>\
-                      </span>'); //status
-          }
-          if(prodim.fecha_revisado != null)
-          $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
-          else
-          $('#detalles_fecha_revisado').text('-');
-          if(prodim.validado == 1){
-          $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                        </svg>\
-          </span>'); //status
-          }else{
-            $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                          </svg>\
-                      </span>'); //status
-          }
-          
-          if(prodim.fecha_validado != null)
-            $('#detalles_fecha_validado').text(prodim.fecha_validado);
-          else
-            $('#detalles_fecha_validado').text('-');
-          if(prodim.convenio == 1){
-          $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                        </svg>\
-          </span>'); //status
-          }else{
-            $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
-                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
-                          </svg>\
-                      </span>'); //status
-          }
-          if(prodim.fecha_convenio != null)
-          $('detalles_fecha_convenio').text(prodim.fecha_convenio);
-          else
-          $('#detalles_fecha_convenio').text('-');
-         
-        }
-
+      }
+        
+//===================================================
         $(document).ready(function(){
+          $('#example').DataTable({ //datatable
+        "autoWidth" : true,
+        "responsive" : true,
+        columnDefs: [
+            { responsivePriority: 1, targets: 4 },
+            { responsivePriority: 1, targets: 1 },
+            { responsivePriority: 10001, targets: 4 },
+            { responsivePriority: 2, targets: -2 }
+        ],
+        language: {
+          url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+        }
+      }).columns.adjust();
+
             $("#cliente_id").on('change', function () { //consulta ejercicios por cliente
                 cliente=$(this).val();
                 $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
@@ -477,7 +520,7 @@
                 }
 
             });
-            //======================================
+//===================================================
             $("#ejercicio").on('change', function () { //limitacion de los calendarios
                 $('#fuenteCliente_id').val($('#ejercicio').val());
               
@@ -500,10 +543,10 @@
 
             $("input[type='checkbox']").on('click', function(){
               if($(this).prop("checked")) {
-                $('#fecha_'+$(this).attr('id')).prop('required',true);
+                //$('#fecha_'+$(this).attr('id')).prop('required',true);
                 $('#fecha_'+$(this).attr('id')).prop('disabled',false);
               }else{
-                $('#fecha_'+$(this).attr('id')).prop('required',false);
+                //$('#fecha_'+$(this).attr('id')).prop('required',false);
                 $('#fecha_'+$(this).attr('id')).prop("disabled",true);
               }
             });
@@ -516,7 +559,7 @@
               }
             });
         });
-
+//===================================================
         function validar(){ //validacion del formulario
             band =true;
                cliente= document.forms["formulario"]["cliente_id"].value;
@@ -540,21 +583,45 @@
               }else{
                 $('#error_acuse').addClass('hidden'); 
               }
-              return band;
+              revisado = document.getElementById("revisado").checked;
+              fecha_revisado = document.forms["formulario"]["fecha_revisado"].value;
+              if(revisado){
+                if(fecha_revisado == ''){
+                  $('#error_fecha_revisado').removeClass('hidden');
+                  band= false;
+                }else{
+                  $('#error_fecha_revisado').addClass('hidden');
+                }
+              }else{
+                $('#error_fecha_revisado').addClass('hidden');
+              }
+              validado = document.getElementById("validado").checked;
+              fecha_validado = document.forms["formulario"]["fecha_validado"].value;
+              if(validado){
+                if(fecha_validado == ''){
+                  $('#error_fecha_validado').removeClass('hidden');
+                  band= false;
+                }else{
+                  $('#error_fecha_validado').addClass('hidden');
+                }
+              }else{
+                $('#error_fecha_validado').addClass('hidden');
+              }
+              convenio = document.getElementById("convenio").checked;
+              fecha_convenio = document.forms["formulario"]["fecha_convenio"].value;
+              if(convenio){
+                if(fecha_convenio == ''){
+                  $('#error_fecha_convenio').removeClass('hidden');
+                  band= false;
+                }else{
+                  $('#error_fecha_convenio').addClass('hidden');
+                }
+              }else{
+                $('#error_fecha_convenio').addClass('hidden');
+              }
+          return band;
         }
     </script>
-    <script>
-        $(document).ready(function() { //llamada al datatable
-          $('#example').DataTable({
-              "autoWidth" : true,
-              "responsive" : true,
-              columnDefs: [
-                { "width": "10%", "targets": 0 }
-              ],
-              language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
-              }
-          }).columns.adjust();
-      });
-      </script>
+    
+   
 @endsection

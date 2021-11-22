@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FuentesCliente;
 use App\Models\Prodim;
+use App\Models\ProdimComprometido;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -55,8 +56,9 @@ class ProdimController extends Controller
         'firma_electronica' => 'nullable',
         'acuse' => 'required',
         'revisado' => 'nullable',
-        'fuenteCliente_id' => 'required',
-      ]);
+        'fuenteCliente_id' => 'required|unique:prodim,fuente_id',
+      ],
+      [ 'fuenteCliente_id.unique' => 'Ya existe un registro con este cliente y ejercicio.']);
       if($request->firma_electronica == null){
         $request->firma_electronica = false;
       }else{
@@ -169,9 +171,15 @@ class ProdimController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy(Prodim $prodim)
     {
-        
+        $existeProdimComprometido = ProdimComprometido::where('prodim_id', $prodim->id_prodim)->exists();
+        if($existeProdimComprometido == null ){
+            $prodim->delete();
+            return redirect()->route('prodim.index')->with('eliminar','ok');
+        }else{
+            return redirect()->route('prodim.index')->with('eliminar','error');
+        }
     }
     // ================================ Funciones API ========================================= //
     public function getDesgloseProdim($cliente_id, $anio){

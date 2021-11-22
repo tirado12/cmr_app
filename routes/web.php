@@ -35,7 +35,7 @@ use App\Http\Controllers\RftController;
 use App\Http\Controllers\SispladeController;
 use App\Http\Controllers\Usuarios\PerfilController;
 use App\Http\Controllers\GeneralController;
-
+use App\Models\ComprometidoDesglose;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ Route::resource('perfil', PerfilController::class)->names('perfil');
 Route::get('/obtClienteFuente/{ejercicio},{cliente}',[SispladeController::class,'obtenerFuenteCliente']);
 Route::get('/existeEnSisplade/{cliente}',[SispladeController::class,'existeEjercicio']);
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
-Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']);
+Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']); //existe
 //Route::get('/cabildoRfc/{rfc}',[IntegrantesCabildoController::class,'existeRfc']);
 
 Route::get('/contratistaRfc/{rfc},{municipio_id}',[ContratistaController::class,'existeRfc']);
@@ -115,3 +115,5 @@ Route::get('/ejerciciosIntegrantes/{municipio}',[IntegrantesCabildoController::c
 Route::get('/clienteEjercicio/{id_municipio}',[ClienteController::class,'clienteXejercicio']); //fuentes cliente, integrantes
 Route::get('/existeGastoFuente/{fuente_id},{gasto}',[GastosIndirectosFuentesController::class,'existeRegistro']); //ya existe registro
 Route::get('/obtenerEjerciciosPorCliente/{municipio}',[GastosIndirectosFuentesController::class,'obtenerEjercicios']); //obtiene ejercicios disponibles por cliente
+Route::get('/ejerciciosclientesProdim/{cliente}',[ProdimComprometidoController::class,'ejerciciosClientesProdim']); //obtiene ejercicios disponibles por cliente en prodim
+Route::get('/ejerciciosProdimComprometido/{cliente}',[ComprometidoDesgloseController::class,'ejerciciosProdimComprometido']); //obtiene ejercicios disponibles por cliente en prodim

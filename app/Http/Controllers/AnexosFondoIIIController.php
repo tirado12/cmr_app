@@ -88,9 +88,9 @@ class AnexosFondoIIIController extends Controller
        }
        if($request['gastos_indirectos']==null){
         $request['gastos_indirectos']=false;
-   }else{
-        $request['gastos_indirectos']=true;
-   }
+        }else{
+                $request['gastos_indirectos']=true;
+        }
         $anexo->update($request->all());
        return redirect()->route('anexos.index');
     }

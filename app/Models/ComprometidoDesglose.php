@@ -10,4 +10,11 @@ class ComprometidoDesglose extends Model
     use HasFactory;
     protected $primaryKey = 'id_desglose'; 
     protected $table = "comprometido_desglose";
+
+    protected $fillable = [
+        'comprometido_id',
+        'concepto',
+        'monto'
+    ];
+
 }

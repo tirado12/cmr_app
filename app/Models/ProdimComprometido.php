@@ -11,4 +11,12 @@ class ProdimComprometido extends Model
     protected $primaryKey = 'id_comprometido';
 
     protected $table = "prodim_comprometido";
+
+    protected $fillable = [
+        'prodim_catalogo_id',
+        'prodim_id',
+        'fecha_comprometido',
+        'monto'
+    ];
+
 }

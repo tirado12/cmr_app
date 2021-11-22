@@ -59,7 +59,7 @@
 
                 <div class="col-span-3 ">
                     <label  id="label_acuse_prodim" for="acuse_prodim" class="block text-sm font-medium text-gray-700">Acuse *</label>
-                    <input type="text" name="acuse_prodim" id="acuse_prodim" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodim->acuse_prodim}}" required>
+                    <input type="text" name="acuse_prodim" id="acuse_prodim" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodim->acuse_prodim}}" >
                     <label id="error_acuse_prodim" name="error_acuse_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido</label>
                 </div>
 
@@ -104,14 +104,14 @@
             
               <div class="col-span-2 p-2">
                 <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha validado *</label>
-                <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_valdiado }}" {{($prodim->validado == 1)? '' : 'disabled'}}>
+                <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_validado }}" {{($prodim->validado == 1)? '' : 'disabled'}}>
                 <label id="error_fecha_validado" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
               <div class="col-span-2 p-2">
                 <label id="label_fecha_convenio" for="fecha_convenio" class="block text-sm font-medium text-gray-700">Fecha convenio *</label>
                 <input type="date" name="fecha_convenio" id="fecha_convenio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_convenio }}" {{($prodim->covenio == 1)? '' : 'disabled'}}>
-                
+                <label id="error_fecha_convenio" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
             </div>
@@ -139,6 +139,7 @@
   window.onload = function(){
     if($('#revisado').prop("checked")){
       $('#fecha_revisado').removeClass("bg-gray-100");
+      //$('#fecha_revisado').prop("required",true);
       $('#validado').removeAttr('disabled');
       $('#fecha_validado').attr('min', $('#fecha_revisado').val());
       $('#fecha_validado').attr('max', $('#ejercicio').val()+'-12-31');
@@ -149,7 +150,7 @@
     
     if($('#validado').prop("checked")){
       $('#fecha_validado').removeClass("bg-gray-100");
-      
+      //$('#fecha_validado').prop("required",true);
       $('#convenio').removeAttr('disabled');
     }else{
       $('#fecha_validado').addClass("bg-gray-100");
@@ -159,50 +160,111 @@
 
     if($('#convenio').prop('checked')){
       $('#fecha_convenio').removeClass("bg-gray-100");
+      
+      //$('#fecha_convenio').prop("required",true);
     }else{
       $('#fecha_convenio').addClass("bg-gray-100");
     }
   }
-
-  $(document).ready(function(){
+//===================================================
+  $(document).ready(function(){ //eventos
       $('#revisado').on('click',function(){
-        if($(this).prop("checked")){
+        if($(this).prop("checked")){ //checklist revisado
           $('#fecha_revisado').removeClass("bg-gray-100");
           $('#fecha_revisado').prop("disabled",false);
+          //$('#fecha_revisado').prop("required",true);
           $('#validado').removeAttr('disabled');
         }else{
           $('#fecha_revisado').addClass("bg-gray-100");
           $('#fecha_revisado').prop("disabled",true);
+          //$('#fecha_revisado').prop("required",false);
+          $('#fecha_revisado').val("");
           $('#validado').prop('disabled',true);
         }
       });
 
-      $('#fecha_revisado').on('change',function(){
+      $('#fecha_revisado').on('change',function(){ //cambia fecha revisado
         $('#fecha_validado').attr('min', $('#fecha_revisado').val());
       });
 
-      $('#validado').on('click',function(){
+      $('#validado').on('click',function(){ //checklist validado
         if($(this).prop("checked")){
           $('#fecha_validado').removeClass("bg-gray-100");
           $('#fecha_validado').prop("disabled",false);
+          //$('#fecha_validado').prop("required",true);
           $('#convenio').removeAttr('disabled');
         }else{
           $('#fecha_validado').addClass("bg-gray-100");
           $('#fecha_validado').prop("disabled",true);
+          //$('#fecha_validado').prop("required",false);
+          $('#fecha_validado').val("");
           $('#convenio').prop('disabled',true);
         }
       });
 
-      $('#convenio').on('click',function(){
+      $('#convenio').on('click',function(){ //checklist convenio
         if($(this).prop("checked")){
           $('#fecha_convenio').removeClass("bg-gray-100");
           $('#fecha_convenio').prop("disabled",false);
-          
+          $('#fecha_convenio').attr('min', $('#ejercicio').val()+'-01-01');
+          //$('#fecha_convenio').prop("required",true);
         }else{
           $('#fecha_convenio').addClass("bg-gray-100");
           $('#fecha_convenio').prop("disabled",true);
+          //$('#fecha_convenio').prop("required",false);
+          $('#fecha_convenio').val("");
         }
       });
   });
+
+  //===================================================
+
+  function validar(){ //validacion del formulario
+    band = true;
+        acuse= document.forms["formulario"]["acuse_prodim"].value;
+          if(acuse == ""){
+             $('#error_acuse_prodim').removeClass('hidden');  
+             band= false;
+          }else{
+             $('#error_acuse_prodim').addClass('hidden'); 
+          }
+        revisado = document.getElementById("revisado").checked;
+        fecha_revisado = document.forms["formulario"]["fecha_revisado"].value;
+        if(revisado){
+          if(fecha_revisado == ''){
+            $('#error_fecha_revisado').removeClass('hidden');
+            band= false;
+          }else{
+            $('#error_fecha_revisado').addClass('hidden');
+          }
+        }else{
+          $('#error_fecha_revisado').addClass('hidden');
+        }
+        validado = document.getElementById("validado").checked;
+        fecha_validado = document.forms["formulario"]["fecha_validado"].value;
+        if(validado){
+          if(fecha_validado == ''){
+            $('#error_fecha_validado').removeClass('hidden');
+            band= false;
+          }else{
+            $('#error_fecha_validado').addClass('hidden');
+          }
+        }else{
+          $('#error_fecha_validado').addClass('hidden');
+        }
+        convenio = document.getElementById("convenio").checked;
+        fecha_convenio = document.forms["formulario"]["fecha_convenio"].value;
+        if(convenio){
+          if(fecha_convenio == ''){
+            $('#error_fecha_convenio').removeClass('hidden');
+            band= false;
+          }else{
+            $('#error_fecha_convenio').addClass('hidden');
+          }
+        }else{
+          $('#error_fecha_convenio').addClass('hidden');
+        }
+    return band;
+  }
 </script>
 @endsection
