@@ -59,6 +59,7 @@ class ProdimController extends Controller
         'fuenteCliente_id' => 'required|unique:prodim,fuente_id',
       ],
       [ 'fuenteCliente_id.unique' => 'Ya existe un registro con este cliente y ejercicio.']);
+
       if($request->firma_electronica == null){
         $request->firma_electronica = false;
       }else{
@@ -138,7 +139,6 @@ class ProdimController extends Controller
             'convenio' => 'nullable',
             'fecha_convenio' => 'nullable',
             'acuse_prodim' => 'required',
-            
           ]);
           if($request->firma_electronica == null){
             $request['firma_electronica'] = false;

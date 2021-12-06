@@ -276,7 +276,6 @@
       icon: 'error',
       title: '¡Oops... !',
       html: 'Este proveedor tiene relación con otro registro.<br> No es posible eliminarlo.'
-      
     });
   </script>
 @endif

@@ -190,7 +190,7 @@ class SispladeController extends Controller
         ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
         ->where('fuente_financiamiento_id', 2)
         ->where('municipio_id',$cliente)
-        ->select('cliente_id','ejercicio')
+        ->select('cliente_id','ejercicio','id_fuente_financ_cliente')
         ->get(); //tabla fuenteClientes segun existentes  
         return $fuenteClie;
     }

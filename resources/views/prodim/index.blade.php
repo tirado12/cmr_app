@@ -174,7 +174,7 @@
         </tr>
         @endforeach
       </tbody>
-  </table>
+</table>
     </div>
 
     <!-- inicio modal -->
@@ -291,10 +291,26 @@
                             <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
                         </div>
 
+                        
+                      <div class="col-span-6 ">
+                        <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700">Porcentaje *</label>
+                        <div class="relative ">
+                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">
+                              %
+                            </span>
+                          </div>
+                          <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="2" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0">
+                        </div>
+                        <label id="error_porcentaje_prodim" name="error_porcentaje_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido (MAX  %2)</label>
+                      </div>
+
                         <div class="col-span-3 ">
-                            <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700">Acuse *</label>
-                            <input type="text" name="acuse" id="acuse" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                            <label id="error_acuse" name="error_acuse" class="hidden text-base font-normal text-red-500" >Este dato es requerido</label>
+                            <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700 mb-2">Acuse *</label>
+                            <label for="acuse" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
+                            <input type="file" name="acuse" id="acuse" onchange='uploadFile(this)' minlength="4" class="hidden mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300" >
+                            <span id="file-name" class="file-box text-green-600 "></span>
+                            <label id="error_acuse" name="error_acuse" class="hidden block text-base font-normal text-red-500" >Este dato es requerido</label>
                         </div>
 
                         <div class="col-span-3 p-4">
@@ -303,6 +319,7 @@
                                 <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
                             </div>
                         </div>
+
                     </div>
 
                     <div class="flex flex-nowrap w-full p-2" >
@@ -313,14 +330,14 @@
                                 <input type="checkbox" name="revisado" id="revisado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
                             </div>
                         </div>
-
+                      
                         <div class="flex flex-col justify-center w-full">
                             <div class="flex flex-row  p-2">
                                 <label id="label_validado" for="validado" class="ml-6 text-sm font-medium text-gray-700 ">Validado</label>
                                 <input type="checkbox" name="validado" id="validado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" disabled>
                             </div>
                         </div>
-
+                      
                         <div class="flex flex-col justify-center w-full">
                             <div class="flex flex-row  p-2">
                                 <label id="label_convenio" for="convenio" class="ml-6 text-sm font-medium text-gray-700 ">Convenio</label>
@@ -328,7 +345,7 @@
                             </div>
                         </div>
                     </div>
-                 
+
                     <div class="grid grid-cols-6 gap-4">
                       <div class="col-span-2 p-2">
                         <label id="label_fecha_revisado" for="fecha_revisado" class="block text-sm font-medium text-gray-700">Fecha revisado *</label>
@@ -347,7 +364,6 @@
                         <input type="date" name="fecha_convenio" id="fecha_convenio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
                         <label id="error_fecha_convenio" class="hidden block text-md text-red-500">Se require de una fecha</label>
                       </div>
-        
                     </div>
                  </div>
               
@@ -399,9 +415,37 @@
     });
   </script>
 @endif
+<script>
+  //Mensaje de advertencia
+$(".form-eliminar").submit(function(e){
+    e.preventDefault();
+    Swal.fire({
+      customClass: {
+      title: 'swal_title_modificado',
+      cancelButton: 'swal_button_cancel_modificado'
+      },
+      title: '¿Seguro que desea eliminar este prodim?',
+      text: "¡Aviso, esta acción es irreversible!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Borrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    })
+});
+ /* */
+</script>
 
     <script type="text/javascript">
-    
+    function uploadFile(target) {
+    document.getElementById("file-name").innerHTML = target.files[0].name;
+    }
+    //============================================================
         function toggleModal(modal){
             document.getElementById(modal).classList.toggle("hidden");
             document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
@@ -440,9 +484,9 @@
                         </span>'); //status
             }
             if(prodim.fecha_revisado != null)
-            $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
+              $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
             else
-            $('#detalles_fecha_revisado').text('-');
+              $('#detalles_fecha_revisado').text('-');
             if(prodim.validado == 1){
             $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\

@@ -39,7 +39,7 @@
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
       <div class="mt-5 md:mt-0 md:col-span-2">
-        <form action="{{ route('fuenteCliente.update', $fuenteCliente) }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
+        <form action="{{ route('fuenteCliente.update', $fuenteCliente) }}" onsubmit="return validarForm();" method="POST" id="formulario" name="formulario">
           @csrf
           @method('PUT')
           <div class="shadow overflow-hidden sm:rounded-md">
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 
-                @if($fuenteCliente->fuente_financiamiento_id == 2)
+                {{-- @if($fuenteCliente->fuente_financiamiento_id == 2) --}}
                
 
                 <!--<div class="col-span-10 lg:col-span-2">
@@ -113,14 +113,14 @@
                     <input type="date" name="adendum_priorizacion" id="adendum_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuenteCliente->adendum_priorizacion }}">
                     <label id="error_adendum_priorizacion" name="error_adendum_priorizacion" class="hidden text-base font-normal text-red-500" >Introduzca una fecha</label>
                 </div> -->
-                @endif
+                {{-- @endif --}}
 
                 <div class="col-span-10 lg:col-span-3">
                     <label id="label_fuente_financiamiento_id" for="fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
-                    <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" class="clickable mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >                
+                    <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" onchange="validarFuente()" class="clickable mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" >                
                       @role('Administrador')
                         @foreach($fuentes as $fuente)
-                          <option value="{{ $fuente->id_fuente_financiamiento }}" {{ ($fuente->id_fuente_financiamiento == $fuenteCliente->fuente_financiamiento_id) ? 'selected' : '' }}> {{ $fuente->nombre_corto }} </option>
+                          <option value="{{ $fuente->id_fuente_financiamiento }}" {{ ($fuente->id_fuente_financiamiento == $fuenteCliente->fuente_financiamiento_id) ? 'selected' : '' }} > {{ $fuente->nombre_corto }} </option>
                         @endforeach
                       @endrole
                       @role('Usuario')
@@ -131,19 +131,17 @@
                 </div>
 
                 <!--<div class="col-span-10 lg:col-span-2">
-                  @if($fuenteCliente->fuente_financiamiento_id == 2)
+                  {{-- @if($fuenteCliente->fuente_financiamiento_id == 2) --}}
                     <div>
                       <label for="cbox2" class="text-sm font-medium text-gray-700"><input type="checkbox" id="prodim" name="prodim" {{ ($fuenteCliente->prodim == 1) ? 'checked' : '' }}> PRODIMDF</label><br>
                       <label for="cbox2" class="text-sm font-medium text-gray-700"><input type="checkbox" id="gastos_indirectos" name="gastos_indirectos" {{ ($fuenteCliente->gastos_indirectos == 1) ? 'checked' : '' }}> Gastos indirectos</label>
                     </div>
-                  @endif
+                  {{-- @endif --}}
                     
                 </div>-->
                 <div class="col-span-10">
                   <label id="error_monto" name="error_monto" class="hidden w-full text-base font-normal text-red-500" >El monto proyectado debe ser mayor o igual al comprometido</label>
                 </div>
-
-                
 
               </div>
               @if($fuenteCliente->fuente_financiamiento_id == 2)
@@ -153,35 +151,100 @@
                   <p class="font-bold sm:text-sm">Anexos</p>
                   </div>
                 </div>
-              
-                <div class="flex flex-col-2 justify-center " >
+                
+                <div class="flex flex-col-2 justify-center mb-2" >
                   <div class="flex flex-row  p-2">
                       <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
-                      <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($anexos_fondo3->prodim == 1) ? 'checked' : '' }}>
+                      <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($fuenteAnexos->prodim == 1) ? 'checked' : '' }}>
                   </div>
                   <div class="flex flex-row  p-2">
                     <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
-                    <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($anexos_fondo3->gastos_indirectos == 1) ? 'checked' : '' }}>
+                    <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($fuenteAnexos->gastos_indirectos == 1) ? 'checked' : '' }}>
                   </div>
+                </div>
+
+                <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
+                  <div class="col-span-3">
+                    <div class="" id="div_porcentaje_prodim">
+                      <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje prodim *</label>
+                      <div class="relative ">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span class="text-gray-500 sm:text-sm">
+                            % 
+                          </span>
+                        </div>
+                        <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3"  class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0" value="{{$fuenteAnexos->porcentaje_prodim}}">
+                      </div>
+                      <label id="error_porcentaje_prodim" class="hidden block text-md text-red-500">Se require de un porcentaje (max %2)</label>
+                      <label for="" id="proyectado_prodim" class="hidden block text-md"></label>
+                    </div>
+                  </div>
+                  
+                  <div class="col-span-3">
+                    <div class="" id="div_porcentaje_gastos">
+                      <label id="label_porcentaje_gastos" for="porcentaje_gastos" class="block text-sm font-medium text-gray-700">Porcentaje gastos indirectos *</label>
+                      <div class="relative ">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span class="text-gray-500 sm:text-sm">
+                            %
+                          </span>
+                        </div>
+                        <input type="text" name="porcentaje_gastos" id="porcentaje_gastos" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0" value="{{$fuenteAnexos->porcentaje_gastos}}">
+                      </div>
+                      <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
+                      <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
+                    </div>
+                  </div>
+
+                  <div class="col-span-3">
+                    <div class="hidden" id="div_monto_prodim">
+                    <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto PRODIMDF *</label>
+                    <div class="relative ">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          $
+                        </span>
+                      </div>
+                      <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                    </div>
+                    <label id="error_monto_prodim" name="error_monto_prodim" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                    </div>
+                  </div>
+    
+                  <div class="col-span-3">
+                    <div class="hidden" id="div_monto_gastos">
+                    <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto Gastos Indirectos *</label>
+                    <div class="relative ">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          $
+                        </span>
+                      </div>
+                      <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                    </div>
+                    <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                    </div>
+                  </div>
+    
                 </div>
              
                 <div class="grid grid-cols-6 gap-4">
     
                   <div class="col-span-2">
-                    <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
-                    <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_integracion_consejo }}">
+                    <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración *</label>
+                    <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuenteAnexos->acta_integracion_consejo }}">
                     <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                   </div>
                 
                   <div class="col-span-2">
-                    <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
-                    <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->acta_priorizacion }}">
+                    <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización *</label>
+                    <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuenteAnexos->acta_priorizacion }}">
                     <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                   </div>
     
                   <div class="col-span-2">
                     <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
-                    <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $anexos_fondo3->adendum_priorizacion }}" >
+                    <input type="date" name="adendum" id="adendum" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $fuenteAnexos->adendum_priorizacion }}" >
                     
                   </div>
     
@@ -205,17 +268,82 @@
                   <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" >
                 </div>
               </div>
+
+              <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
+                <div class="col-span-3">
+                  <div class="hidden" id="div_porcentaje_prodim">
+                    <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje prodim *</label>
+                    <div class="relative ">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          % 
+                        </span>
+                      </div>
+                      <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0" >
+                    </div>
+                    <label id="error_porcentaje_prodim" class="hidden block text-md text-red-500">Se require de un porcentaje (max %2)</label>
+                    <label for="" id="proyectado_prodim" class="hidden block text-md"></label>
+                  </div>
+                </div>
+                
+                <div class="col-span-3">
+                  <div class="hidden" id="div_porcentaje_gastos">
+                    <label id="label_porcentaje_gastos" for="porcentaje_gastos" class="block text-sm font-medium text-gray-700">Porcentaje gastos indirectos *</label>
+                    <div class="relative ">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          %
+                        </span>
+                      </div>
+                      <input type="text" name="porcentaje_gastos" id="porcentaje_gastos" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0">
+                    </div>
+                    <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
+                    <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
+                  </div>
+                </div>
+
+                <div class="col-span-3">
+                  <div class="hidden" id="div_monto_prodim">
+                  <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto PRODIMDF *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        $
+                      </span>
+                    </div>
+                    <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_monto_prodim" name="error_monto_prodim" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                  </div>
+                </div>
+  
+                <div class="col-span-3">
+                  <div class="hidden" id="div_monto_gastos">
+                  <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto Gastos Indirectos *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        $
+                      </span>
+                    </div>
+                    <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                  </div>
+                </div>
+  
+              </div>
            
               <div class="grid grid-cols-6 gap-4">
   
                 <div class="col-span-2">
-                  <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración </label>
+                  <label id="label_ejercicio" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración *</label>
                   <input type="date" name="acta_integracion" id="acta_integracion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                   <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                 </div>
               
                 <div class="col-span-2">
-                  <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización </label>
+                  <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización *</label>
                   <input type="date" name="acta_priorizacion" id="acta_priorizacion" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
                   <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
                 </div>
@@ -283,17 +411,103 @@
       $('#titulo_anexo').removeClass('hidden');
       $('#anexos').removeClass('hidden');
       valor_comprometido= $("#monto_comprometido").val();
-      $("#monto_comprometido").val(moneda(valor_comprometido));
+      $("#monto_comprometido").val(parseFloat(valor_comprometido).toFixed(2));
       valor_proyectado = $("#monto_proyectado").val();
-      $("#monto_proyectado").val(moneda(valor_proyectado));
+      $("#monto_proyectado").val(parseFloat(valor_proyectado).toFixed(2));
+
+      if(document.getElementById('prodim').checked == true){ //check seleccionado
+        $('#div_porcentaje_prodim').removeClass('hidden');
+        $('#div_monto_prodim').removeClass('hidden');
+        $('#proyectado_prodim').removeClass('hidden');
+        monto_proyectado = $('#monto_proyectado').val();
+        monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+        porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
+        resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+        $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
+      }else{
+        $('#div_porcentaje_prodim').addClass('hidden');
+        $('#div_monto_prodim').addClass('hidden');
+      }
+
+      if(document.getElementById('gastos_indirectos').checked == true){ //check seleccionado
+        $('#div_porcentaje_gastos').removeClass('hidden');
+        $('#div_monto_gastos').removeClass('hidden');
+        monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
+      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+        $('#proyectado_gastos').removeClass('hidden');
+        $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
+      }else{
+        $('#div_porcentaje_gastos').addClass('hidden');
+        $('#div_monto_gastos').addClass('hidden');
+      }
+
+      $('#titulo_anexo').removeClass('hidden');
+      $('#anexos').removeClass('hidden');
+      $('#acta_integracion').attr('required',true);
+      $('#acta_priorizacion').attr('required',true);
+
+
     }else{
       $('#titulo_anexo').addClass('hidden');
       $('#anexos').addClass('hidden');
       valor_comprometido= $("#monto_comprometido").val();
-      $("#monto_comprometido").val(moneda(valor_comprometido));
+      $("#monto_comprometido").val(parseFloat(valor_comprometido).toFixed(2));
       valor_proyectado = $("#monto_proyectado").val();
-      $("#monto_proyectado").val(moneda(valor_proyectado));
+      $("#monto_proyectado").val(parseFloat(valor_proyectado).toFixed(2));
+      $('#titulo_anexo').addClass('hidden');
+    $('#anexos').addClass('hidden');
+    $('#acta_integracion').removeAttr('required');
+    $('#acta_priorizacion').removeAttr('required');
     }
+    //=================================================
+    montoComprometido = $('#monto_comprometido').val();
+monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
+ $('#porcentaje_prodim, #monto_proyectado, #porcentaje_gastos').on('keyup',function(e){
+  setTimeout(function() {
+    $('#proyectado_prodim').text('');
+    $('#anterior_comprometido').val(montoComprometido); //monto comprometido actual
+
+    if($('#porcentaje_prodim').val()!='' && $('#monto_proyectado').val()!=''){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      
+      porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
+      resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+        $('#proyectado_prodim').removeClass('hidden');
+        $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
+        // resultado = parseFloat(resultado);
+        //   nuevoComprometido = resultado+monto_comprometido;
+        //   nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+        //   $('#monto_comprometido').val(nuevoComprometido)
+      
+    }else{
+         $('#proyectado_prodim').addClass('hidden');
+         $('#monto_comprometido').val(montoComprometido);
+    }
+
+    if($('#porcentaje_gastos').val()!='' && $('#monto_proyectado').val()!='' ){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
+      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+        $('#proyectado_gastos').removeClass('hidden');
+        $('#comprometido_prodim').removeClass('hidden');
+        $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
+        // resultado = parseFloat(resultado);
+        //   nuevoComprometido = resultado+monto_comprometido;
+        //   nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+        //   $('#monto_comprometido').val(nuevoComprometido)
+      
+    }else{
+         $('#proyectado_gastos').addClass('hidden');
+         //$('#monto_comprometido').val(montoComprometido);
+    }
+
+
+  },1);
+ });
     //=================================================
     periodo = $('#label_periodo').text();
     anioMin=periodo.substring(0,4);
@@ -302,6 +516,7 @@
     $('#ejercicio').attr('max',anioMax);
     //=================================================
     function moneda(valor){
+     
       return valor.replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
     }
     //=================================================
@@ -324,6 +539,90 @@
   // else
   //   $('#error_monto_mayor').addClass('hidden');
   }
+
+  function validarForm(){ //validacion del formulario
+ band = true;
+  
+  fuente= document.forms["formulario"]["fuente_financiamiento_id"].value;
+  ejercicio= document.forms["formulario"]["ejercicio"].value;
+  monto_proyectado = document.forms["formulario"]["monto_proyectado"].value;
+  
+  if(fuente == ""){
+    $('#error_fuente_financiamiento_id').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_fuente_financiamiento_id').addClass('hidden');
+  }
+
+  if(ejercicio == ""){
+    $('#error_ejercicio').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_ejercicio').addClass('hidden');
+  }
+
+  if(monto_proyectado == ""){
+    $('#error_monto_proyectado').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_monto_proyectado').addClass('hidden');
+  }
+
+  if(fuente == 2){
+    prodim = document.getElementById("prodim").checked;
+    if(prodim == true){
+      porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
+      if(porcentaje_prodim == "" || porcentaje_prodim < 0.1 || porcentaje_prodim > 2){
+        $('#error_porcentaje_prodim').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_prodim').addClass('hidden');
+      }
+    }
+    gastos_indirectos = document.getElementById("gastos_indirectos").checked;
+    if(gastos_indirectos == true){
+      porcentaje_gastos= document.forms["formulario"]["porcentaje_gastos"].value;
+      if(porcentaje_gastos == "" || porcentaje_gastos < 0.1 || porcentaje_gastos > 3){
+        $('#error_porcentaje_gastos').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_gastos').addClass('hidden');
+      }
+    }
+  }
+
+  acta_integracion= document.forms["formulario"]["acta_integracion"].value;
+  acta_priorizacion= document.forms["formulario"]["acta_priorizacion"].value;
+  if(acta_integracion = ""){
+    $('#error_acta_integracion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_integracion').addClass('hidden');
+      }
+  if(acta_priorizacion = ""){
+    $('#error_acta_priorizacion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_priorizacion').addClass('hidden');
+      }
+    
+  return band;
+  
+}
+$("input").keyup(function() {
+  $("#porcentaje_prodim, #porcentaje_gastos").on({ //validacion de solo numeros
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+            }
+        });  
+});
     
 //colocar opcion registrada en los selected
     $(document).ready(function(){
@@ -362,6 +661,41 @@
         else
           $('#error_monto_mayor').addClass('hidden');
       });
+
+      $('#acta_integracion').on('change', function(){
+      fechaMin = $('#acta_integracion').val();
+      var anio = $('#ejercicio').val();
+      var fechaMax = anio+'-12'+'-31';
+      //$('#acta_priorizacion').val('');
+      //$('#adendum').val('');
+      $('#acta_priorizacion').attr('min',fechaMin);
+      $('#acta_priorizacion').attr('max',fechaMax);
+  });
+
+      $('#prodim').on('change', function(){
+    //console.log($(this).val())
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_prodim').removeClass('hidden');
+      $('#porcentaje_prodim').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_prodim').addClass('hidden');
+      $('#porcentaje_prodim').prop('required',false);
+    }
+  });
+
+  $('#gastos_indirectos').on('change', function(){
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_gastos').removeClass('hidden');
+      $('#porcentaje_gastos').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_gastos').addClass('hidden');
+      $('#porcentaje_gastos').prop('required',false);
+    }
+  });
 
      // $('#monto_comprometido').keyup();
       var statusProdim =  '{{ $fuenteCliente->prodim }}';
@@ -469,31 +803,31 @@ $(document).ready(function() {
 });
 
 //validacion del formulario con el btn guardar
-$().ready(function() {
-  $("#formulario").validate({
-    onfocusout: false,
-    onclick: false,
-		rules: {
-      municipio: { required: true},
-			monto_proyectado: { required: true},
-      monto_comprometido: { required: true},
-      ejercicio: { required: true},
+// $().ready(function() {
+//   $("#formulario").validate({
+//     onfocusout: false,
+//     onclick: false,
+// 		rules: {
+//       municipio: { required: true},
+// 			monto_proyectado: { required: true},
+//       monto_comprometido: { required: true},
+//       ejercicio: { required: true},
      
       
       
-      fuente_financiamiento_id: { required: true},
-      /*prodim: { required: true},
-      gastos_indirectos: { required: true},*/
-		},
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-        $('#error_'+element.attr('id')).fadeOut();
-      }
-     // console.log(element.attr('id'));
-    },
-	});
+//       fuente_financiamiento_id: { required: true},
+//       /*prodim: { required: true},
+//       gastos_indirectos: { required: true},*/
+// 		},
+//     errorPlacement: function(error, element) {
+//       if(error != null){
+//       $('#error_'+element.attr('id')).fadeIn();
+//       }else{
+//         $('#error_'+element.attr('id')).fadeOut();
+//       }
+//      // console.log(element.attr('id'));
+//     },
+// 	});
   // $("#enviar_datos").click(function () {
   //     var $m_p = $("#monto_proyectado").val().replaceAll(",", "");
   //     var $m_c = $("#label_comprometido").text().replaceAll(",","").replaceAll("$", "");
@@ -506,10 +840,36 @@ $().ready(function() {
   //       return true;
   //     }
   //   });
-});
+//});
   </script>
   
   <script>
+//validar selected del cliente
+function validarFuente() {
+  var valor = document.getElementById("fuente_financiamiento_id").value;
+  if(valor != ''){
+    $('#error_fuente_financiamiento_id').fadeOut();
+    $("#label_fuente_financiamiento_id").removeClass('text-red-500');
+    $("#label_fuente_financiamiento_id").addClass('text-gray-700');
+  }else{
+    $('#error_fuente_financiamiento_id').fadeIn();
+    $("#label_fuente_financiamiento_id").addClass('text-red-500');
+    $("#label_fuente_financiamiento_id").removeClass('text-gray-700');
+  }
+
+  if($('#fuente_financiamiento_id').val() == '2'){
+    $('#titulo_anexo').removeClass('hidden');
+    $('#anexos').removeClass('hidden');
+    $('#acta_integracion').attr('required',true);
+    $('#acta_priorizacion').attr('required',true);
+  }else{
+    $('#titulo_anexo').addClass('hidden');
+    $('#anexos').addClass('hidden');
+    $('#acta_integracion').removeAttr('required');
+    $('#acta_priorizacion').removeAttr('required');
+  }
+}
+
     function validar(){
         proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
         proyectado = parseFloat(proyectado) || 0;

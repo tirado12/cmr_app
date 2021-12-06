@@ -10,6 +10,7 @@ use App\Models\GastosIndirectosFuentes;
 use App\Models\Municipio;
 use App\Models\ObrasFuentes;
 use App\Models\Prodim;
+use App\Models\ProdimComprometido;
 use App\Models\Sisplade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,9 @@ class FuenteClienteController extends Controller
         $fuenteClientes= FuentesCliente::join('clientes','id_cliente','cliente_id')
         ->join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
         ->leftjoin('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
+        ->leftjoin('prodim','fuente_id','id_fuente_financ_cliente')
         ->get();
+        //return $fuenteClientes;
         $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
         //$municipios = Municipio::all(); //todos los municipios
         $listaClientes = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
@@ -70,7 +73,7 @@ class FuenteClienteController extends Controller
             'fuente_financiamiento_id'=> 'required'
         ]);
         if(str_replace(",", '',$request->monto_comprometido) == null){
-        $request->monto_comprometido = 0;
+            $request->monto_comprometido = 0;
         }
         $fuenteCliente = FuentesCliente::create([
             'monto_proyectado' => str_replace(",", '', $request->monto_proyectado),
@@ -82,20 +85,35 @@ class FuenteClienteController extends Controller
         if($request->fuente_financiamiento_id == 2){
             if($request->prodim == null){
                 $request->prodim = false;
+                $request->porcentaje_prodim = null;
+                $request->monto_prodim = null;
             }else{
                 $request->prodim = true;
             }
             if($request->gastos_indirectos == null){
                 $request->gastos_indirectos = false;
+                $request->porcentaje_gastos = null;
+                $request->monto_gastos = null;
             }else{
                 $request->gastos_indirectos = true;
             }
+
+            if($request->prodim != null){ //agregar a tabla prodim
+                Prodim::create([
+                    'fuente_id' => $fuenteCliente->id_fuente_financ_cliente
+                ]);
+            }
+
             AnexosFondoIII::create([
                 'acta_integracion_consejo' => $request->acta_integracion,
                 'acta_priorizacion' => $request->acta_priorizacion,
                 'adendum_priorizacion' => $request->adendum,
                 'prodim' => $request->prodim,
+                'porcentaje_prodim' => $request->porcentaje_prodim,
+                'monto_prodim' => str_replace(",", '',$request->monto_prodim),
                 'gastos_indirectos' => $request->gastos_indirectos,
+                'porcentaje_gastos' => $request->porcentaje_gastos,
+                'monto_gastos' => str_replace(",", '',$request->monto_gastos),
                 'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
             ]);
         }
@@ -113,7 +131,7 @@ class FuenteClienteController extends Controller
      */
     public function show($id)
     {
-        return view('fuentes_clientes.vista');
+        
     }
      /**
      * Show the form for editing the specified resource.
@@ -129,10 +147,15 @@ class FuenteClienteController extends Controller
         ->where('id_cliente',$fuenteCliente->cliente_id)
         ->select('clientes.id_cliente', 'municipios.nombre','clientes.anio_inicio','clientes.anio_fin')
         ->get();
-        //return $fuenteCliente;
-        $anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->first();
-        return view('fuentes_clientes.edit',compact('fuenteCliente','cliente','fuentes','anexos_fondo3'));
-       //return $anexos_fondo3;
+        
+        $fuenteAnexos =FuentesCliente::leftjoin('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
+        ->leftjoin('prodim','fuente_id','id_fuente_financ_cliente')
+        ->where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)
+        ->first();
+        //return $fuenteAnexos;
+        //$anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->first();
+        
+        return view('fuentes_clientes.edit',compact('fuenteCliente','cliente','fuentes','fuenteAnexos'));
     }
 
     /**
@@ -144,73 +167,125 @@ class FuenteClienteController extends Controller
      */
     public function update(Request $request, FuentesCliente $fuenteCliente)
     {
-        //return $fuenteCliente;
         $request->validate([
             'monto_proyectado' => 'required',
             'fuente_financiamiento_id' => 'required',
         ]);
+        $fuenteCliente->ejercicio = $request->ejercicio;
         $fuenteCliente->monto_proyectado = str_replace(",", '',$request->monto_proyectado);
-        $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
-        $fuenteCliente->update();
-       // $fuenteCliente = FuentesCliente::find($request->fuente_id_edit);
-       // $fuenteCliente->monto_proyectado = str_replace(",", '', $request->monto_proyectado_edit);
-       $existe = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->exists();
-       
-        if($request->fuente_financiamiento_id == 2){
-           
-            if($existe == 1){
-                $anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->first();
-                
-                $anexos_fondo3->acta_integracion_consejo = $request->acta_integracion;
-                $anexos_fondo3->acta_priorizacion = $request->acta_priorizacion;
-                $anexos_fondo3->adendum_priorizacion = $request->adendum;
-                
-                if($request->prodim == null){
-                    $anexos_fondo3->prodim = false;
-                }else{
-                    $anexos_fondo3->prodim = true;
-                }
-                if($request->gastos_indirectos == null){
-                    $anexos_fondo3->gastos_indirectos = false;
-                }else{
-                    $anexos_fondo3->gastos_indirectos = true;
-                }
-                
-                $anexos_fondo3->update();
-            }else{
-                if($request->prodim == null){
+        $aviso = '';
+        
+        if($request->fuente_financiamiento_id == 2){ //es fondo III el que llega
+         $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
+         $existeAnexos = AnexosFondoIII::where('fuente_financiamiento_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->first();
+            if($existeAnexos == null){ //si no hay un registro anexos
+                if($request->prodim == null){ 
                     $request->prodim = false;
+                    $request->porcentaje_prodim = null;
                 }else{
                     $request->prodim = true;
                 }
                 if($request->gastos_indirectos == null){
                     $request->gastos_indirectos = false;
+                    $request->porcentaje_gastos = null;
                 }else{
                     $request->gastos_indirectos = true;
                 }
-                AnexosFondoIII::create([
-                    'acta_integracion_consejo' => $request->acta_integracion_consejo,
-                    'acta_priorizacion' => $request->acta_priorizacion,
-                    'adendum_priorizacion' => $request->adendum_priorizacion,
-                    'prodim' => $request->prodim,
-                    'gastos_indirectos' => $request->gastos_indirectos,
-                    'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
+                $anexosNuevo= AnexosFondoIII::create([
+                        'acta_integracion_consejo' => $request->acta_integracion,
+                        'acta_priorizacion' => $request->acta_priorizacion,
+                        'adendum_priorizacion' => $request->adendum_priorizacion,
+                        'prodim' => $request->prodim,
+                        'porcentaje_prodim' => $request->porcentaje_prodim,
+                        'monto_prodim' => str_replace(",", '',$request->monto_prodim),
+                        'gastos_indirectos' => $request->gastos_indirectos,
+                        'porcentaje_gastos' => $request->porcentaje_gastos,
+                        'monto_gastos' => str_replace(",", '',$request->monto_gastos),
+                        'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
                 ]);
+                if($request->prodim != null){ //si el check prodim esta seleccionado
+                    Prodim::create([ 
+                        'fuente_id' => $fuenteCliente->id_fuente_financ_cliente
+                    ]);
+                } 
+            }else{ //si existe un registro anexos
+                $existeAnexos->acta_integracion_consejo = $request->acta_integracion;
+                $existeAnexos->acta_priorizacion = $request->acta_priorizacion;
+                $existeAnexos->adendum_priorizacion = $request->adendum_priorizacion;
+                $prodim = Prodim::where("fuente_id", $fuenteCliente->id_fuente_financ_cliente)->first(); //busca prodim del obj
+                if($request->prodim == null){  //check prodim vacio - quitar prodim
+                    if($prodim != null){// tiene prodim
+                        $prodimComprometido= ProdimComprometido::where('prodim_id',$prodim->id_prodim)->first(); //busca prodim comprometido
+                        if($prodimComprometido != null){ //tiene prodim comprometido
+                            $aviso = 'errorProdim'; //manda msj de error
+                        }else{                          //no tiene comprometido 
+                            $existeAnexos->prodim = false; //borra registro de prodim y lo quita de anexos
+                            $existeAnexos->porcentaje_prodim = null;
+                            $existeAnexos->monto_prodim = null;
+                            $prodim->delete();
+                        }
+                    }
+                }else{ //check seleccionado
+                    
+                    if($prodim == null){ //si no tiene prodim
+                        Prodim::create([ 
+                            'fuente_id' => $fuenteCliente->id_fuente_financ_cliente
+                        ]);
+                     }
+                     $existeAnexos->prodim = true; //agrega prodim a anexos
+                     $existeAnexos->porcentaje_prodim = $request->porcentaje_prodim;
+                     $existeAnexos->monto_prodim = str_replace(",", '',$request->monto_prodim);
+                }
+
+                $existeGastosFuente = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->first(); 
+                if($request->gastos_indirectos == null){  //check gastos vacio 
+                    if($existeGastosFuente != null){
+                        $aviso = 'errorProdim'; 
+                    }else{
+                        $existeAnexos->gastos_indirectos = false; //borra registro de prodim y lo quita de anexos
+                        $existeAnexos->porcentaje_gastos = null;
+                        $existeAnexos->monto_gastos = null;
+                    }
+                }else{ //check seleccionado
+                    $existeAnexos->gastos_indirectos = true; 
+                    $existeAnexos->porcentaje_gastos = $request->porcentaje_gastos;
+                    $existeAnexos->monto_gastos = str_replace(",", '',$request->monto_gastos);
+                }
+
+                $existeAnexos->update();
             }
-            
-        }else{
-            if($existe == 1){
-                AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->delete();
-            }
-        }      
-        
-        
-        //return $request;
-        //$fuenteCliente->update();
-        //return $fuenteCliente;
+
+         
+        }else{ //cambio de fuente dif al III
+            $bandera = true; //confirmamos si alguna de las 
+            $prodim = Prodim::where("fuente_id", $fuenteCliente->id_fuente_financ_cliente)->first();
+            $existeGastosFuente = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->first();
+                if($request->prodim == null || $request->gastos_indirectos == null){ //si los check estan vacios
+                    if($existeGastosFuente != null){ //si hay un registro en gastos indirectos
+                        $bandera = false;
+                    }
+                    if($prodim != null ){  //tiene prodim - verifica
+                        $prodimComprometido= ProdimComprometido::where('prodim_id',$prodim->id_prodim)->first();
+                        if($prodimComprometido != null ){ //si tiene comprometido
+                            $bandera = false;
+                        }
+                    }
+                }    
+                if($bandera == true){
+                    $anexos_fondo3 = AnexosFondoIII::where("fuente_financiamiento_cliente_id", $fuenteCliente->id_fuente_financ_cliente)->first();
+                    $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
+                    $prodim->delete();
+                    $anexos_fondo3->delete();
+                }else{
+                    $aviso = 'errorProdim';
+                }            
+                
+        }
+
+        $fuenteCliente->update();
 
         if(auth()->user()->getRoleNames()[0] == 'Administrador')
-            return redirect()->route('fuenteCliente.index');
+            return redirect()->route('fuenteCliente.index')->with('eliminar',$aviso);
         else
             return redirect()->route('cliente.ejercicio', ['id' => $fuenteCliente->cliente_id, 'anio' => $fuenteCliente->ejercicio]);
     }
@@ -248,6 +323,7 @@ class FuenteClienteController extends Controller
     }
 
     //======================================================================
+
 
     public function getEjercicioDisponible($cliente_id, $ejercicio, $fuente){
         $existe = FuentesCliente::where('cliente_id',$cliente_id)

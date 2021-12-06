@@ -16,7 +16,11 @@ class AnexosFondoIII extends Model
         'acta_priorizacion',
         'adendum_priorizacion',
         'prodim',
+        'porcentaje_prodim',
+        'monto_prodim',
         'gastos_indirectos',
+        'porcentaje_gastos',
+        'monto_gastos',
         'fuente_financiamiento_cliente_id',
     ];
 

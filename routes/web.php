@@ -35,7 +35,7 @@ use App\Http\Controllers\RftController;
 use App\Http\Controllers\SispladeController;
 use App\Http\Controllers\Usuarios\PerfilController;
 use App\Http\Controllers\GeneralController;
-use App\Models\ComprometidoDesglose;
+use App\Http\Controllers\ObrasFuentesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,6 +84,7 @@ Route::resource('obraContrato', ObraContratoController::class)->names('obraContr
 Route::resource('obra', ObraController::class)->except(['getObrasCliente','sendMessage','getProdim'])->names('obra');
 Route::resource('obraModalidad', ObraModalidadEjecucionController::class)->except(['getObraExpediente'])->names('obraModalidad');
 Route::resource('observacionesDesglose', ObservacionesDesgloseController::class)->names('observacionesDesglose');
+Route::resource('obrasFuentes', ObrasFuentesController::class)->names('obrasFuentes');
 Route::resource('parteSocial', ParteSocialTecnicaController::class)->names('parteSocial');
 Route::resource('prodimCatalogo', ProdimCatalogoController::class)->names('prodimCatalogo');
 Route::resource('prodimComprometido', ProdimComprometidoController::class)->names('prodimComprometido');

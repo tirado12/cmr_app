@@ -13,7 +13,7 @@
   <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
   </svg>
-<h1 class="text-xl font-bold ml-2">Lista de Fuentes de financiamiento - Clientes</h1>
+<h1 class="text-xl font-bold ml-2">Lista de fuentes de financiamiento - Clientes</h1>
 </div>
 
 
@@ -80,13 +80,13 @@
           </td>
          <td>
             <div class="text-sm leading-5 font-medium text-gray-900 myDIV">
-              {{ $index->monto_proyectado}}
+              {{ $index->monto_proyectado }}
             </div>
             
           </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900 myDIV">
-              {{$index->monto_comprometido}}
+              {{$index->monto_comprometido }}
             </div>
             
           </td>
@@ -167,7 +167,14 @@
               <label for="ver_monto_comprometido" class=" text-base font-medium text-gray-700">Monto comprometido: </label>
               <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 myDIV"></label>
             </div>
-           
+            <div class="col-span-8">
+              <label for="ver_porcentaje_prodim" class=" text-base font-medium text-gray-700">Porcentaje Prodim: </label>
+              <label id="ver_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
+            </div>
+            <div class="col-span-8">
+              <label for="ver_porcentaje_gastos" class=" text-base font-medium text-gray-700">Porcentaje Gastos Indirectos: </label>
+              <label id="ver_porcentaje_gastos" class="text-base font-bold text-gray-900 "></label>
+            </div>
             <div class="col-span-8">
                 <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Ejercicio: </label>
                 <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
@@ -177,24 +184,32 @@
                 <label id="ver_fuente_financiamiento" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="prodim" class="text-base font-medium text-gray-700">Prodim: </label>
+                <label for="ver_prodim" class="text-base font-medium text-gray-700">PRODIMDF: </label>
                 <span id="ver_prodim" class=" "></span>
               </div>
               <div class="col-span-8">
-                <label for="gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
-                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full "></span>
+                <label for="ver_monto_prodim" class="text-base font-medium text-gray-700">Monto PRODIMDF: </label>
+                <span id="ver_monto_prodim" class=" text-base font-bold text-gray-900 myDIV"></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
+                <span id="ver_gastos_indirectos" class=""></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_monto_gastos" class="text-base font-medium text-gray-700">Monto Gastos Indirectos: </label>
+                <span id="ver_monto_gastos" class=" text-base font-bold text-gray-900 myDIV"></span>
               </div>
               <div class="col-span-8">
                 <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
-                <span id="ver_acta_integracion_consejo" class=" "></span>
+                <span id="ver_acta_integracion_consejo" class="text-base font-bold text-gray-900"></span>
               </div>
               <div class="col-span-8">
                 <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta de priorización: </label>
-                <span id="ver_acta_priorizacion" class=" "></span>
+                <span id="ver_acta_priorizacion" class="text-base font-bold text-gray-900"></span>
               </div>
               <div class="col-span-8">
                 <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
-                <span id="ver_adendum_priorizacion" class=" "></span>
+                <span id="ver_adendum_priorizacion" class="text-base font-bold text-gray-900"></span>
               </div>
              
           </div>
@@ -222,7 +237,7 @@
         </button>
       </div>
       <!--body-->
-      <form action="{{ route('fuenteCliente.store') }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
+      <form action="{{ route('fuenteCliente.store') }}" onsubmit="return validarForm();" method="POST" id="formulario" name="formulario">
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">
@@ -285,7 +300,7 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.0">
+                <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.00">
               </div>
                 <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad.</label><br>
                 <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado.</label>
@@ -298,10 +313,10 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0" readonly>
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly value="1,000.00">
               </div>
-              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>  
-                
+              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+              <label for="" id="anterior_comprometido" class="hidden block text-md text-green-500"></label>
             </div>
             
          </div>
@@ -322,6 +337,71 @@
                 <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
               </div>
             </div>
+
+            <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
+              <div class="col-span-3">
+                <div class="hidden" id="div_porcentaje_prodim">
+                  <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje prodim *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        %
+                      </span>
+                    </div>
+                    <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_porcentaje_prodim" class="hidden block text-md text-red-500">Se require de un porcentaje (max %2)</label>
+                  <label for="" id="proyectado_prodim" class="hidden block text-md"></label>
+                </div>
+              </div>
+              
+              <div class="col-span-3">
+                <div class="hidden" id="div_porcentaje_gastos">
+                  <label id="label_porcentaje_gastos" for="porcentaje_gastos" class="block text-sm font-medium text-gray-700">Porcentaje gastos indirectos *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        %
+                      </span>
+                    </div>
+                    <input type="text" name="porcentaje_gastos" id="porcentaje_gastos" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
+                  <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
+                </div>
+              </div>
+
+              <div class="col-span-3">
+                <div class="hidden" id="div_monto_prodim">
+                <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto PRODIMDF *</label>
+                <div class="relative ">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">
+                      $
+                    </span>
+                  </div>
+                  <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                </div>
+                <label id="error_monto_prodim" name="error_monto_prodim" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                </div>
+              </div>
+
+              <div class="col-span-3">
+                <div class="hidden" id="div_monto_gastos">
+                <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto Gastos Indirectos *</label>
+                <div class="relative ">
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <span class="text-gray-500 sm:text-sm">
+                      $
+                    </span>
+                  </div>
+                  <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                </div>
+                <label id="error_monto_gastos" name="error_monto_gastos" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+                </div>
+              </div>
+
+            </div>
          
             <div class="grid grid-cols-6 gap-4">
               <div class="col-span-2">
@@ -339,9 +419,7 @@
               <div class="col-span-2">
                 <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
                 <input type="date" name="adendum" id="adendum" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                
               </div>
-
             </div>
          </div>
 
@@ -378,7 +456,7 @@
         <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal')">
           Cancelar
         </button>
-        <button type="submit" id="guardar" class="bg-gray-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" disabled>
+        <button type="submit" id="guardar" class="bg-green-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
           Guardar
         </button>
         </div>
@@ -414,6 +492,16 @@
       icon: 'error',
       title: '¡Oops... !',
       html: 'Este registro tiene relación con otro.<br> No es posible eliminarlo.'
+    });
+  </script>
+@endif
+<!--Alerta de error-->
+@if(session('eliminar')=='errorProdim')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'No es posible actualizar la fuente de financiamiento,<br> ni eliminar el prodim si esta comprometido.'
     });
   </script>
 @endif
@@ -474,6 +562,102 @@ function toggleMod(modal, fuente){
     document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
 }
 //================================================
+function validarForm(){ //validacion del formulario
+ band = true;
+  cliente =document.forms["formulario"]["municipio"].value;
+  periodo =document.forms["formulario"]["periodo"].value;
+  fuente= document.forms["formulario"]["fuente_financiamiento_id"].value;
+  ejercicio= document.forms["formulario"]["ejercicio"].value;
+  monto_proyectado = document.forms["formulario"]["monto_proyectado"].value;
+  if(cliente == ""){
+    $('#error_municipio').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_municipio').addClass('hidden');
+  }
+  if(periodo == ""){
+    $('#error_periodo').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_periodo').addClass('hidden');
+  }
+  if(fuente == ""){
+    $('#error_fuente_financiamiento_id').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_fuente_financiamiento_id').addClass('hidden');
+  }
+
+  if(ejercicio == ""){
+    $('#error_ejercicio').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_ejercicio').addClass('hidden');
+  }
+
+  if(monto_proyectado == ""){
+    $('#error_monto_proyectado').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_monto_proyectado').addClass('hidden');
+  }
+
+  if(fuente == 2){
+    prodim = document.getElementById("prodim").checked;
+    if(prodim == true){
+      porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
+      monto_prodim= document.forms["formulario"]["monto_prodim"].value;
+      if(porcentaje_prodim == "" || porcentaje_prodim < 0.1 || porcentaje_prodim > 2){
+        $('#error_porcentaje_prodim').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_prodim').addClass('hidden');
+      }
+      if(monto_prodim == ""){
+        band = false;
+        $('#error_monto_prodim').removeClass('hidden');
+      }else{
+        $('#error_monto_prodim').addClass('hidden');
+      }
+    }
+    gastos_indirectos = document.getElementById("gastos_indirectos").checked;
+    if(gastos_indirectos == true){
+      porcentaje_gastos= document.forms["formulario"]["porcentaje_gastos"].value;
+      monto_gastos= document.forms["formulario"]["monto_gastos"].value;
+      if(porcentaje_gastos == "" || porcentaje_gastos < 0.1 || porcentaje_gastos > 3){
+        $('#error_porcentaje_gastos').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_gastos').addClass('hidden');
+      }
+      if(monto_gastos == ""){
+        $('#error_monto_gastos').removeClass('hidden');
+        band = false;
+      }else{
+        $('#error_monto_gastos').addClass('hidden');
+      }
+    }
+  }
+
+  acta_integracion= document.forms["formulario"]["acta_integracion"].value;
+  acta_priorizacion= document.forms["formulario"]["acta_priorizacion"].value;
+  if(acta_integracion = ""){
+    $('#error_acta_integracion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_integracion').addClass('hidden');
+      }
+  if(acta_priorizacion = ""){
+    $('#error_acta_priorizacion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_priorizacion').addClass('hidden');
+      }
+    
+  return band;
+  
+}
+//================================================
 //validar selected del cliente
 function validarFuente() {
   var valor = document.getElementById("fuente_financiamiento_id").value;
@@ -513,10 +697,87 @@ function validarCliente() {
     $("#label_municipio").removeClass('text-gray-700');
   }
 }
+
 //================================================
 //validacion de campos del modal
 $(document).ready(function() {
   //$('#ejercicio').attr('maxlength','4');
+  $('#prodim').on('change', function(){
+    //console.log($(this).val())
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_prodim').removeClass('hidden');
+      $('#div_monto_prodim').removeClass('hidden');
+      //$('#porcentaje_prodim').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_prodim').addClass('hidden');
+      $('#div_monto_prodim').addClass('hidden');
+      //$('#porcentaje_prodim').prop('required',false);
+    }
+  });
+  $('#gastos_indirectos').on('change', function(){
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_gastos').removeClass('hidden');
+      $('#div_monto_gastos').removeClass('hidden');
+      //$('#porcentaje_gastos').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_gastos').addClass('hidden');
+      $('#div_monto_gastos').addClass('hidden');
+      //$('#porcentaje_gastos').prop('required',false);
+    }
+  });
+// ==========================================
+montoComprometido = $('#monto_comprometido').val();
+monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
+ $('#porcentaje_prodim, #monto_proyectado, #porcentaje_gastos').on('keyup',function(e){
+  setTimeout(function() {
+    $('#proyectado_prodim').text('');
+    $('#anterior_comprometido').val(montoComprometido); //monto comprometido actual
+
+    if($('#porcentaje_prodim').val()!='' && $('#monto_proyectado').val()!=''){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      $('#monto_proyectado').val();
+      porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
+      resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+        $('#proyectado_prodim').removeClass('hidden');
+        $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
+        //resultado = parseFloat(resultado);
+          //nuevoComprometido = resultado+monto_comprometido;
+          //nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+          //$('#monto_comprometido').val(moneda(nuevoComprometido));
+      
+    }else{
+         $('#proyectado_prodim').addClass('hidden');
+         $('#monto_comprometido').val(montoComprometido);
+    }
+
+    if($('#porcentaje_gastos').val()!='' && $('#monto_proyectado').val()!='' ){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      
+      porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
+      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+        $('#proyectado_gastos').removeClass('hidden');
+        $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
+        // resultado = parseFloat(resultado);
+        //   nuevoComprometido = resultado+monto_comprometido;
+        //   nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+        //   $('#monto_comprometido').val(nuevoComprometido)
+      
+    }else{
+         $('#proyectado_gastos').addClass('hidden');
+         //$('#monto_comprometido').val(montoComprometido);
+    }
+
+
+  },1);
+ });
+
+ 
 //================================================
 var myArray;
 $('#municipio').on('keyup change', function(){ //ejercicio select
@@ -534,11 +795,11 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 myArray= data;
                 $.each(data,function(key, item) { //llenado del select ejercicio
                   if(key == 0){
-                  $("#periodo").append('<option value='+item.id_cliente+' selected>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
-                  $('#cliente_id').val(item.id_cliente);
-                  $('#ejercicio').attr({ min: item.anio_inicio, max: item.anio_fin});
+                    $("#periodo").append('<option value='+item.id_cliente+' selected>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                    $('#cliente_id').val(item.id_cliente);
+                    $('#ejercicio').attr({ min: item.anio_inicio, max: item.anio_fin});
                   }else{
-                  $("#periodo").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                    $("#periodo").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
                   }
                 });
                 
@@ -592,14 +853,14 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 //console.log(data);
                 if(data.length != 0){
                   $('#error_existe').removeClass('hidden');
-                  $('#guardar').attr("disabled", true);
-                  $("#guardar").removeClass('bg-green-500');
-                  $("#guardar").addClass('bg-gray-700');
+                  // $('#guardar').attr("disabled", true);
+                  // $("#guardar").removeClass('bg-green-500');
+                  // $("#guardar").addClass('bg-gray-700');
                 }else{
                   $('#error_existe').addClass('hidden');
-                  $('#guardar').removeAttr("disabled");
-                  $("#guardar").removeClass('bg-gray-700');
-                  $("#guardar").addClass('bg-green-500');
+                  // $('#guardar').removeAttr("disabled");
+                  // $("#guardar").removeClass('bg-gray-700');
+                  // $("#guardar").addClass('bg-green-500');
                 }
               },
               cache: false
@@ -626,7 +887,7 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
   });
 //================================================
    $("#modal input").keyup(function() {
-    $("#ejercicio").on({ //validacion de solo numeros
+       $("#ejercicio").on({ //validacion de solo numeros
             "focus": function(event) {
                 $(event.target).select();
             },
@@ -638,10 +899,23 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 });
             }
         });
+        $("#porcentaje_prodim, #porcentaje_gastos").on({ //validacion de solo numeros
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+                
+            }
+        });
 //================================================
         var proyectado;
         var comprometido;
-        $("#monto_proyectado").on({
+        $("#monto_proyectado, #monto_prodim, #monto_gastos").on({
             "focus": function(event) {
                 $(event.target).select();
             },
@@ -652,11 +926,14 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                         .replace(/([0-9])([0-9]{2})$/, '$1.$2')
                         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
                         
-                }); 
+                });
+                // $(event.target).val(function(index, value) { //formato montos
+                //     return parseFloat(value).toFixed(2);
+                // }); 
                 
             }
         });
-//editar adm el ejercicio
+//editar adm el ejercicio 
       $("#monto_proyectado").on('keyup', function(){ //validar montos
                 //obtener el monto para eliminar formato y pasar a float
                 proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
@@ -677,14 +954,14 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
       var monto = $(this).val();
       
       if(monto != ''){
-        $('#error_'+$(this).attr('id')).fadeOut();
+        $('#error_'+$(this).attr('id')).addClass('hidden');
         $("#label_"+$(this).attr('id')).removeClass('text-red-500');
         $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       //$('#guardar').removeAttr("disabled");
       }
       else{
       //$("#guardar").attr("disabled", true);
-        $('#error_'+$(this).attr('id')).fadeIn();
+        $('#error_'+$(this).attr('id')).removeClass('hidden');
         $("#label_"+$(this).attr('id')).addClass('text-red-500');
         $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
       }
@@ -693,29 +970,30 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
 });
 //================================================
 //validacion del formulario con el btn guardar
-$().ready(function($) {
-  $('#formulario').validate({
-    onfocusout: false,
-    onclick: false,
-    rules: {
-      cliente_id: { required: true },
-      ejercicio: { required: true },
-      monto_proyectado: { required: true },
-      //monto_comprometido: { required: true},
-      fuente_financiamiento_id: { required: true },
-    },
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-        $('#error_'+element.attr('id')).fadeOut();
-      }
-     
-    },
-  });
-//================================================
-});
 
+// $().ready(function($) {
+//   $('#formulario').validate({
+//     onfocusout: false,
+//     onclick: false,
+//     rules: {
+//       cliente_id: { required: true },
+//       ejercicio: { required: true },
+//       monto_proyectado: { required: true },
+//       //monto_comprometido: { required: true},
+//       fuente_financiamiento_id: { required: true },
+//     },
+//     errorPlacement: function(error, element) {
+//       if(error != null){
+//       $('#error_'+element.attr('id')).fadeIn();
+//       }else{
+//         $('#error_'+element.attr('id')).fadeOut();
+//       }
+     
+//     },
+//   });
+
+// });
+//================================================
 //Codigo de Modal detalles
 $(".btn-AddDate").on("click",function() {
   document.getElementById('modal-id').classList.toggle("hidden");
@@ -727,7 +1005,7 @@ function moneda(valor){//formato montos
     }
 
   function toggleModal(modalID, index, cliente, fuente, key){ //modal detalles 
-      
+      console.log(index)
         for(item in cliente){
           if(index.cliente_id == cliente[item].id_cliente){
             // console.log(cliente[index].nombre)
@@ -735,10 +1013,18 @@ function moneda(valor){//formato montos
           }
         }
         
-    $('#ver_monto_proyectado').html(moneda(index.monto_proyectado)); 
-    $('#ver_monto_comprometido').html(moneda(index.monto_comprometido)); 
+    $('#ver_monto_proyectado').html(moneda(parseFloat(index.monto_proyectado).toFixed(2))); 
+    $('#ver_monto_comprometido').html(moneda(parseFloat(index.monto_comprometido).toFixed(2)));
+    if(index.porcentaje_prodim == null) 
+    {$('#ver_porcentaje_prodim').html('-');}
+    else
+    {$('#ver_porcentaje_prodim').html('% '+index.porcentaje_prodim);}
+    if(index.porcentaje_gastos == null) 
+    {$('#ver_porcentaje_gastos').html('-');}
+    else
+    {$('#ver_porcentaje_gastos').html('% '+index.porcentaje_gastos);}
     if(index.acta_integracion_consejo == null)
-    { }
+    { $('#ver_acta_integracion_consejo').html('-');}
     else
     {$('#ver_acta_integracion_consejo').html(index.acta_integracion_consejo);} 
     if(index.acta_priorizacion == null)
@@ -751,6 +1037,15 @@ function moneda(valor){//formato montos
     {$('#ver_adendum_priorizacion').html(index.adendum_priorizacion); }
     $('#ver_ejercicio').html(index.ejercicio);
     $('#ver_fuente_financiamiento').html(fuente);
+
+    if(index.monto_prodim == null)
+    {$('#ver_monto_prodim').html('-');}
+    else
+    {$('#ver_monto_prodim').html(moneda(parseFloat(index.monto_prodim).toFixed(2))); }
+    if(index.monto_gastos == null)
+    {$('#ver_monto_gastos').html('-');}
+    else
+    {$('#ver_monto_gastos').html(moneda(parseFloat(index.monto_gastos).toFixed(2))); }
     
     styleValue('#ver_prodim', index.prodim);
     styleValue('#ver_gastos_indirectos', index.gastos_indirectos);
@@ -761,7 +1056,7 @@ function moneda(valor){//formato montos
   function styleValue(id,valor){ //funcion para determinar status de prodim y gastos indirectos
     if(valor == 1){
       html='<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class=" h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
                         </svg>\
                     </span>';

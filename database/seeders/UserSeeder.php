@@ -21,6 +21,8 @@ class UserSeeder extends Seeder
             'name' => 'Juan',
             'email' => 'josese@gmail.com',
             'password' => bcrypt('12345678'),
+            'area' => 'Infraestructura',
+            'img' => 'http://127.0.0.1:8000/image/profile.jpg',
             'remember_token' => Str::random(100)
         ])->assignRole('Administrador');
 
@@ -28,12 +30,16 @@ class UserSeeder extends Seeder
             'name' => 'Andy',
             'email' => 'antrick10@gmail.com',
             'password' => bcrypt('12345678'),
+            'area' => 'Creatividad e Innovacion',
+            'img' => 'http://127.0.0.1:8000/image/profile2.jpg',
             'remember_token' => Str::random(100)
         ])->assignRole('Administrador');
         User::create([
             'name' => 'carlos',
             'email' => 'carlos10@gmail.com',
             'password' => bcrypt('12345678'),
+            'area' => 'Contabilidad',
+            'img' => 'http://127.0.0.1:8000/image/profile.jpg',
             'remember_token' => Str::random(100)
         ])->assignRole('Usuario');
         
