@@ -83,20 +83,11 @@ class FuenteClienteController extends Controller
             'fuente_financiamiento_id' => $request->fuente_financiamiento_id
         ]);
         if($request->fuente_financiamiento_id == 2){
-            if($request->prodim == null){
-                $request->prodim = false;
-                $request->porcentaje_prodim = null;
-                $request->monto_prodim = null;
-            }else{
-                $request->prodim = true;
-            }
-            if($request->gastos_indirectos == null){
-                $request->gastos_indirectos = false;
-                $request->porcentaje_gastos = null;
-                $request->monto_gastos = null;
-            }else{
-                $request->gastos_indirectos = true;
-            }
+            $request->prodim = $request->prodim == null? false:true;
+            $request->gastos_indirectos = $request->gastos_indirectos == null? false:true;
+            
+            $monto_prodim = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+            $monto_gastos = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
 
             if($request->prodim != null){ //agregar a tabla prodim
                 Prodim::create([
@@ -110,10 +101,10 @@ class FuenteClienteController extends Controller
                 'adendum_priorizacion' => $request->adendum,
                 'prodim' => $request->prodim,
                 'porcentaje_prodim' => $request->porcentaje_prodim,
-                'monto_prodim' => str_replace(",", '',$request->monto_prodim),
+                'monto_prodim' => round($monto_prodim,2),
                 'gastos_indirectos' => $request->gastos_indirectos,
                 'porcentaje_gastos' => $request->porcentaje_gastos,
-                'monto_gastos' => str_replace(",", '',$request->monto_gastos),
+                'monto_gastos' => round($monto_gastos,2),
                 'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
             ]);
         }
