@@ -86,8 +86,8 @@ class FuenteClienteController extends Controller
             $request->prodim = $request->prodim == null? false:true;
             $request->gastos_indirectos = $request->gastos_indirectos == null? false:true;
             
-            $monto_prodim = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
-            $monto_gastos = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
+            $monto_prodim = $request->prodim == null? 0:str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+            $monto_gastos = $request->gastos_indirectos == null? 0:str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
 
             if($request->prodim != null){ //agregar a tabla prodim
                 Prodim::create([
@@ -170,28 +170,23 @@ class FuenteClienteController extends Controller
          $fuenteCliente->fuente_financiamiento_id = $request->fuente_financiamiento_id;
          $existeAnexos = AnexosFondoIII::where('fuente_financiamiento_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->first();
             if($existeAnexos == null){ //si no hay un registro anexos
-                if($request->prodim == null){ 
-                    $request->prodim = false;
-                    $request->porcentaje_prodim = null;
-                }else{
-                    $request->prodim = true;
-                }
-                if($request->gastos_indirectos == null){
-                    $request->gastos_indirectos = false;
-                    $request->porcentaje_gastos = null;
-                }else{
-                    $request->gastos_indirectos = true;
-                }
+
+            $request->prodim = $request->prodim == null? false:true;
+            $request->gastos_indirectos = $request->gastos_indirectos == null? false:true;
+            
+            $monto_prodim = $request->prodim == null? 0:str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+            $monto_gastos = $request->gastos_indirectos == null? 0:str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
+
                 $anexosNuevo= AnexosFondoIII::create([
                         'acta_integracion_consejo' => $request->acta_integracion,
                         'acta_priorizacion' => $request->acta_priorizacion,
                         'adendum_priorizacion' => $request->adendum_priorizacion,
                         'prodim' => $request->prodim,
                         'porcentaje_prodim' => $request->porcentaje_prodim,
-                        'monto_prodim' => str_replace(",", '',$request->monto_prodim),
+                        'monto_prodim' => round($monto_prodim,2),
                         'gastos_indirectos' => $request->gastos_indirectos,
                         'porcentaje_gastos' => $request->porcentaje_gastos,
-                        'monto_gastos' => str_replace(",", '',$request->monto_gastos),
+                        'monto_gastos' => round($monto_gastos,2),
                         'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
                 ]);
                 if($request->prodim != null){ //si el check prodim esta seleccionado
@@ -212,7 +207,7 @@ class FuenteClienteController extends Controller
                         }else{                          //no tiene comprometido 
                             $existeAnexos->prodim = false; //borra registro de prodim y lo quita de anexos
                             $existeAnexos->porcentaje_prodim = null;
-                            $existeAnexos->monto_prodim = null;
+                            $existeAnexos->monto_prodim = 0;
                             $prodim->delete();
                         }
                     }
@@ -225,7 +220,7 @@ class FuenteClienteController extends Controller
                      }
                      $existeAnexos->prodim = true; //agrega prodim a anexos
                      $existeAnexos->porcentaje_prodim = $request->porcentaje_prodim;
-                     $existeAnexos->monto_prodim = str_replace(",", '',$request->monto_prodim);
+                     $existeAnexos->monto_prodim = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
                 }
 
                 $existeGastosFuente = GastosIndirectosFuentes::where('fuente_cliente_id', $fuenteCliente->id_fuente_financ_cliente)->first(); 
@@ -235,12 +230,12 @@ class FuenteClienteController extends Controller
                     }else{
                         $existeAnexos->gastos_indirectos = false; //borra registro de prodim y lo quita de anexos
                         $existeAnexos->porcentaje_gastos = null;
-                        $existeAnexos->monto_gastos = null;
+                        $existeAnexos->monto_gastos = 0;
                     }
                 }else{ //check seleccionado
                     $existeAnexos->gastos_indirectos = true; 
                     $existeAnexos->porcentaje_gastos = $request->porcentaje_gastos;
-                    $existeAnexos->monto_gastos = str_replace(",", '',$request->monto_gastos);
+                    $existeAnexos->monto_gastos = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
                 }
 
                 $existeAnexos->update();

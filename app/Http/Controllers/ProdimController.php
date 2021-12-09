@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AnexosFondoIII;
 use App\Models\FuentesCliente;
 use App\Models\Prodim;
 use App\Models\ProdimComprometido;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File; 
 
 class ProdimController extends Controller
 {
@@ -40,7 +42,7 @@ class ProdimController extends Controller
      */
     public function create()
     {
-        //
+        return $fuenteCliente = FuentesCliente::join('anexos_fondo3', 'id_fuente_financ_cliente', 'fuente_financiamiento_cliente_id')->where('id_fuente_financ_cliente', 2)->first();
     }
 
     /**
@@ -51,8 +53,19 @@ class ProdimController extends Controller
      */
     public function store(Request $request)
     {
-      //return $request;
-      $request->validate([
+        //obtenemos el campo file definido en el formulario
+        if (!empty($request->file('acuse_prodim'))) {
+            $file = $request->file('acuse_prodim');
+            //Move Uploaded File
+            $destinationPath = './uploads';
+            $file->move($destinationPath, $file->getClientOriginalName());
+            $archivo = $file->getClientOriginalName();
+            $destinationPath = url("/uploads/$archivo");
+            $request['acuse'] = $destinationPath;
+            
+        }
+        
+       $request->validate([
         'firma_electronica' => 'nullable',
         'acuse' => 'required',
         'revisado' => 'nullable',
@@ -60,27 +73,13 @@ class ProdimController extends Controller
       ],
       [ 'fuenteCliente_id.unique' => 'Ya existe un registro con este cliente y ejercicio.']);
 
-      if($request->firma_electronica == null){
-        $request->firma_electronica = false;
-      }else{
-        $request->firma_electronica = true;
-      }
-      if($request->revisado == null){
-          $request->revisado = false;
-      }else{
-          $request->revisado = true;
-      }
-      if($request->validado == null){
-          $request->validado = false;
-      }else{
-          $request->validado= true;
-      }
-      if($request->convenio == null){
-          $request->convenio =false;
-      }else{
-          $request->convenio =true;
-      }
-      Prodim::create([
+
+      $request->firma_electronica == null ? $request->firma_electronica = false : $request->firma_electronica = true;
+      $request->revisado == null ? $request->revisado = false : $request->revisado = true;
+      $request->validado == null ? $request->validado = false : $request->validado = true;
+      $request->convenio == null ? $request->convenio = false : $request->convenio = true;
+
+      $prodim = Prodim::create([
           'firma_electronica' => $request->firma_electronica,
           'revisado' => $request->revisado,
           'fecha_revisado' => $request->fecha_revisado,
@@ -91,6 +90,15 @@ class ProdimController extends Controller
           'acuse_prodim' => $request->acuse,
           'fuente_id' => $request->fuenteCliente_id
       ]);
+
+      $fuenteCliente = FuentesCliente::where('id_fuente_financ_cliente', $prodim->fuente_id)->first();
+      $anexos = AnexosFondoIII::where('fuente_financiamiento_cliente_id', $prodim->fuente_id)->first();
+
+      $anexos->porcentaje_prodim= $request->porcentaje_prodim;
+      $anexos->monto_prodim = str_replace(",", '', $fuenteCliente->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+      $anexos->prodim = true;
+      $anexos->update();
+
       return redirect()->route('prodim.index');
     }
     /**
@@ -175,6 +183,9 @@ class ProdimController extends Controller
     {
         $existeProdimComprometido = ProdimComprometido::where('prodim_id', $prodim->id_prodim)->exists();
         if($existeProdimComprometido == null ){
+            if(File::exists('./uploads/OP. REG. C.P. YESENIA.pdf')) { // establecer subruta
+                File::delete('./uploads/OP. REG. C.P. YESENIA.pdf');
+            }
             $prodim->delete();
             return redirect()->route('prodim.index')->with('eliminar','ok');
         }else{

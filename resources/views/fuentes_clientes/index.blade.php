@@ -168,14 +168,6 @@
               <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 myDIV"></label>
             </div>
             <div class="col-span-8">
-              <label for="ver_porcentaje_prodim" class=" text-base font-medium text-gray-700">Porcentaje Prodim: </label>
-              <label id="ver_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
-            </div>
-            <div class="col-span-8">
-              <label for="ver_porcentaje_gastos" class=" text-base font-medium text-gray-700">Porcentaje Gastos Indirectos: </label>
-              <label id="ver_porcentaje_gastos" class="text-base font-bold text-gray-900 "></label>
-            </div>
-            <div class="col-span-8">
                 <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Ejercicio: </label>
                 <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
               </div>
@@ -185,7 +177,11 @@
               </div>
               <div class="col-span-8">
                 <label for="ver_prodim" class="text-base font-medium text-gray-700">PRODIMDF: </label>
-                <span id="ver_prodim" class=" "></span>
+                <span id="ver_prodim" class=""></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_porcentaje_prodim" class=" text-base font-medium text-gray-700">Porcentaje PRODIMDF: </label>
+                <label id="ver_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
               </div>
               <div class="col-span-8">
                 <label for="ver_monto_prodim" class="text-base font-medium text-gray-700">Monto PRODIMDF: </label>
@@ -194,6 +190,10 @@
               <div class="col-span-8">
                 <label for="ver_gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
                 <span id="ver_gastos_indirectos" class=""></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_porcentaje_gastos" class=" text-base font-medium text-gray-700">Porcentaje Gastos Indirectos: </label>
+                <label id="ver_porcentaje_gastos" class="text-base font-bold text-gray-900 "></label>
               </div>
               <div class="col-span-8">
                 <label for="ver_monto_gastos" class="text-base font-medium text-gray-700">Monto Gastos Indirectos: </label>
@@ -313,7 +313,7 @@
                     $
                   </span>
                 </div>
-                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly value="1,000.00">
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly >
               </div>
               <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
               <label for="" id="anterior_comprometido" class="hidden block text-md text-green-500"></label>
@@ -329,7 +329,7 @@
           
             <div class="flex flex-col-2 justify-center mb-2" >
               <div class="flex flex-row  p-2">
-                  <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                  <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">PRODIMDF </label>
                   <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
               </div>
               <div class="flex flex-row  p-2">
@@ -341,7 +341,7 @@
             <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
               <div class="col-span-3">
                 <div class="hidden" id="div_porcentaje_prodim">
-                  <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje prodim *</label>
+                  <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje PRODIMDF *</label>
                   <div class="relative ">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <span class="text-gray-500 sm:text-sm">
@@ -368,36 +368,6 @@
                   </div>
                   <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
                   <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
-                </div>
-              </div>
-
-              <div class="col-span-3">
-                <div class="hidden" id="div_monto_prodim">
-                <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto PRODIMDF *</label>
-                <div class="relative ">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span class="text-gray-500 sm:text-sm">
-                      $
-                    </span>
-                  </div>
-                  <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                </div>
-                <label id="error_monto_prodim" name="error_monto_prodim" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
-                </div>
-              </div>
-
-              <div class="col-span-3">
-                <div class="hidden" id="div_monto_gastos">
-                <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto Gastos Indirectos *</label>
-                <div class="relative ">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <span class="text-gray-500 sm:text-sm">
-                      $
-                    </span>
-                  </div>
-                  <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                </div>
-                <label id="error_monto_gastos" name="error_monto_gastos" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
                 </div>
               </div>
 
@@ -603,58 +573,52 @@ function validarForm(){ //validacion del formulario
   }
 
   if(fuente == 2){
+    
     prodim = document.getElementById("prodim").checked;
+    
     if(prodim == true){
       porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
-      monto_prodim= document.forms["formulario"]["monto_prodim"].value;
+      
       if(porcentaje_prodim == "" || porcentaje_prodim < 0.1 || porcentaje_prodim > 2){
         $('#error_porcentaje_prodim').removeClass('hidden');  
         band = false;
       }else{
         $('#error_porcentaje_prodim').addClass('hidden');
       }
-      if(monto_prodim == ""){
-        band = false;
-        $('#error_monto_prodim').removeClass('hidden');
-      }else{
-        $('#error_monto_prodim').addClass('hidden');
-      }
+     
     }
     gastos_indirectos = document.getElementById("gastos_indirectos").checked;
+    
     if(gastos_indirectos == true){
       porcentaje_gastos= document.forms["formulario"]["porcentaje_gastos"].value;
-      monto_gastos= document.forms["formulario"]["monto_gastos"].value;
-      if(porcentaje_gastos == "" || porcentaje_gastos < 0.1 || porcentaje_gastos > 3){
+      if(porcentaje_gastos == "" || porcentaje_prodim == 0 || porcentaje_gastos < 0.1 || porcentaje_gastos > 3){
         $('#error_porcentaje_gastos').removeClass('hidden');  
         band = false;
       }else{
         $('#error_porcentaje_gastos').addClass('hidden');
       }
-      if(monto_gastos == ""){
-        $('#error_monto_gastos').removeClass('hidden');
-        band = false;
-      }else{
-        $('#error_monto_gastos').addClass('hidden');
-      }
     }
-  }
 
-  acta_integracion= document.forms["formulario"]["acta_integracion"].value;
+    acta_integracion= document.forms["formulario"]["acta_integracion"].value;
   acta_priorizacion= document.forms["formulario"]["acta_priorizacion"].value;
-  if(acta_integracion = ""){
+  
+  if(acta_integracion == ""){
     $('#error_acta_integracion').removeClass('hidden');  
         band = false;
       }else{
         $('#error_acta_integracion').addClass('hidden');
       }
-  if(acta_priorizacion = ""){
+  if(acta_priorizacion == ""){
     $('#error_acta_priorizacion').removeClass('hidden');  
         band = false;
       }else{
         $('#error_acta_priorizacion').addClass('hidden');
       }
-    
-  return band;
+  }
+
+  //console.log(band);
+    return band;
+  
   
 }
 //================================================
@@ -674,13 +638,13 @@ function validarFuente() {
   if($('#fuente_financiamiento_id').val() == '2'){
     $('#titulo_anexo').removeClass('hidden');
     $('#anexos').removeClass('hidden');
-    $('#acta_integracion').attr('required',true);
-    $('#acta_priorizacion').attr('required',true);
+    // $('#acta_integracion').attr('required',true);
+    // $('#acta_priorizacion').attr('required',true);
   }else{
     $('#titulo_anexo').addClass('hidden');
     $('#anexos').addClass('hidden');
-    $('#acta_integracion').removeAttr('required');
-    $('#acta_priorizacion').removeAttr('required');
+    // $('#acta_integracion').removeAttr('required');
+    // $('#acta_priorizacion').removeAttr('required');
   }
 }
 //================================================
@@ -707,12 +671,10 @@ $(document).ready(function() {
     if(this.checked == true){
       //$('#div_porcentajes').removeClass('hidden');
       $('#div_porcentaje_prodim').removeClass('hidden');
-      $('#div_monto_prodim').removeClass('hidden');
       //$('#porcentaje_prodim').prop('required',true);
     }else{
       //$('#div_porcentajes').addClass('hidden');
       $('#div_porcentaje_prodim').addClass('hidden');
-      $('#div_monto_prodim').addClass('hidden');
       //$('#porcentaje_prodim').prop('required',false);
     }
   });
@@ -720,12 +682,10 @@ $(document).ready(function() {
     if(this.checked == true){
       //$('#div_porcentajes').removeClass('hidden');
       $('#div_porcentaje_gastos').removeClass('hidden');
-      $('#div_monto_gastos').removeClass('hidden');
       //$('#porcentaje_gastos').prop('required',true);
     }else{
       //$('#div_porcentajes').addClass('hidden');
       $('#div_porcentaje_gastos').addClass('hidden');
-      $('#div_monto_gastos').addClass('hidden');
       //$('#porcentaje_gastos').prop('required',false);
     }
   });
@@ -1005,7 +965,7 @@ function moneda(valor){//formato montos
     }
 
   function toggleModal(modalID, index, cliente, fuente, key){ //modal detalles 
-      console.log(index)
+      //console.log(index)
         for(item in cliente){
           if(index.cliente_id == cliente[item].id_cliente){
             // console.log(cliente[index].nombre)

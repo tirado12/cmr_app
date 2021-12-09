@@ -260,7 +260,7 @@
             
               <div class="flex flex-col-2 justify-center " >
                 <div class="flex flex-row  p-2">
-                    <label id="label_prodim" for="prodim" class="ml-6 text-sm font-medium text-gray-700 ">Prodim </label>
+                    <label id="label_prodim" for="prodim" class="ml-6 text-sm font-medium text-gray-700 ">PRODIMDF </label>
                     <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" >
                 </div>
                 <div class="flex flex-row  p-2">
@@ -272,7 +272,7 @@
               <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
                 <div class="col-span-3">
                   <div class="hidden" id="div_porcentaje_prodim">
-                    <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje prodim *</label>
+                    <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje PRODIMDF *</label>
                     <div class="relative ">
                       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <span class="text-gray-500 sm:text-sm">
@@ -299,36 +299,6 @@
                     </div>
                     <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
                     <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
-                  </div>
-                </div>
-
-                <div class="col-span-3">
-                  <div class="hidden" id="div_monto_prodim">
-                  <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto PRODIMDF *</label>
-                  <div class="relative ">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span class="text-gray-500 sm:text-sm">
-                        $
-                      </span>
-                    </div>
-                    <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                  </div>
-                  <label id="error_monto_prodim" name="error_monto_prodim" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
-                  </div>
-                </div>
-  
-                <div class="col-span-3">
-                  <div class="hidden" id="div_monto_gastos">
-                  <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto Gastos Indirectos *</label>
-                  <div class="relative ">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span class="text-gray-500 sm:text-sm">
-                        $
-                      </span>
-                    </div>
-                    <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block  w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
-                  </div>
-                  <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
                   </div>
                 </div>
   
@@ -411,13 +381,12 @@
       $('#titulo_anexo').removeClass('hidden');
       $('#anexos').removeClass('hidden');
       valor_comprometido= $("#monto_comprometido").val();
-      $("#monto_comprometido").val(parseFloat(valor_comprometido).toFixed(2));
+      $("#monto_comprometido").val(moneda(parseFloat(valor_comprometido).toFixed(2)));
       valor_proyectado = $("#monto_proyectado").val();
-      $("#monto_proyectado").val(parseFloat(valor_proyectado).toFixed(2));
+      $("#monto_proyectado").val(moneda(parseFloat(valor_proyectado).toFixed(2)));
 
       if(document.getElementById('prodim').checked == true){ //check seleccionado
         $('#div_porcentaje_prodim').removeClass('hidden');
-        $('#div_monto_prodim').removeClass('hidden');
         $('#proyectado_prodim').removeClass('hidden');
         monto_proyectado = $('#monto_proyectado').val();
         monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
@@ -426,12 +395,10 @@
         $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
       }else{
         $('#div_porcentaje_prodim').addClass('hidden');
-        $('#div_monto_prodim').addClass('hidden');
       }
 
       if(document.getElementById('gastos_indirectos').checked == true){ //check seleccionado
         $('#div_porcentaje_gastos').removeClass('hidden');
-        $('#div_monto_gastos').removeClass('hidden');
         monto_proyectado = $('#monto_proyectado').val();
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
@@ -440,7 +407,6 @@
         $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
       }else{
         $('#div_porcentaje_gastos').addClass('hidden');
-        $('#div_monto_gastos').addClass('hidden');
       }
 
       $('#titulo_anexo').removeClass('hidden');
@@ -463,7 +429,7 @@
     }
     //=================================================
     montoComprometido = $('#monto_comprometido').val();
-monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
+    monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
  $('#porcentaje_prodim, #monto_proyectado, #porcentaje_gastos').on('keyup',function(e){
   setTimeout(function() {
     $('#proyectado_prodim').text('');
@@ -516,7 +482,6 @@ monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
     $('#ejercicio').attr('max',anioMax);
     //=================================================
     function moneda(valor){
-     
       return valor.replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
     }
     //=================================================

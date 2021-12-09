@@ -1,5 +1,5 @@
 @extends('layouts.plantilla')
-@section('title','Prodim')
+@section('title','PRODIMDF')
 @section('contenido')
 <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
 <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
@@ -12,7 +12,7 @@
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
     </svg>
-  <h1 class="text-xl font-bold ml-2">Lista Prodim</h1>
+  <h1 class="text-xl font-bold ml-2">Lista PRODIMDF</h1>
 </div>
 
 <div class="flex flex-col mt-6">
@@ -57,9 +57,9 @@
             <th>Cliente</th>
             <th>Acuse</th>
             <th>Ejercicio</th>
-            <th>Firma electronica</th>
-            <th>Revisado</th>
-            <th>Validado</th>          
+            <th>Presentado</th>
+            <th>Revisado</th>          
+            <th>Aprobado</th>
             <th>Convenio</th>
             <th class="flex justify-center">Acción</th>
         </tr>
@@ -79,7 +79,21 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                {{$index->acuse_prodim}}
+                @if($index->acuse_prodim == null)
+                
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded-full bg-red-200 text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+                
+                @else
+                <a onclick='window.open("{{$index->acuse_prodim}}","_blank", "width=900, height=800");' class="cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded-full bg-green-200 text-green-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                </a>
+                
+                @endif
               </div>
             </td>
             <td>
@@ -167,7 +181,6 @@
                 @method('DELETE')
                   <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
                 </div>
-                
                 </form>
               </div>
             </td>   
@@ -212,7 +225,7 @@
             </div>
            
             <div class="col-span-8">
-                <label for="detalles_firma_electronica" class="text-base font-medium text-gray-700">Firma electronica: </label>
+                <label for="detalles_firma_electronica" class="text-base font-medium text-gray-700">Presentado: </label>
                 <label id="detalles_firma_electronica" class="text-base font-bold text-gray-900"></label>
               </div>
             <div class="col-span-8">
@@ -220,23 +233,23 @@
                 <label id="detalles_revisado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_fecha_revisado" class="text-base font-medium text-gray-700">Fecha Revisado: </label>
+                <label for="detalles_fecha_revisado" class="text-base font-medium text-gray-700">Fecha revisado: </label>
                 <label id="detalles_fecha_revisado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_validado" class="text-base font-medium text-gray-700">Validado: </label>
+                <label for="detalles_validado" class="text-base font-medium text-gray-700">Aprobado: </label>
                 <label id="detalles_validado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_fecha_validado" class="text-base font-medium text-gray-700">Fecha validado: </label>
+                <label for="detalles_fecha_validado" class="text-base font-medium text-gray-700">Fecha aprobado: </label>
                 <label id="detalles_fecha_validado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_convenio" class="text-base font-medium text-gray-700">Convenio: </label>
+                <label for="detalles_convenio" class="text-base font-medium text-gray-700">Firma de convenio: </label>
                 <label id="detalles_convenio" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_fecha_convenio" class="text-base font-medium text-gray-700">Fecha convenio: </label>
+                <label for="detalles_fecha_convenio" class="text-base font-medium text-gray-700">Fecha firma de convenio: </label>
                 <label id="detalles_fecha_convenio" class="text-base font-bold text-gray-900"></label>
               </div>             
           </div>
@@ -264,10 +277,10 @@
           </button>
         </div>
         <!--body-->
-        <form action="{{ route('prodim.store') }}" method="POST" onsubmit="return validar()" id="formulario" name="formulario">
+        <form action="{{ route('prodim.store') }}" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" onsubmit="return validar();" id="formulario" name="formulario">
           @csrf
           @method('POST')
-        <div class="relative p-6 flex-auto">
+          <div class="relative p-6 flex-auto">
                 <div class="relative p-6 flex-auto" id="anexos">
                     <div class="grid grid-cols-6 gap-4 mb-2">
                         <div class="col-span-3 ">
@@ -300,22 +313,23 @@
                               %
                             </span>
                           </div>
-                          <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="2" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0">
+                          <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0">
                         </div>
                         <label id="error_porcentaje_prodim" name="error_porcentaje_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido (MAX  %2)</label>
                       </div>
 
-                        <div class="col-span-3 ">
-                            <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700 mb-2">Acuse *</label>
-                            <label for="acuse" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
-                            <input type="file" name="acuse" id="acuse" onchange='uploadFile(this)' minlength="4" class="hidden mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300" >
-                            <span id="file-name" class="file-box text-green-600 "></span>
-                            <label id="error_acuse" name="error_acuse" class="hidden block text-base font-normal text-red-500" >Este dato es requerido</label>
-                        </div>
+                      <div class="col-span-3">
+                        <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700 mb-2">Acuse *</label>
+                        <label for="acuse_prodim" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
+                        <input type="file" name="acuse_prodim" id="acuse_prodim" accept=".pdf" onchange='uploadFile(this)' minlength="4" class="hidden mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300" >
+                        <span id="file-name" class="block file-box mt-2 text-sm text-green-600"></span>
+                        <label id="error_acuse" name="error_acuse" class="hidden block text-base font-normal text-red-500" >Este archivo es requerido</label>
+                        <label id="error_extension" name="error_extension" class="hidden block text-base font-normal text-red-500">Seleccione un formato PDF porfavor</label>
+                    </div>
 
                         <div class="col-span-3 p-4">
                             <div class="flex flex-row p-2 justify-center">
-                                <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Firma electronica </label>
+                                <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
                                 <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
                             </div>
                         </div>
@@ -325,7 +339,7 @@
                     <div class="flex flex-nowrap w-full p-2" >
 
                         <div class="flex flex-col justify-center w-full">
-                            <div class="flex flex-row  p-2 ">
+                            <div class="flex flex-row p-2 ">
                                 <label id="label_revisado" for="revisado" class="ml-6 text-sm font-medium text-gray-700 ">Revisado </label>
                                 <input type="checkbox" name="revisado" id="revisado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
                             </div>
@@ -333,7 +347,7 @@
                       
                         <div class="flex flex-col justify-center w-full">
                             <div class="flex flex-row  p-2">
-                                <label id="label_validado" for="validado" class="ml-6 text-sm font-medium text-gray-700 ">Validado</label>
+                                <label id="label_validado" for="validado" class="ml-6 text-sm font-medium text-gray-700 ">Aprobado</label>
                                 <input type="checkbox" name="validado" id="validado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" disabled>
                             </div>
                         </div>
@@ -354,7 +368,7 @@
                       </div>
                     
                       <div class="col-span-2 p-2">
-                        <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha validado *</label>
+                        <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha aprobado *</label>
                         <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
                         <label id="error_fecha_validado" class="hidden block text-md text-red-500">Se require de una fecha</label>
                       </div>
@@ -443,7 +457,8 @@ $(".form-eliminar").submit(function(e){
 
     <script type="text/javascript">
     function uploadFile(target) {
-    document.getElementById("file-name").innerHTML = target.files[0].name;
+    //document.getElementById("file-name").innerHTML = target.files[0].name;
+    
     }
     //============================================================
         function toggleModal(modal){
@@ -456,6 +471,23 @@ $(".form-eliminar").submit(function(e){
           if(prodim != null){
             $('#detalles_cliente').text(prodim.nombre);
             $('#detalles_acuse').text(prodim.acuse_prodim);
+            if(prodim.acuse_prodim == null){
+              $('#detalles_acuse').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800">\
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />\
+                </svg>\
+              </span>'); //status
+            }else{
+              $('#detalles_acuse').html('<a id="acuse_link" class="cursor-pointer"><span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800">\
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6  " fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />\
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />\
+                </svg>\
+              </span></a>'); //status
+              $('#acuse_link').on('click',function(){
+                window.open(prodim.acuse_prodim, "_blank", "width=900, height=800");
+              });
+            }
             $('#detalles_ejercicio').text(prodim.ejercicio);
             if(prodim.firma_electronica == 1){
             $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
@@ -486,7 +518,7 @@ $(".form-eliminar").submit(function(e){
             if(prodim.fecha_revisado != null)
               $('#detalles_fecha_revisado').text(prodim.fecha_revisado);
             else
-              $('#detalles_fecha_revisado').text('-');
+              $('#detalles_fecha_revisado').text('- / - / -');
             if(prodim.validado == 1){
             $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
@@ -504,7 +536,7 @@ $(".form-eliminar").submit(function(e){
             if(prodim.fecha_validado != null)
               $('#detalles_fecha_validado').text(prodim.fecha_validado);
             else
-              $('#detalles_fecha_validado').text('-');
+              $('#detalles_fecha_validado').text('- / - / -');
             if(prodim.convenio == 1){
             $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
@@ -521,7 +553,7 @@ $(".form-eliminar").submit(function(e){
             if(prodim.fecha_convenio != null)
             $('#detalles_fecha_convenio').text(prodim.fecha_convenio);
             else
-            $('#detalles_fecha_convenio').text('-');
+            $('#detalles_fecha_convenio').text('- / - / -');
         }
           document.getElementById(modalID).classList.toggle("hidden");
           document.getElementById(modalID + "-backdrop").classList.toggle("hidden");
@@ -564,6 +596,28 @@ $(".form-eliminar").submit(function(e){
                 }
 
             });
+
+            $('#porcentaje_prodim').on('keyup',function(event){
+              $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+            });
+
+            $('input[type=file]').change(function () {
+        var val = $(this).val().toLowerCase(),
+            regex = new RegExp("(.*?)\.(pdf)$");
+
+        if (!(regex.test(val))) {
+            $(this).val('');
+            $('#file-name').html('');
+            $('#error_extension').removeClass('hidden');
+        }else{
+            $('#file-name').html(this.files[0].name);
+            $('#error_extension').addClass('hidden');
+        }
+    });
 //===================================================
             $("#ejercicio").on('change', function () { //limitacion de los calendarios
                 $('#fuenteCliente_id').val($('#ejercicio').val());
@@ -620,12 +674,20 @@ $(".form-eliminar").submit(function(e){
               }else{
                 $('#error_ejercicio').addClass('hidden'); 
               }
-              acuse= document.forms["formulario"]["acuse"].value;
-              if(acuse == ""){
+              acuse= document.forms["formulario"]["acuse_prodim"].value;
+                regex = new RegExp("(.*?)\.(pdf)$");
+              if(acuse == "" && !(regex.test(acuse))){
                  $('#error_acuse').removeClass('hidden');  
                  band= false;
               }else{
                 $('#error_acuse').addClass('hidden'); 
+              }
+              porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
+              if(porcentaje_prodim == "" || porcentaje_prodim < 0.1 || porcentaje_prodim > 2){
+                $('#error_porcentaje_prodim').removeClass('hidden');  
+                band = false;
+              }else{
+                $('#error_porcentaje_prodim').addClass('hidden');
               }
               revisado = document.getElementById("revisado").checked;
               fecha_revisado = document.forms["formulario"]["fecha_revisado"].value;
