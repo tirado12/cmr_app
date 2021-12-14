@@ -99,22 +99,30 @@ Route::get('cliente/ver/{id}', [ClienteController::class, 'ver'])->name('cliente
 Route::get('cliente/ejercicio/{id},{anio}', [GeneralController::class, 'ejercicio'])->name('cliente.ejercicio');
 Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
 
-
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');
 Route::resource('perfil', PerfilController::class)->names('perfil');
 
-//rutas de validaciones ajax
+//========================== consultas ajax =====================================
+//sisplade
 Route::get('/obtClienteFuente/{ejercicio},{cliente}',[SispladeController::class,'obtenerFuenteCliente']);
 Route::get('/existeEnSisplade/{cliente}',[SispladeController::class,'existeEjercicio']);
 Route::get('/selectEjercicio/{cliente}',[SispladeController::class,'selectEjercicio']);
+//fuentes cliente
 Route::get('/ejercicioDisponible/{cliente},{ejercicio},{fuente}',[FuenteClienteController::class,'getEjercicioDisponible']); //existe
-//Route::get('/cabildoRfc/{rfc}',[IntegrantesCabildoController::class,'existeRfc']);
-
+//contratista
 Route::get('/contratistaRfc/{rfc},{municipio_id}',[ContratistaController::class,'existeRfc']);
+//proveedor
 Route::get('/proveedorRfc/{rfc},{municipio_id}',[ProveedorController::class,'existeRfcProveedor']);
+//integrantes
 Route::get('/ejerciciosIntegrantes/{municipio}',[IntegrantesCabildoController::class,'ejerciciosCabildo']); //integrantes cabildo
 Route::get('/clienteEjercicio/{id_municipio}',[ClienteController::class,'clienteXejercicio']); //fuentes cliente, integrantes
+//gastos indirectos
 Route::get('/existeGastoFuente/{fuente_id},{gasto}',[GastosIndirectosFuentesController::class,'existeRegistro']); //ya existe registro
 Route::get('/obtenerEjerciciosPorCliente/{municipio}',[GastosIndirectosFuentesController::class,'obtenerEjercicios']); //obtiene ejercicios disponibles por cliente
-Route::get('/ejerciciosclientesProdim/{cliente}',[ProdimComprometidoController::class,'ejerciciosClientesProdim']); //obtiene ejercicios disponibles por cliente en prodim
+//prodim comprometido
+Route::get('/ejerciciosclientesProdim/{cliente}',[ProdimComprometidoController::class,'ejerciciosClientesProdim']); //obtiene ejercicios - monto total disponibles por cliente en prodim
+Route::get('/montoTotalCliente/{prodim}',[ProdimComprometidoController::class,'montoTotalCliente']); //obtiene suma del monto comprometido del prodim seleccionado
+
 Route::get('/ejerciciosProdimComprometido/{cliente}',[ComprometidoDesgloseController::class,'ejerciciosProdimComprometido']); //obtiene ejercicios disponibles por cliente en prodim
+//Prodimdf
+Route::get('/getEjerciciosCliente/{cliente}',[ProdimController::class,'getEjerciciosCliente']); //obtiene ejercicios por cliente - prodimdf

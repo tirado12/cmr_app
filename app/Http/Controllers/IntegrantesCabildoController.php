@@ -137,16 +137,6 @@ class IntegrantesCabildoController extends Controller
     }
 
     //===============================================================
-
-    // public function existeRfc($rfc){
-    //     $existe = IntegrantesCabildo::where('rfc',$rfc)->exists();
-    //     if ($existe == null)
-    //     return 0;
-    //     else
-    //     return $existe;
-    // }
-
-
     public function ejerciciosCabildo($municipio){
         $result= Cliente::join('municipios', 'id_municipio','municipio_id')->select('id_cliente','municipio_id','anio_inicio','anio_fin')
         //->join('integrantes_cabildo','id_cliente','cliente_id')}

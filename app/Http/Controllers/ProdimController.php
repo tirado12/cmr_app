@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnexosFondoIII;
+use App\Models\Cliente;
 use App\Models\FuentesCliente;
 use App\Models\Prodim;
 use App\Models\ProdimComprometido;
@@ -19,17 +20,22 @@ class ProdimController extends Controller
      */
     public function index()
     {
-        $fuenteCliente= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        //consulta para agregar
+        $fuenteCliente= FuentesCliente::join('clientes','cliente_id','id_cliente') //lista de clientes
         ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
         ->where('fuente_financiamiento_id', 2)
         ->select('cliente_id','nombre','municipio_id')
         ->get(); //tabla fuenteClientes segun existentes           
         $clientes = $fuenteCliente->unique('municipio_id');
+        //return $fuenteCliente;
 
+        //consulta para tabla
         $listaProdim = Prodim::join('fuentes_clientes','fuente_id','id_fuente_financ_cliente')
         ->join('clientes','cliente_id','id_cliente')
         ->join('municipios','municipio_id','id_municipio')
-        ->select('prodim.*','ejercicio','nombre')
+        ->join('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
+        ->where('fuente_financiamiento_id', 2)
+        ->select('prodim.*','ejercicio','nombre','anexos_fondo3.*')
         ->get();
         //return $listaProdim;
         return view('prodim.index', compact('clientes','listaProdim'));
@@ -111,6 +117,7 @@ class ProdimController extends Controller
     {
         //
     }
+
      /**
      * Show the form for editing the specified resource.
      *
@@ -122,8 +129,9 @@ class ProdimController extends Controller
         $listaProdim = Prodim::join('fuentes_clientes','fuente_id','id_fuente_financ_cliente')
         ->join('clientes','cliente_id','id_cliente')
         ->join('municipios','municipio_id','id_municipio')
+        ->join('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
         ->where('id_prodim', $prodim->id_prodim)
-        ->select('prodim.*','ejercicio','nombre','anio_inicio','anio_fin')
+        ->select('prodim.*','ejercicio','nombre','anio_inicio','anio_fin','anexos_fondo3.*')
         ->get();
       // return $listaProdim;
        return view('prodim.edit',compact('listaProdim','prodim'));
@@ -138,6 +146,19 @@ class ProdimController extends Controller
      */
     public function update(Request $request, Prodim $prodim)
     {
+        if (!empty($request->file('acuse_prodim'))) {
+            $file = $request->file('acuse_prodim');
+            //Move Uploaded File
+            $destinationPath = './uploads';
+            $file->move($destinationPath, $file->getClientOriginalName());
+            $archivo = $file->getClientOriginalName();
+            $destinationPath = url("/uploads/$archivo");
+            $request['acuse'] = $destinationPath;
+            
+        }else{
+            $request['acuse'] = $prodim->acuse_prodim;
+        }
+    
         $request->validate([
             'firma_electronica' => 'nullable',
             'revisado' => 'nullable',
@@ -146,29 +167,40 @@ class ProdimController extends Controller
             'fecha_validado' => 'nullable',
             'convenio' => 'nullable',
             'fecha_convenio' => 'nullable',
-            'acuse_prodim' => 'required',
+            'acuse' => 'required',
           ]);
-          if($request->firma_electronica == null){
-            $request['firma_electronica'] = false;
-          }else{
-            $request['firma_electronica'] = true;
-          }
-          if($request->revisado == null){
-              $request['revisado'] = false;
-          }else{
-            $request['revisado'] = true;
-          }
-          if($request->validado == null){
-              $request['validado'] = false;
-          }else{
-            $request['validado']= true;
-          }
-          if($request->convenio == null){
-              $request['convenio'] =false;
-          }else{
-            $request['convenio'] =true;
-          }
-          //return $request;
+
+          $request->firma_electronica == null ? $request['firma_electronica'] = false : $request['firma_electronica'] = true;
+          $request->revisado == null ? $request['revisado'] = false : $request['revisado'] = true;
+          $request->validado == null ? $request['validado'] = false : $request['validado'] = true;
+          $request->convenio == null ? $request['convenio'] = false : $request['convenio'] = true;
+
+          $fuenteCliente = FuentesCliente::where('id_fuente_financ_cliente', $prodim->fuente_id)->first();
+          $anexos = AnexosFondoIII::where('fuente_financiamiento_cliente_id', $prodim->fuente_id)->first();
+          
+          $anexos->porcentaje_prodim= $request->porcentaje_prodim;
+          $anexos->monto_prodim = str_replace(",", '', $fuenteCliente->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+          $anexos->update();
+        //   if($request->firma_electronica == null){
+        //     $request['firma_electronica'] = false;
+        //   }else{
+        //     $request['firma_electronica'] = true;
+        //   }
+        //   if($request->revisado == null){
+        //       $request['revisado'] = false;
+        //   }else{
+        //     $request['revisado'] = true;
+        //   }
+        //   if($request->validado == null){
+        //       $request['validado'] = false;
+        //   }else{
+        //     $request['validado']= true;
+        //   }
+        //   if($request->convenio == null){
+        //       $request['convenio'] =false;
+        //   }else{
+        //     $request['convenio'] =true;
+        //   }
           $prodim->update($request->all());
           return redirect()->route('prodim.index');
     }
@@ -183,14 +215,30 @@ class ProdimController extends Controller
     {
         $existeProdimComprometido = ProdimComprometido::where('prodim_id', $prodim->id_prodim)->exists();
         if($existeProdimComprometido == null ){
-            if(File::exists('./uploads/OP. REG. C.P. YESENIA.pdf')) { // establecer subruta
-                File::delete('./uploads/OP. REG. C.P. YESENIA.pdf');
-            }
+            // if(File::exists('./uploads/OP. REG. C.P. YESENIA.pdf')) { // establecer subruta
+            //     File::delete('./uploads/OP. REG. C.P. YESENIA.pdf');
+            // }
+            $anexos = AnexosFondoIII::where('fuente_financiamiento_cliente_id', $prodim->fuente_id)->first();
+            $anexos->prodim = false;
+            $anexos->porcentaje_prodim = 0;
+            $anexos->monto_prodim = 0;
+            $anexos->update();
             $prodim->delete();
             return redirect()->route('prodim.index')->with('eliminar','ok');
         }else{
             return redirect()->route('prodim.index')->with('eliminar','error');
         }
+    }
+    //=========================================Funciones Ajax==================================================
+   
+    public function getEjerciciosCliente($id_municipio){
+        return FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'id_municipio', 'municipio_id')
+        ->where('fuente_financiamiento_id', 2)
+        ->where('id_municipio', $id_municipio)
+        ->orderBy('ejercicio')
+        ->select('id_fuente_financ_cliente','ejercicio')
+        ->get();
     }
     // ================================ Funciones API ========================================= //
     public function getDesgloseProdim($cliente_id, $anio){

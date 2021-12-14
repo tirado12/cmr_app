@@ -440,7 +440,7 @@
 <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-backdrop"></div>
 <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
@@ -471,7 +471,7 @@
     Swal.fire({
       icon: 'error',
       title: '¡Oops... !',
-      html: 'No es posible actualizar la fuente de financiamiento,<br> ni eliminar el prodim si esta comprometido.'
+      html: 'No es posible actualizar la fuente de financiamiento,<br> verifique que no existan gastos indirectos o PRODIMDF relacionados.'
     });
   </script>
 @endif
@@ -615,12 +615,9 @@ function validarForm(){ //validacion del formulario
         $('#error_acta_priorizacion').addClass('hidden');
       }
   }
-
-  //console.log(band);
     return band;
-  
-  
 }
+
 //================================================
 //validar selected del cliente
 function validarFuente() {
@@ -804,6 +801,7 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
     ejercicio= $('#ejercicio').val();
     
     var link = '{{ url("/ejercicioDisponible")}}/'+cliente+','+ejercicio+','+fuente;
+   // console.log(link)
     if(cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
         $.ajax({
               url: link,
@@ -813,14 +811,14 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 //console.log(data);
                 if(data.length != 0){
                   $('#error_existe').removeClass('hidden');
-                  // $('#guardar').attr("disabled", true);
-                  // $("#guardar").removeClass('bg-green-500');
-                  // $("#guardar").addClass('bg-gray-700');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-400');
+                  $("#guardar").addClass('bg-gray-600');
                 }else{
                   $('#error_existe').addClass('hidden');
-                  // $('#guardar').removeAttr("disabled");
-                  // $("#guardar").removeClass('bg-gray-700');
-                  // $("#guardar").addClass('bg-green-500');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-600');
+                  $("#guardar").addClass('bg-green-400');
                 }
               },
               cache: false

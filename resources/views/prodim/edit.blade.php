@@ -5,7 +5,7 @@
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
     </svg>
-    <h1 class="font-bold text-xl ml-2">Editar Prodim</h1>
+    <h1 class="font-bold text-xl ml-2">Editar PRODIMDF</h1>
 </div>
 
 @if ($errors->any())
@@ -37,12 +37,12 @@
   <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
     <div class="mt-5 md:mt-0 md:col-span-2">
-      <form action="{{ route('prodim.update', $prodim) }}" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
+      <form action="{{ route('prodim.update', $prodim) }}" accept-charset="UTF-8" enctype="multipart/form-data" onsubmit="return validar()" method="POST" id="formulario" name="formulario">
         @csrf
         @method('PUT')
         <div class="shadow overflow-hidden sm:rounded-md">
           @foreach($listaProdim as $prodim)
-          <div class="relative p-6 flex-auto" id="anexos">
+          <div class=" p-6 flex-auto" id="anexos">
             <div class="grid grid-cols-6 gap-4 mb-2">
                 <div class="col-span-3 ">
                     <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente </label>
@@ -57,13 +57,33 @@
                     <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
                 </div>
 
-                <div class="col-span-3 ">
-                  
+                <div class="col-span-2">
+                    <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700">Porcentaje *</label>
+                        <div class="relative ">
+                          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">
+                              %
+                            </span>
+                          </div>
+                          <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0" value="{{$prodim->porcentaje_prodim}}">
+                      </div>
+                    <label id="error_porcentaje_prodim" name="error_porcentaje_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido (MAX  %2)</label>
+                </div>
+                {{-- <div class="col-span-3"></div> --}}
+
+                <div class="col-span-2 p-4">
+                  <div class="flex flex-row p-2">
+                      <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
+                      <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->firma_electronica)? 'checked' : ''}}>
+                  </div>
+              </div>
+
+                <div class="col-span-2 ">
                     <label  id="label_acuse_prodim" for="acuse_prodim" class="block text-sm font-medium text-gray-700">Acuse *</label>
                     
                     <div class="grid grid-cols-2 " >
                     <label for="acuse_prodim" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
-                    <input type="file" name="acuse_prodim" id="acuse_prodim" accept=".pdf" onchange='uploadFile(this)' minlength="4" class="hidden focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border-gray-300" >              
+                    <input type="file" name="acuse_prodim" id="acuse_prodim" accept=".pdf" onchange='uploadFile(this)' class="hidden focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border-gray-300">              
                     <a type="button" onclick='window.open("{{$prodim->acuse_prodim}}","_blank", "width=900, height=800");' class="cursor-pointer bg-green-300 border rounded h-8 w-8 ml-2">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7  " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -76,12 +96,7 @@
                     
                 </div>
 
-                <div class="col-span-3 p-4">
-                    <div class="flex flex-row p-2 justify-center">
-                        <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
-                        <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->firma_electronica)? 'checked' : ''}}>
-                    </div>
-                </div>
+               
             </div>
 
             <div class="flex flex-nowrap w-full p-2" >
@@ -161,6 +176,9 @@
       $('#validado').prop('disabled',true);
     }
     
+    porcentaje = $('#porcentaje_prodim').val();
+    $('#porcentaje_prodim').val(parseFloat(porcentaje).toFixed(2));
+
     if($('#validado').prop("checked")){
       $('#fecha_validado').removeClass("bg-gray-100");
       //$('#fecha_validado').prop("required",true);
@@ -184,6 +202,7 @@
     document.getElementById("file-name").innerHTML = target.files[0].name;
     
     }
+  
 //===================================================
   $(document).ready(function(){ //eventos
       $('#revisado').on('click',function(){
@@ -233,19 +252,27 @@
           $('#fecha_convenio').val("");
         }
       });
+
+      $('#porcentaje_prodim').on('keyup',function(event){
+              $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+            });
   });
 
   //===================================================
 
   function validar(){ //validacion del formulario
     band = true;
-        acuse= document.forms["formulario"]["acuse_prodim"].value;
-          if(acuse == ""){
-             $('#error_acuse_prodim').removeClass('hidden');  
-             band= false;
-          }else{
-             $('#error_acuse_prodim').addClass('hidden'); 
-          }
+        // acuse= document.forms["formulario"]["acuse_prodim"].value;
+        //   if(acuse == ""){
+        //      $('#error_acuse_prodim').removeClass('hidden');  
+        //      band= false;
+        //   }else{
+        //      $('#error_acuse_prodim').addClass('hidden'); 
+        //   }
         revisado = document.getElementById("revisado").checked;
         fecha_revisado = document.forms["formulario"]["fecha_revisado"].value;
         if(revisado){

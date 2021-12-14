@@ -65,7 +65,7 @@
         </tr>
       </thead>
       <tbody> 
-        @foreach( $listaProdim as $index)
+        @foreach($listaProdim as $index)
         <tr>
             <td>
               <div class="flex items-center">
@@ -80,14 +80,13 @@
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
                 @if($index->acuse_prodim == null)
-                
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded-full bg-red-200 text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded border bg-red-200 text-red-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                 </svg>
                 
                 @else
                 <a onclick='window.open("{{$index->acuse_prodim}}","_blank", "width=900, height=800");' class="cursor-pointer">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded-full bg-green-200 text-green-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rounded border bg-green-200 hover:bg-green-300 text-green-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -103,7 +102,7 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  @if(($index->firma_electronica == 1) )
+                  @if(($index->firma_electronica == 1))
                   <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -120,7 +119,7 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                    @if(($index->revisado == 1) )
+                    @if(($index->revisado == 1))
                     <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -137,7 +136,7 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                @if(($index->validado == 1) )
+                @if(($index->validado == 1))
                     <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -198,7 +197,7 @@
       <!--header-->
       <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
         <h4 class="text-xl font-semibold">
-          Detalles Prodim
+          Detalles PRODIMDF
         </h4>
         <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleDetalles('modal-detalles')">
           <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
@@ -223,7 +222,10 @@
               <label for="detalles_ejercicio" class=" text-base font-medium text-gray-700">Ejercicio: </label>
               <label id="detalles_ejercicio" class="text-base font-bold text-gray-900 "></label>
             </div>
-           
+            <div class="col-span-8">
+              <label for="detalles_porcentaje_prodim" class=" text-base font-medium text-gray-700">Porcentaje PRODIMDF: </label>
+              <label id="detalles_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
+            </div>
             <div class="col-span-8">
                 <label for="detalles_firma_electronica" class="text-base font-medium text-gray-700">Presentado: </label>
                 <label id="detalles_firma_electronica" class="text-base font-bold text-gray-900"></label>
@@ -268,7 +270,7 @@
         <!--header-->
         <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
           <h4 class="text-xl font-semibold">
-            Agregar Nuevo Prodim
+            Agregar Nuevo PRODIMDF
           </h4>
           <button class="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal('modal-add')">
             <span class="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
@@ -297,15 +299,14 @@
                         <div class="col-span-3 ">
                             <label  id="label_ejercicio" for="ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
                             <select id="ejercicio" name="ejercicio" onchange="" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                              <option value=""> Elija un cliente </option>
+                              <option value=""> Elija un periodo </option>
                               
                             </select>
                             <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
                             <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
                         </div>
 
-                        
-                      <div class="col-span-6 ">
+                      <div class="col-span-2 ">
                         <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700">Porcentaje *</label>
                         <div class="relative ">
                           <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -318,22 +319,22 @@
                         <label id="error_porcentaje_prodim" name="error_porcentaje_prodim" class="hidden text-base font-normal text-red-500" >Este dato es requerido (MAX  %2)</label>
                       </div>
 
-                      <div class="col-span-3">
+                      <div class="col-span-2 flex flex-col justify-center  w-full">
+                        <div class="flex flex-row p-2">
+                            <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
+                            <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                        </div>
+                      </div>
+
+                      <div class="col-span-2 p-2">
                         <label  id="label_acuse" for="acuse" class="block text-sm font-medium text-gray-700 mb-2">Acuse *</label>
                         <label for="acuse_prodim" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
                         <input type="file" name="acuse_prodim" id="acuse_prodim" accept=".pdf" onchange='uploadFile(this)' minlength="4" class="hidden mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300" >
                         <span id="file-name" class="block file-box mt-2 text-sm text-green-600"></span>
                         <label id="error_acuse" name="error_acuse" class="hidden block text-base font-normal text-red-500" >Este archivo es requerido</label>
                         <label id="error_extension" name="error_extension" class="hidden block text-base font-normal text-red-500">Seleccione un formato PDF porfavor</label>
-                    </div>
-
-                        <div class="col-span-3 p-4">
-                            <div class="flex flex-row p-2 justify-center">
-                                <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
-                                <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
-                            </div>
-                        </div>
-
+                      </div>
+                        
                     </div>
 
                     <div class="flex flex-nowrap w-full p-2" >
@@ -471,14 +472,15 @@ $(".form-eliminar").submit(function(e){
           if(prodim != null){
             $('#detalles_cliente').text(prodim.nombre);
             $('#detalles_acuse').text(prodim.acuse_prodim);
+            $('#detalles_porcentaje_prodim').text("% "+prodim.porcentaje_prodim);
             if(prodim.acuse_prodim == null){
-              $('#detalles_acuse').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800">\
+              $('#detalles_acuse').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded border bg-red-200 text-red-800">\
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 " fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />\
                 </svg>\
               </span>'); //status
             }else{
-              $('#detalles_acuse').html('<a id="acuse_link" class="cursor-pointer"><span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800">\
+              $('#detalles_acuse').html('<a id="acuse_link" class="cursor-pointer"><span class=" inline-flex text-xs leading-6 font-semibold rounded border hover:bg-green-300 bg-green-200 text-green-800">\
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6  " fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />\
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />\
@@ -577,33 +579,28 @@ $(".form-eliminar").submit(function(e){
 
             $("#cliente_id").on('change', function () { //consulta ejercicios por cliente
                 cliente=$(this).val();
+                //console.log(cliente)
                 $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
                 $("#ejercicio").append('<option value="">Elija un cliente</option>');
                 if(cliente != ""){
-                  var link = '{{ url("/obtenerEjerciciosPorCliente")}}/'+cliente; //consulta ajax
+                  var link = '{{ url("/getEjerciciosCliente")}}/'+cliente; //consulta ajax
                   $.ajax({
                       url: link,
                       dataType:'json',
                       type:'get',
                       success: function(data){
-                          //console.log(data)
+                          console.log(data)
                           $.each(data,function(key, item) {
-                              $("#ejercicio").append('<option value='+item.id_fuente_financ_cliente+'>'+item.ejercicio+'</option>');
+                             $("#ejercicio").append('<option value='+item.id_fuente_financ_cliente+'>'+item.ejercicio+'</option>');
+                            // $("#periodo").append('<option value='+item.cliente_id+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
                           });
                       },
                       cache: false
                   });
                 }
 
-            });
-
-            $('#porcentaje_prodim').on('keyup',function(event){
-              $(event.target).val(function(index, value) { //formato montos
-                    return value.replace(/\D/g, "")
-                        .replace(/[^\d]/,'')
-                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
-                });
-            });
+            });        
+            
 
             $('input[type=file]').change(function () {
         var val = $(this).val().toLowerCase(),
@@ -619,6 +616,8 @@ $(".form-eliminar").submit(function(e){
         }
     });
 //===================================================
+
+            
             $("#ejercicio").on('change', function () { //limitacion de los calendarios
                 $('#fuenteCliente_id').val($('#ejercicio').val());
               
@@ -656,6 +655,15 @@ $(".form-eliminar").submit(function(e){
                 $('#validado').prop('disabled',true)
               }
             });
+
+            $('#porcentaje_prodim').on('keyup',function(event){
+              $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+            });
+
         });
 //===================================================
         function validar(){ //validacion del formulario

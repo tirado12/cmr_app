@@ -48,6 +48,31 @@
 </div>
 @endif
 
+@if (session('existe')=='error')
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            
+                <li>Ya existe un registro con el mismo cliente, ejercicio y catalogo.</li>
+            
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
+
 <!-- fin tabla tailwind, inicio data table -->
 <div class="contenedor p-8 shadow-2xl bg-white rounded-lg">
     <table id="example" class="table table-striped bg-white" style="width:100%;">
@@ -62,7 +87,7 @@
           </tr>
         </thead>
         <tbody> 
-          @foreach( $prodimComprometidos as $index)
+          @foreach($prodimComprometidos as $index)
           <tr>
               <td>
                 <div class="flex items-center">
@@ -191,10 +216,47 @@
                         </div>
 
                         <div class="col-span-3 ">
+                          <label id="label_monto_prodim" for="monto_prodim" class="block text-sm font-medium text-gray-700">Monto total PRODIMDF </label>
+                          <div class="relative ">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <span class="text-gray-500 sm:text-sm">
+                                $
+                              </span>
+                            </div>
+                            <input type="text" name="monto_prodim" id="monto_prodim" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly >
+                          </div>
+                          {{-- <input type="text" name="monto_prodim" id="monto_prodim" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly placeholder="0.00"> --}}
+                          {{-- <label id="error_monto_prodim" class="hidden block text-md text-red-500">Monto disponible</label> --}}
+                        </div>
+
+                        <div class="col-span-3 ">
+                          <label id="label_monto_disponible" for="monto_disponible" class="block text-sm font-medium text-gray-700">Monto disponible </label>
+                          <div class="relative ">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <span class="text-gray-500 sm:text-sm">
+                                $
+                              </span>
+                            </div>
+                            <input type="text" name="monto_disponible" id="monto_disponible" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly >
+                          </div>
+                          {{-- <input type="text" name="monto_prodim" id="monto_prodim" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly placeholder="0.00"> --}}
+                          <label id="error_monto_disponible" class="hidden block text-md text-red-500">La cantidad ingresada supera el monto disponible</label>
+                        </div>
+
+                        <div class="col-span-6 ">
                           <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto *</label>
-                          <input type="text" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                          <div class="relative ">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                              <span class="text-gray-500 sm:text-sm">
+                                $
+                              </span>
+                            </div>
+                            <input type="text" name="monto" id="monto" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" >
+                          </div>
+                          {{-- <input type="text" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"> --}}
                           <label id="error_monto" class="hidden block text-md text-red-500">Se require de un monto</label>
                         </div>
+
                     </div>
 
                   </div>
@@ -246,23 +308,56 @@
 </script>
 @endif
 
+<script>
+  //Mensaje de advertencia
+$(".form-eliminar").submit(function(e){
+    e.preventDefault();
+    Swal.fire({
+      customClass: {
+      title: 'swal_title_modificado',
+      cancelButton: 'swal_button_cancel_modificado'
+      },
+      title: '¿Seguro que desea eliminar este PRODIMDF comprometido?',
+      text: "¡Aviso, esta acción es irreversible!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Borrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.submit();
+      }
+    })
+});
+ /* */
+</script>
+
 <style>
   .currSign:before {
       content: '$';
   }
 </style>
 <script>
+  function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
   //Formato de cantidades
     let x = document.querySelectorAll(".myDIV");
+    
     for (let i = 0, len = x.length; i < len; i++) {
-        let num = Number(x[i].innerHTML)
-                  .toLocaleString('es-MX');
+        //let num = Number(x[i].innerHTML).toLocaleString('es-MX');
+        let num = moneda(parseFloat(x[i].innerHTML).toFixed(2));
         x[i].innerHTML = num;
         x[i].classList.add("currSign"); 
     }
 </script>
 <script>
+  
+
      $(document).ready(function(){
+       disponibles="";
         $("#cliente_id").on('change', function () { //consulta ejercicios por cliente
                   cliente=$(this).val();
                   $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
@@ -275,8 +370,10 @@
                         type:'get',
                         success: function(data){
                             //console.log(data)
+                            disponibles = data;
                             $.each(data,function(key, item) {
                                 $("#ejercicio").append('<option value='+item.id_prodim+'>'+item.ejercicio+'</option>');
+                                
                             });
                         },
                         cache: false
@@ -295,12 +392,25 @@
                         .replace(/([0-9])([0-9]{2})$/, '$1.$2')
                         .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
                 }); 
-                
+                // monto_disponible = parseFloat($('#monto_disponible').val()).toFixed(2);
+                // monto = parseFloat($(this).val()).toFixed(2);
+                // if(monto > monto_disponible){
+
+                // }
             }
         });
 
       $('#ejercicio').on('change',function(){
+          $.each(disponibles,function(key, item) { //colocar el monto 
+            //console.log(item)
+              if($('#ejercicio option:selected').val() == item.id_prodim){
+                //console.log(item.monto_prodim)
+                $('#monto_prodim').val(moneda(parseFloat(item.monto_prodim).toFixed(2)));
+              }
+          });
           $('#prodim_id').val($(this).val());
+          consultarSumaComprometido($(this).val());
+          
           $('#fecha_comprometido').val('');
           $('#fecha_comprometido').prop('min',$('#ejercicio option:selected').text()+'-01-01');
           $('#fecha_comprometido').prop('max',$('#ejercicio option:selected').text()+'-12-31');
@@ -314,6 +424,28 @@
         }
       }).columns.adjust();
     });
+
+    function consultarSumaComprometido(prodim){
+             if(prodim != ''){var link = '{{ url("/montoTotalCliente")}}/'+prodim; //consulta ajax
+               $.ajax({
+                        url: link,
+                        dataType:'json',
+                        type:'get',
+                        success: function(data){
+                            //console.log(data)
+                            sumaComprometido = parseFloat(data).toFixed(2);
+                            montoTotalProdim = parseFloat($('#monto_prodim').val().replace(",","")).toFixed(2);
+                            montoDisponible = montoTotalProdim - sumaComprometido;
+                            
+                            $('#monto_disponible').val(moneda(parseFloat(montoDisponible).toFixed(2)));
+                            // $.each(data,function(key, item) {
+                            // $("#ejercicio").append('<option value='+item.id_prodim+'>'+item.ejercicio+'</option>');
+                                
+                            // });
+                        },
+                        cache: false
+              });}
+    }
 
     function toggleModal(modal){
             document.getElementById(modal).classList.toggle("hidden");
@@ -351,11 +483,25 @@
                 $('#error_fecha_comprometido').addClass('hidden'); 
       }
       monto= document.forms["formulario"]["monto"].value;
+      
       if(monto == ""){
                  $('#error_monto').removeClass('hidden');  
                  band= false;
       }else{
+                monto = parseFloat(monto.replace(",","")).toFixed(2);
+                monto_disponible = document.forms["formulario"]["monto_disponible"].value;
+                monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
+                 console.log(parseFloat(monto))
+                // console.log(monto_disponible)
+                
+                if(parseFloat(monto)>parseFloat(monto_disponible)){
+                  band = false;
+                  $('#error_monto_disponible').removeClass('hidden');
+                }else{
+                  $('#error_monto_disponible').addClass('hidden');
+                }
                 $('#error_monto').addClass('hidden'); 
+                
       }
 
       return band;

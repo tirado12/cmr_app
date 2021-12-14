@@ -76,8 +76,31 @@
                 </div>
 
                 <div class="col-span-3 ">
+                  <label id="label_monto_disponible" for="monto_disponible" class="block text-sm font-medium text-gray-700">Monto disponible </label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        $
+                      </span>
+                    </div>
+                    <input type="text" name="monto_disponible" id="monto_disponible" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly >
+                  </div>
+                  {{-- <input type="text" name="monto_prodim" id="monto_prodim" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly placeholder="0.00"> --}}
+                  <label id="error_monto_disponible" class="hidden block text-md text-red-500">La cantidad ingresada supera el monto disponible</label>
+                  <input type="text" id="monto_prodim" name="monto_prodim" class="hidden " value="{{$index->monto_prodim}}">
+                </div>
+
+                <div class="col-span-3 ">
                     <label  id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto *</label>
-                    <input type="text" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodimComprometido->monto}}">
+                    <div class="relative ">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <span class="text-gray-500 sm:text-sm">
+                          $
+                        </span>
+                      </div>
+                      <input type="text" name="monto" id="monto" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" value="{{$prodimComprometido->monto}}">
+                    </div>
+                    {{-- <input type="text" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{$prodimComprometido->monto}}"> --}}
                     <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Este dato es requerido</label>
                 </div>
                 
@@ -104,11 +127,29 @@
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     window.onload =function(){
-        $("#monto").val(moneda($("#monto").val()));
+        $("#monto").val(moneda(parseFloat($("#monto").val()).toFixed(2)));
+          consultarSumaComprometido($('#prodim_id').val());
     }
 
     function moneda(valor){
       return valor.replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+
+    function consultarSumaComprometido(prodim){
+             if(prodim != ''){var link = '{{ url("/montoTotalCliente")}}/'+prodim; //consulta ajax
+               $.ajax({
+                        url: link,
+                        dataType:'json',
+                        type:'get',
+                        success: function(data){
+                            //console.log(data)
+                            sumaComprometido = parseFloat(data).toFixed(2);
+                            montoTotalProdim = parseFloat($('#monto_prodim').val().replace(",","")).toFixed(2);
+                            montoDisponible = montoTotalProdim - sumaComprometido;
+                            $('#monto_disponible').val(moneda(parseFloat(montoDisponible).toFixed(2)));
+                        },
+                        cache: false
+              });}
     }
 
     function validar(){
@@ -132,8 +173,18 @@
                         $('#error_monto').removeClass('hidden');  
                         band= false;
             }else{
+                        monto = parseFloat(monto.replace(",","")).toFixed(2);
+                        monto_disponible = document.forms["formulario"]["monto_disponible"].value;
+                        monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
+                        //console.log(monto_disponible)
+                        if(monto>monto_disponible){
+                          band = false;
+                          $('#error_monto_disponible').removeClass('hidden');
+                        }else{
+                          $('#error_monto_disponible').addClass('hidden');
+                        }
                         $('#error_monto').addClass('hidden'); 
-      }
+            }
         return band;
     }
 

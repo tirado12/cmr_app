@@ -65,8 +65,8 @@ class UserSeeder extends Seeder
             'user' => 'oaxaca1',
             'email' => 'oaxaca1@gmail.com',
             'password' => bcrypt('12345678'),
-            'anio_inicio' => '2022',
-            'anio_fin' => '2023',
+            'anio_inicio' => '2023',
+            'anio_fin' => '2024',
             'logo' => 'http://127.0.0.1:8000/uploads/img-1.png',
             'municipio_id' => '67'
         ]);
