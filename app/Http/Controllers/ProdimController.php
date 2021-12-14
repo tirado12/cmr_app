@@ -181,26 +181,7 @@ class ProdimController extends Controller
           $anexos->porcentaje_prodim= $request->porcentaje_prodim;
           $anexos->monto_prodim = str_replace(",", '', $fuenteCliente->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
           $anexos->update();
-        //   if($request->firma_electronica == null){
-        //     $request['firma_electronica'] = false;
-        //   }else{
-        //     $request['firma_electronica'] = true;
-        //   }
-        //   if($request->revisado == null){
-        //       $request['revisado'] = false;
-        //   }else{
-        //     $request['revisado'] = true;
-        //   }
-        //   if($request->validado == null){
-        //       $request['validado'] = false;
-        //   }else{
-        //     $request['validado']= true;
-        //   }
-        //   if($request->convenio == null){
-        //       $request['convenio'] =false;
-        //   }else{
-        //     $request['convenio'] =true;
-        //   }
+        
           $prodim->update($request->all());
           return redirect()->route('prodim.index');
     }
