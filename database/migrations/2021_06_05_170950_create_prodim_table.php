@@ -15,11 +15,12 @@ class CreateProdimTable extends Migration
     {
         Schema::create('prodim', function (Blueprint $table) {
             $table->id('id_prodim');
-            $table->integer('firma_electronica')->nullable();
+            $table->integer('presentado')->nullable();
+            $table->date('fecha_presentado')->nullable();
             $table->integer('revisado')->nullable();
             $table->date('fecha_revisado')->nullable();
-            $table->integer('validado')->nullable();
-            $table->date('fecha_validado')->nullable();
+            $table->integer('aprovado')->nullable();
+            $table->date('fecha_aprovado')->nullable();
             $table->integer('convenio')->nullable();
             $table->date('fecha_convenio')->nullable();
             $table->text('acuse_prodim')->nullable();
