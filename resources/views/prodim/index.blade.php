@@ -102,7 +102,7 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                  @if(($index->firma_electronica == 1))
+                  @if(($index->presentado == 1))
                   <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -136,7 +136,7 @@
             </td>
             <td>
               <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
-                @if(($index->validado == 1))
+                @if(($index->aprobado == 1))
                     <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -227,8 +227,12 @@
               <label id="detalles_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
             </div>
             <div class="col-span-8">
-                <label for="detalles_firma_electronica" class="text-base font-medium text-gray-700">Presentado: </label>
-                <label id="detalles_firma_electronica" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_presentado" class="text-base font-medium text-gray-700">Presentado: </label>
+                <label id="detalles_presentado" class="text-base font-bold text-gray-900"></label>
+              </div>
+              <div class="col-span-8">
+                <label for="detalles_fecha_presentado" class="text-base font-medium text-gray-700">Presentado: </label>
+                <label id="detalles_fecha_presentado" class="text-base font-bold text-gray-900"></label>
               </div>
             <div class="col-span-8">
                 <label for="detalles_revisado" class="text-base font-medium text-gray-700">Revisado: </label>
@@ -239,12 +243,12 @@
                 <label id="detalles_fecha_revisado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_validado" class="text-base font-medium text-gray-700">Aprobado: </label>
-                <label id="detalles_validado" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_aprobado" class="text-base font-medium text-gray-700">Aprobado: </label>
+                <label id="detalles_aprobado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="detalles_fecha_validado" class="text-base font-medium text-gray-700">Fecha aprobado: </label>
-                <label id="detalles_fecha_validado" class="text-base font-bold text-gray-900"></label>
+                <label for="detalles_fecha_aprobado" class="text-base font-medium text-gray-700">Fecha aprobado: </label>
+                <label id="detalles_fecha_aprobado" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
                 <label for="detalles_convenio" class="text-base font-medium text-gray-700">Firma de convenio: </label>
@@ -321,8 +325,8 @@
 
                       <div class="col-span-2 flex flex-col justify-center  w-full">
                         <div class="flex flex-row p-2">
-                            <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
-                            <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+                            <label id="label_presentado" for="presentado" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
+                            <input type="checkbox" name="presentado" id="presentado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
                         </div>
                       </div>
 
@@ -348,8 +352,8 @@
                       
                         <div class="flex flex-col justify-center w-full">
                             <div class="flex flex-row  p-2">
-                                <label id="label_validado" for="validado" class="ml-6 text-sm font-medium text-gray-700 ">Aprobado</label>
-                                <input type="checkbox" name="validado" id="validado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" disabled>
+                                <label id="label_aprobado" for="aprobado" class="ml-6 text-sm font-medium text-gray-700 ">Aprobado</label>
+                                <input type="checkbox" name="aprobado" id="aprobado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" disabled>
                             </div>
                         </div>
                       
@@ -369,9 +373,9 @@
                       </div>
                     
                       <div class="col-span-2 p-2">
-                        <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha aprobado *</label>
-                        <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
-                        <label id="error_fecha_validado" class="hidden block text-md text-red-500">Se require de una fecha</label>
+                        <label id="label_fecha_aprobado" for="fecha_aprobado" class="block text-sm font-medium text-gray-700">Fecha aprobado *</label>
+                        <input type="date" name="fecha_aprobado" id="fecha_aprobado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" disabled>
+                        <label id="error_fecha_aprobado" class="hidden block text-md text-red-500">Se require de una fecha</label>
                       </div>
         
                       <div class="col-span-2 p-2">
@@ -492,13 +496,13 @@ $(".form-eliminar").submit(function(e){
             }
             $('#detalles_ejercicio').text(prodim.ejercicio);
             if(prodim.firma_electronica == 1){
-            $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+            $('#detalles_presentado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
                           </svg>\
             </span>'); //status
             }else{
-              $('#detalles_firma_electronica').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+              $('#detalles_presentado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
                             </svg>\
@@ -522,23 +526,23 @@ $(".form-eliminar").submit(function(e){
             else
               $('#detalles_fecha_revisado').text('- / - / -');
             if(prodim.validado == 1){
-            $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+            $('#detalles_aprobado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
                           </svg>\
             </span>'); //status
             }else{
-              $('#detalles_validado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+              $('#detalles_aprobado').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
                             </svg>\
                         </span>'); //status
             }
             
-            if(prodim.fecha_validado != null)
-              $('#detalles_fecha_validado').text(prodim.fecha_validado);
+            if(prodim.fecha_aprobado != null)
+              $('#detalles_fecha_aprobado').text(prodim.fecha_aprobado);
             else
-              $('#detalles_fecha_validado').text('- / - / -');
+              $('#detalles_fecha_aprobado').text('- / - / -');
             if(prodim.convenio == 1){
             $('#detalles_convenio').html('<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
                           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
@@ -589,7 +593,7 @@ $(".form-eliminar").submit(function(e){
                       dataType:'json',
                       type:'get',
                       success: function(data){
-                          console.log(data)
+                          //console.log(data)
                           $.each(data,function(key, item) {
                              $("#ejercicio").append('<option value='+item.id_fuente_financ_cliente+'>'+item.ejercicio+'</option>');
                             // $("#periodo").append('<option value='+item.cliente_id+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
@@ -628,12 +632,12 @@ $(".form-eliminar").submit(function(e){
             }); 
 
             $('#fecha_revisado').on('change', function(){
-              $('#fecha_validado').val('');
-              $('#fecha_validado').attr('min', $('#fecha_revisado').val());
-              $('#fecha_validado').attr('max',$('#ejercicio option:selected').text()+'-12-31');
+              $('#fecha_aprobado').val('');
+              $('#fecha_aprobado').attr('min', $('#fecha_revisado').val());
+              $('#fecha_aprobado').attr('max',$('#ejercicio option:selected').text()+'-12-31');
             });
 
-            $('#fecha_validado').on('change', function(){
+            $('#fecha_aprobado').on('change', function(){
               $('#fecha_convenio').attr('min', $('#fecha_revisado').val());
               $('#fecha_convenio').attr('max',$('#ejercicio option:selected').text()+'-12-31');
             });
@@ -650,9 +654,9 @@ $(".form-eliminar").submit(function(e){
 
             $("#revisado").on('click', function(){
               if($(this).prop("checked")) {
-                $('#validado').prop('disabled',false)
+                $('#aprobado').prop('disabled',false)
               }else{
-                $('#validado').prop('disabled',true)
+                $('#aprobado').prop('disabled',true)
               }
             });
 
@@ -709,17 +713,17 @@ $(".form-eliminar").submit(function(e){
               }else{
                 $('#error_fecha_revisado').addClass('hidden');
               }
-              validado = document.getElementById("validado").checked;
-              fecha_validado = document.forms["formulario"]["fecha_validado"].value;
-              if(validado){
-                if(fecha_validado == ''){
-                  $('#error_fecha_validado').removeClass('hidden');
+              aprobado = document.getElementById("aprobado").checked;
+              fecha_aprobado = document.forms["formulario"]["fecha_aprobado"].value;
+              if(aprobado){
+                if(fecha_aprobado == ''){
+                  $('#error_fecha_aprobado').removeClass('hidden');
                   band= false;
                 }else{
-                  $('#error_fecha_validado').addClass('hidden');
+                  $('#error_fecha_aprobado').addClass('hidden');
                 }
               }else{
-                $('#error_fecha_validado').addClass('hidden');
+                $('#error_fecha_aprobado').addClass('hidden');
               }
               convenio = document.getElementById("convenio").checked;
               fecha_convenio = document.forms["formulario"]["fecha_convenio"].value;

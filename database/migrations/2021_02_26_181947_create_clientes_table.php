@@ -19,9 +19,10 @@ class CreateClientesTable extends Migration
             $table->string('email')->unique();
             $table->text('password');
             $table->rememberToken()->nullable();
-            $table->string('anio_inicio',4);
-            $table->string('anio_fin',4);
-            $table->text('logo', 255);
+            $table->date('anio_inicio');
+            $table->date('anio_fin');
+            $table->text('logo', 255)->nullable();
+            $table->string('url',100)->nullable();
             $table->string('id_onesignal',150)->nullable();
             
             $table->unsignedBigInteger('municipio_id');

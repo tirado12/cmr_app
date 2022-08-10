@@ -36,6 +36,7 @@ use App\Http\Controllers\SispladeController;
 use App\Http\Controllers\Usuarios\PerfilController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\ObrasFuentesController;
+use App\Models\GastosIndirectosFuentes;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,12 +59,12 @@ Route::get('/dashboard', function () {
 
 require __DIR__.'/auth.php';
 
-Route::resource('users', UsersController::class)->names('admin.users');
-Route::resource('clientes', ClienteController::class)->except(['getCliente','getUsuario','getUsuarioToken'])->names('clientes');
+Route::resource('users', UsersController::class)->middleware(['auth'])->names('admin.users');
+Route::resource('clientes', ClienteController::class)->middleware(['auth'])->except(['getCliente','getUsuario','getUsuarioToken'])->names('clientes');
 Route::get('userCliente', [ClienteController::class, 'userCliente']);
 Route::get('emailCliente', [ClienteController::class, 'emailCliente']);
 Route::resource('comprometidoDesglose', ComprometidoDesgloseController::class)->names('comprometidoDesglose');
-Route::resource('contratistas', ContratistaController::class)->names('contratistas');
+Route::resource('contratistas', ContratistaController::class)->middleware(['auth'])->names('contratistas');
 Route::resource('contratoArrendamiento', ContratoArrendamientoController::class)->names('contratoArrendamiento');
 Route::resource('contratoFacturas', ContratoFacturasController::class)->names('contratoFacturas');
 Route::resource('convenioModificatorio', ConvenioModificatorio::class)->names('convenioModificatorio');
@@ -78,7 +79,7 @@ Route::resource('integrantes', IntegrantesCabildoController::class)->names('cabi
 Route::resource('licitacionInvitacion', LicitacionInvitacionController::class)->names('licitacionInvitacion');
 Route::resource('listaRaya', ListaRayaController::class)->names('listaRaya');
 Route::resource('mids', MidsController::class)->names('mids');
-Route::resource('municipio', MunicipioController::class)->except(['getMunicipio'])->names('municipio');
+Route::resource('municipio', MunicipioController::class)->middleware(['auth'])->except(['getMunicipio'])->names('municipio');
 Route::resource('obraAdministracion', ObraAdministracionController::class)->names('obraAdministracion');
 Route::resource('obraContrato', ObraContratoController::class)->names('obraContrato');
 Route::resource('obra', ObraController::class)->except(['getObrasCliente','sendMessage','getProdim'])->names('obra');
@@ -89,7 +90,7 @@ Route::resource('parteSocial', ParteSocialTecnicaController::class)->names('part
 Route::resource('prodimCatalogo', ProdimCatalogoController::class)->names('prodimCatalogo');
 Route::resource('prodimComprometido', ProdimComprometidoController::class)->names('prodimComprometido');
 Route::resource('prodim', ProdimController::class)->except(['getDesgloseProdim'])->names('prodim');
-Route::resource('proveedor', ProveedorController::class)->names('proveedor');
+Route::resource('proveedor', ProveedorController::class)->middleware(['auth'])->names('proveedor');
 Route::resource('rft', RftController::class)->names('rft');
 Route::resource('anexos', AnexosFondoIIIController::class)->names('anexos');
 
@@ -100,7 +101,7 @@ Route::get('cliente/ejercicio/{id},{anio}', [GeneralController::class, 'ejercici
 Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
 
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');
-Route::resource('perfil', PerfilController::class)->names('perfil');
+Route::resource('perfil', PerfilController::class)->middleware(['auth'])    ->names('perfil');
 
 //========================== consultas ajax =====================================
 //sisplade
@@ -126,3 +127,5 @@ Route::get('/montoTotalCliente/{prodim}',[ProdimComprometidoController::class,'m
 Route::get('/ejerciciosProdimComprometido/{cliente}',[ComprometidoDesgloseController::class,'ejerciciosProdimComprometido']); //obtiene ejercicios disponibles por cliente en prodim
 //Prodimdf
 Route::get('/getEjerciciosCliente/{cliente}',[ProdimController::class,'getEjerciciosCliente']); //obtiene ejercicios por cliente - prodimdf
+//gastos indirectos fuentes
+Route::get('/montoGastosComprometido/{gasto}',[GastosIndirectosFuentesController::class,'montoGastosComprometido']); //obtiene ejercicios por cliente - prodimdf

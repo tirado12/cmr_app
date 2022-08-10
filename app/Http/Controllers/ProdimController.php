@@ -48,7 +48,7 @@ class ProdimController extends Controller
      */
     public function create()
     {
-        return $fuenteCliente = FuentesCliente::join('anexos_fondo3', 'id_fuente_financ_cliente', 'fuente_financiamiento_cliente_id')->where('id_fuente_financ_cliente', 2)->first();
+        //return $fuenteCliente = FuentesCliente::join('anexos_fondo3', 'id_fuente_financ_cliente', 'fuente_financiamiento_cliente_id')->where('id_fuente_financ_cliente', 2)->first();
     }
 
     /**
@@ -70,9 +70,9 @@ class ProdimController extends Controller
             $request['acuse'] = $destinationPath;
             
         }
-        
+        //request->fuenteCliente_id->cliente->url
        $request->validate([
-        'firma_electronica' => 'nullable',
+        'presentado' => 'nullable',
         'acuse' => 'required',
         'revisado' => 'nullable',
         'fuenteCliente_id' => 'required|unique:prodim,fuente_id',
@@ -80,17 +80,18 @@ class ProdimController extends Controller
       [ 'fuenteCliente_id.unique' => 'Ya existe un registro con este cliente y ejercicio.']);
 
 
-      $request->firma_electronica == null ? $request->firma_electronica = false : $request->firma_electronica = true;
+      $request->presentado == null ? $request->presentado = false : $request->presentado = true;
       $request->revisado == null ? $request->revisado = false : $request->revisado = true;
-      $request->validado == null ? $request->validado = false : $request->validado = true;
+      $request->aprobado == null ? $request->aprobado = false : $request->aprobado = true;
       $request->convenio == null ? $request->convenio = false : $request->convenio = true;
 
       $prodim = Prodim::create([
-          'firma_electronica' => $request->firma_electronica,
+          'presentado' => $request->presentado,
+          'fecha_presentado' => $request->fecha_presentado,
           'revisado' => $request->revisado,
           'fecha_revisado' => $request->fecha_revisado,
-          'validado' => $request->validado,
-          'fecha_validado' => $request->fecha_validado,
+          'aprobado' => $request->aprobado,
+          'fecha_aprobado' => $request->fecha_aprobado,
           'convenio' => $request->convenio, 
           'fecha_convenio' => $request->fecha_convenio,
           'acuse_prodim' => $request->acuse,
@@ -115,7 +116,7 @@ class ProdimController extends Controller
      */
     public function show($id)
     {
-        //
+       //
     }
 
      /**
@@ -146,6 +147,7 @@ class ProdimController extends Controller
      */
     public function update(Request $request, Prodim $prodim)
     {
+        //return $prodim;
         if (!empty($request->file('acuse_prodim'))) {
             $file = $request->file('acuse_prodim');
             //Move Uploaded File
@@ -160,19 +162,20 @@ class ProdimController extends Controller
         }
     
         $request->validate([
-            'firma_electronica' => 'nullable',
+            'presentado' => 'nullable',
+            'fecha_presentado' => 'nullable',
             'revisado' => 'nullable',
             'fecha_revisado' => 'nullable',
-            'validado' => 'nullable',
-            'fecha_validado' => 'nullable',
+            'aprobado' => 'nullable',
+            'fecha_aprobado' => 'nullable',
             'convenio' => 'nullable',
             'fecha_convenio' => 'nullable',
             'acuse' => 'required',
           ]);
 
-          $request->firma_electronica == null ? $request['firma_electronica'] = false : $request['firma_electronica'] = true;
+          $request->presentado == null ? $request['presentado'] = false : $request['presentado'] = true;
           $request->revisado == null ? $request['revisado'] = false : $request['revisado'] = true;
-          $request->validado == null ? $request['validado'] = false : $request['validado'] = true;
+          $request->aprobado == null ? $request['aprobado'] = false : $request['aprobado'] = true;
           $request->convenio == null ? $request['convenio'] = false : $request['convenio'] = true;
 
           $fuenteCliente = FuentesCliente::where('id_fuente_financ_cliente', $prodim->fuente_id)->first();
@@ -231,7 +234,7 @@ class ProdimController extends Controller
                     ->where('fuente_financiamiento_id',2);
             })
             ->join('prodim', 'prodim.fuente_id', '=', 'id_fuente_financ_cliente')
-            ->select('firma_electronica','revisado','validado','convenio','id_prodim')
+            ->select('presentado','revisado','aprobado','convenio','id_prodim')
             ->get();
         $prodim_id = $fuente_prodim->first()->id_prodim;
         $fuente_comprometido = DB::table('prodim_comprometido')

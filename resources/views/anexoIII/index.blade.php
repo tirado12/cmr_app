@@ -79,7 +79,7 @@
               <td>
                 <div class="text-sm leading-5 font-medium text-gray-900 flex justify-center">
                     
-                    @if(($item->gastos_indirectos == 1) )
+                    @if(($item->gastos_indirectos == 1))
                     <span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">
                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -127,13 +127,45 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
+  <!--Alerta de error-->
+  @if(session('actualizar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'No es posible actualizar la fuente de financiamiento,<br> verifique que no existan Gastos Indirectos y PRODIMDF relacionados.'
+    });
+  </script>
+  @endif
+
+  <!--Alerta de error-->
+  @if(session('actualizar')=='prodim')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'No es posible actualizar la fuente de financiamiento,<br> verifique que no existan registros relacionados con PRODIMDF.'
+    });
+  </script>
+  @endif
+
+  <!--Alerta de error-->
+  @if(session('actualizar')=='gastos')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'No es posible actualizar la fuente de financiamiento,<br> verifique que no existan resgistros relacionados con Gastos Indirectos.'
+    });
+  </script>
+  @endif
 
 <script>
     //ejecucion del datatable
     res = '{{ request()->filled('r') }}'
     //console.log(res)
     var busqueda= '{{ request()->r }}';
-  //console.log(busqueda);
+    //console.log(busqueda);
   $(document).ready(function() {
       $('#example').DataTable({
           "oSearch": {"sSearch": busqueda},

@@ -391,7 +391,7 @@
         monto_proyectado = $('#monto_proyectado').val();
         monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
         porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
-        resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+        resultado = moneda(parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2));
         $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
       }else{
         $('#div_porcentaje_prodim').addClass('hidden');
@@ -402,7 +402,9 @@
         monto_proyectado = $('#monto_proyectado').val();
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
-      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+      resul = moneda
+      
+      (parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2));
         $('#proyectado_gastos').removeClass('hidden');
         $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
       }else{
@@ -419,9 +421,9 @@
       $('#titulo_anexo').addClass('hidden');
       $('#anexos').addClass('hidden');
       valor_comprometido= $("#monto_comprometido").val();
-      $("#monto_comprometido").val(parseFloat(valor_comprometido).toFixed(2));
+      $("#monto_comprometido").val(moneda(parseFloat(valor_comprometido).toFixed(2)));
       valor_proyectado = $("#monto_proyectado").val();
-      $("#monto_proyectado").val(parseFloat(valor_proyectado).toFixed(2));
+      $("#monto_proyectado").val(moneda(parseFloat(valor_proyectado).toFixed(2)));
       $('#titulo_anexo').addClass('hidden');
     $('#anexos').addClass('hidden');
     $('#acta_integracion').removeAttr('required');
@@ -440,7 +442,7 @@
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       
       porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
-      resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+      resultado = moneda(parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2));
         $('#proyectado_prodim').removeClass('hidden');
         $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
         // resultado = parseFloat(resultado);
@@ -457,7 +459,7 @@
       monto_proyectado = $('#monto_proyectado').val();
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
-      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+      resul = moneda(parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2));
         $('#proyectado_gastos').removeClass('hidden');
         $('#comprometido_prodim').removeClass('hidden');
         $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);

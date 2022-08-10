@@ -84,7 +84,7 @@
                       Examinar archivos
                     </div>
                     <input type="text" name="logo_text" id="logo_text" autocomplete="email" class="hidden focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente -> logo }}">
-                    <img id="preViewImg" src="{{$cliente->logo}}" alt="your image" class="h-32"/>
+                    <img id="preViewImg" src="{{asset($cliente->logo)}}" alt="your image" class="h-32 border border-blue-900 rounded"/>
                   </div>
 
                 </div>
@@ -93,11 +93,11 @@
                   <div class="grid grid-cols-8">
                     <div class="col-span-4 mr-3">
                       <label for="periodo_address" class=" text-xs font-medium text-gray-700">Año inicial: </label>
-                      <input type="number" min="2015" max="2030" name="anio_inicio" id="anio_inicio" autocomplete="direccion" class=" focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_inicio }}">
+                      <input type="date"  name="anio_inicio" id="anio_inicio" autocomplete="direccion" class=" focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_inicio }}">
                     </div>
                     <div class=" col-span-4 ml-3">
                       <label for="periodo_address" class=" text-xs font-medium text-gray-700">Año final: </label>
-                      <input type="number" min="2015" max="2030" name="anio_fin" id="anio_fin" autocomplete="direccion" class="focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_fin }}">
+                      <input type="date"  name="anio_fin" id="anio_fin" autocomplete="direccion" class="focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_fin }}">
                     </div>
                   </div>
                 </div>
@@ -147,10 +147,17 @@ function myPassword() {
   $(document).ready(function() {
 
     var anio = (new Date).getFullYear();
-    $('#anio_inicio').attr("min", anio -2);
-    $('#anio_inicio').attr("max", anio +1);
-    $('#anio_fin').attr("min", anio);
-    $('#anio_fin').attr("max", anio +3);
+     
+     fechaIniMin = (anio-2)+"-01-01";
+     fechaIniMax = (anio+1)+"-12-31";
+     fechaFinMin = (anio)+"-01-01";
+     fechaFinMax = (anio+3)+"-12-31";
+     
+     //console.log(fechaIniMax)
+     $('#anio_inicio').attr("min", fechaIniMin);
+     $('#anio_inicio').attr("max", fechaIniMax);
+     $('#anio_fin').attr("min", fechaFinMin);
+     $('#anio_fin').attr("max", fechaFinMax);
 
     function readURL(input) {
       if (input.files && input.files[0]) {
@@ -166,7 +173,8 @@ function myPassword() {
 
     $("#file").click(function(){
       if($('#logo_text').val() != ""){
-        $('#preViewImg').attr('src', $("#logo_text").val());
+        // $('#preViewImg').attr('src', '' );
+        // $('#preViewImg').attr('src', '{{asset($cliente->logo)}}' );
       }
       else{
         $('#preViewImg').addClass('hidden');

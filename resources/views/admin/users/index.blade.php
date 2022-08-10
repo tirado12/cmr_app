@@ -31,6 +31,7 @@
       <tr>
           <th>Usuario</th>
           <th>Roles</th>
+          <th>Area</th>
           <th class="flex justify-center">Acción</th>
           
       </tr>
@@ -42,7 +43,7 @@
           <td>
             <div class="flex items-center space-y-4">
               <div>
-                  <div class="text-sm leading-5 font-medium text-gray-900">{{$user->name}}</div>
+                  <div class="text-sm leading-5 font-medium text-gray-900">{{$user->name}} {{$user->lastname}}</div>
                   <div class="text-sm leading-5 text-gray-500">{{$user->email}}</div>
               </div>
           </div>
@@ -51,7 +52,11 @@
             <div class="text-sm leading-5 font-medium text-gray-900">
             {{ $user->roles[0]->name }}
             </div>
-            
+          </td>
+          <td>
+            <div class="text-sm leading-5 font-medium text-gray-900">
+              {{$user->area}}
+            </div>
           </td>
           <td>
             <div class="flex justify-center">
@@ -104,14 +109,28 @@
         
           <div class="grid grid-cols-8 gap-8">
             <div class="col-span-8 ">
-              <label for="first_name" class="block text-sm font-medium text-gray-700">Usuario *</label>
+              <label for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
               <input type="text" name="name" id="name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-              <label id="error_name" name="error_name" class="hidden text-base font-normal text-red-500" >Porfavor ingrese un usuario</label>
+              <label id="error_name" name="error_name" class="hidden text-base font-normal text-red-500" >Porfavor ingrese un nombre</label>
+            </div>
+            <div class="col-span-8 ">
+              <label for="lastname" class="block text-sm font-medium text-gray-700">Apellido *</label>
+              <input type="text" name="lastname" id="lastname" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+              <label id="error_apellido" name="error_apellido" class="hidden text-base font-normal text-red-500" >Porfavor ingrese un apellido</label>
             </div>
             <div class="col-span-8">
               <label for="email_address" class="block text-sm font-medium text-gray-700">Correo *</label>
               <input type="text" name="email" id="email" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
               <label id="error_email" name="error_email" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un correo</label>
+            </div>
+            <div class="col-span-8">
+              <label for="area" class="block text-sm font-medium text-gray-700">Area *</label>
+              <select id="area" name="area"  class="mt-1 block w-full py-2 px-3 border border-gray-300  bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value="Infraestructura"> Infraestructura </option>
+                <option value="Gubernamental"> Gubernamental </option>
+                <option value="Dirección General"> Dirección General </option>
+              </select>
+              <label id="error_area" name="error_area" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una area de trabajo</label>
             </div>
             <div class="col-span-8">
               <label for="password" class="block text-sm font-medium text-gray-700">Contraseña *</label>
@@ -238,7 +257,9 @@ $().ready(function() {
     onclick: false,
 		rules: {
 			name: { required: true},
+      lastname: { required: true},
       email: { required: true, email: true},
+      area: { required: true},
       password: { required: true},
       roles: { required: true},
       

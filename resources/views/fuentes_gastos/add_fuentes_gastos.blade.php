@@ -40,7 +40,7 @@
             </div>
           </div>
     </div>
-    <form id="formulario" name="formulario" action="{{ route('gastosIndirectosFuentes.store') }}" method="POST">
+    <form id="formulario" name="formulario" action="{{ route('gastosIndirectosFuentes.store') }}" method="POST" onsubmit="return validar();">
       @csrf
       @method('POST')
 
@@ -64,7 +64,7 @@
         <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
       </div>
 
-      <div class="col-span-4 mb-4">
+      <div class="col-span-4 ">
         <label id="label_gasto_indirecto" for="gasto_indirecto" class="block text-sm font-medium text-gray-700">Gasto indirecto *</label>
           <select id="gasto_indirecto" name="gasto_indirecto" onchange="validarSelect()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
             <option value=""> Elija una opción </option>
@@ -75,21 +75,52 @@
         <label id="error_gasto_indirecto" name="error_gasto_indirecto" class="hidden text-base font-normal text-red-500" >Por favor ingresar un gasto indirecto al registro</label>  
       </div>
 
-      <div class="col-span-4 mb-4">
-        <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto *</label>
-        <label class="relative flex w-full flex-wrap items-stretch mb-3 text-gray-500">
-          <span class="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
-            <i class="fas fa-dollar-sign"></i>
-          </span>
-        <input type="text" name="monto" id="monto" class="mt-1 pl-8 focus:ring-gray-500 focus:border-gray-500 bg-white block w-full shadow-sm sm:text-sm  rounded-md" placeholder="(0.00)" required>
-        </label>
+      <div class="col-span-4">
+        <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto total gastos indirectos*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly>
+        </div>
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_monto_disponible" for="monto_disponible" class="block text-sm font-medium text-gray-700">Monto disponible*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto_disponible" id="monto_disponible" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly>
+        </div>
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto" id="monto" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" >
+        </div>
         <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Por favor ingresar un monto</label>  
+        <label id="error_monto_disponible" class="hidden block text-md text-red-500">La cantidad ingresada supera el monto disponible</label>
         <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
       </div>
+
+      
     
   </div>
-  <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este cliente, ejercicio y gasto indirecto asignado.</label>  
-  <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+  
+  <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este cliente, ejercicio y gasto indirecto asignado.</label>
+  <label id="error_monto_ceros" class="hidden block text-md text-red-500">No queda monto disponible para comprometer</label>  
+  <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 mt-4">
     <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
       Regresar
     </a>
@@ -101,6 +132,10 @@
 </div>
 
 <script>
+  function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+
 function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
     let element = event.target;
     while(element.nodeName !== "BUTTON"){
@@ -109,7 +144,8 @@ function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
     element.parentNode.parentNode.removeChild(element.parentNode);
   }
 //=================================================================================
-$(document).ready(function() {
+ $(document).ready(function() {
+  disponible = '';
   //select muestra ejercicios disponibles por cliente
   $("#cliente_id").on('change', function () {
   cliente=$(this).val();
@@ -123,8 +159,9 @@ $(document).ready(function() {
       type:'get',
         success: function(data){
           //console.log(data)
+          disponible = data;
           $.each(data,function(key, item) {
-            $("#ejercicio").append('<option value='+item.cliente_id+'>'+item.ejercicio+'</option>');
+            $("#ejercicio").append('<option value='+item.id_fuente_financ_cliente+'>'+item.ejercicio+'</option>');
           });
         },
       cache: false
@@ -146,13 +183,20 @@ $(document).ready(function() {
   });
 //======================================================================================
  //llenado de select ejercicios disponibles de ese cliente
- $("#ejercicio").on('change', function () {        
-          ejercicio = $('#ejercicio option:selected').text();
-          cliente= $('#ejercicio').val();
-        if(cliente.length>0 && ejercicio.length>0){  
-          var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
-          consulta(direccion);
-        }
+ $("#ejercicio").on('change', function () {   
+  $('#fuenteCliente_id').val($('#ejercicio').val());
+          $.each(disponible,function(key, item) { //colocar el monto 
+            if($('#ejercicio option:selected').val() == item.fuente_financiamiento_cliente_id){
+              $('#monto_gastos').val(moneda(parseFloat(item.monto_prodim).toFixed(2)));
+            }
+          });    
+          consultarSumaComprometido($(this).val());
+          // ejercicio = $('#ejercicio option:selected').text();
+          // cliente= $('#ejercicio').val();
+        // if(cliente.length>0 && ejercicio.length>0){  
+        //   var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
+        //   consulta(direccion);
+        // }
 });
 //======================================================================================
 $('#gasto_indirecto').on('change', function(){ //valida si existe registro similar al seleccionar una opc en gast
@@ -190,44 +234,69 @@ function existe(){  //metodo para consultar si existe el registro
         });
 }  
 //======================================================================================
-      function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
-        $.ajax({
-              url: direccion,
-              dataType:'json',
-              type:'get',
-              success: function(data){
-                //console.log(data);
-                $.each(data,function(key, item) {
-                  $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
-                  if($('#gasto_indirecto').val().length>0)
-                    existe();
-                  //console.log('a '+ $('#fuenteCliente_id').val());
-                });
-              },
-              cache: false
-        });
-      }  
+function consultarSumaComprometido(fuente){
+             if(fuente != ''){var link = '{{ url("/montoGastosComprometido")}}/'+fuente; //consulta ajax
+               $.ajax({
+                        url: link,
+                        dataType:'json',
+                        type:'get',
+                        success: function(data){
+                            //console.log(data)
+                            sumaComprometido = parseFloat(data).toFixed(2);
+                            montoTotalGastos = parseFloat($('#monto_gastos').val().replace(",","")).toFixed(2);
+                            montoDisponible = montoTotalGastos - sumaComprometido;
+                            
+                            $('#monto_disponible').val(moneda(parseFloat(montoDisponible).toFixed(2)));
+                            // $.each(data,function(key, item) {
+                            // $("#ejercicio").append('<option value='+item.id_prodim+'>'+item.ejercicio+'</option>');
+                                
+                            // });
+                        },
+                        cache: false
+              });}
+    }
+//======================================================================================
+      // function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
+      //   $.ajax({
+      //         url: direccion,
+      //         dataType:'json',
+      //         type:'get',
+      //         success: function(data){
+      //           //console.log(data);
+      //           $.each(data,function(key, item) {
+      //             $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
+      //             if($('#gasto_indirecto').val().length>0)
+      //               existe();
+      //           });
+      //         },
+      //         cache: false
+      //   });
+      // }  
 //======================================================================================
       //validacion del formulario con el btn guardar
-     $().ready(function() {
-          $("#formulario").validate({
-            onfocusout: false,
-            onclick: false,
-            rules: {
-              cliente_id: {required: true },
-              ejercicio: {required: true },
-              monto: { required: true },
-              gasto_indirecto: { required: true},
-            },
-            errorPlacement: function(error, element) {
-              if(error != null){
-              $('#error_'+element.attr('id')).fadeIn();
-              }else{
-                $('#error_'+element.attr('id')).fadeOut();
-              }
-            },
-          }); 
+    //  $().ready(function() {
+    //       $("#formulario").validate({
+    //         onfocusout: false,
+    //         onclick: false,
+    //         rules: {
+    //           cliente_id: {required: true },
+    //           ejercicio: {required: true },
+    //           monto: { required: true },
+    //           gasto_indirecto: { required: true},
+    //         },
+    //         errorPlacement: function(error, element) {
+    //           if(error != null){
+    //           $('#error_'+element.attr('id')).fadeIn();
+    //           }else{
+    //             $('#error_'+element.attr('id')).fadeOut();
+    //           }
+    //         },
+    //       }); 
+    //});
+
+    
 //======================================================================================
+$().ready(function() {
       //validacion de input 
       $("input").keyup(function() {
           var cadena = $(this).val();
@@ -258,6 +327,53 @@ function validarSelect() {
       $("#label_gasto_indirecto").removeClass('text-gray-700');
     }
 }
+
+function validar(){
+      band = true;
+      cliente= document.forms["formulario"]["cliente_id"].value;
+      if(cliente == ""){
+        $('#error_cliente_id').removeClass('hidden');  
+        band= false;
+      }else{
+        $('#error_cliente_id').addClass('hidden');
+      }
+      ejercicio = document.forms["formulario"]["ejercicio"].value;
+      if(ejercicio == ""){
+        $('#error_ejercicio').removeClass('hidden');
+        band = false;
+      }else{
+        $('#error_ejercicio').addClass('hidden');
+      }
+      gastos_indirecto = document.forms['formulario']['gasto_indirecto'].value;
+      if(gastos_indirecto == ""){
+        $('#error_gasto_indirecto').removeClass('hidden');
+        band = false;
+      }else{
+        $('#error_gasto_indirecto').addClass('hidden');
+      }
+      monto = document.forms['formulario']['monto'].value;
+      if(monto == ""){
+        $('#error_monto').removeClass('hidden');
+        band = false;
+      }else{
+                monto = parseFloat(monto.replace(",","")).toFixed(2);
+                monto_disponible = document.forms["formulario"]["monto_disponible"].value;
+                monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
+                if(parseFloat(monto_disponible) == 0){
+                  band = false;
+                  $('#error_monto_ceros').removeClass('hidden');
+                }
+
+                if(parseFloat(monto)>parseFloat(monto_disponible)){
+                  band = false;
+                  $('#error_monto_disponible').removeClass('hidden');
+                }else{
+                  $('#error_monto_disponible').addClass('hidden');
+                }
+        $('#error_monto').addClass('hidden');
+      }
+      return band;
+    }
 </script>
 
 @endsection

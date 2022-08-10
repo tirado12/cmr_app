@@ -1,6 +1,7 @@
 @extends('layouts.plantilla')
 @section('title','Dashboard')
 @section('contenido')
+        
         <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
         <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
         <link rel="stylesheet" href="{{ asset('css/style_alert.css') }}">

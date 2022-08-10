@@ -13,11 +13,11 @@ class Prodim extends Model
     protected $table = "prodim";
 
     protected $fillable = [
-        'firma_electronica',
+        'presentado',
         'revisado',
         'fecha_revisado',
-        'validado',
-        'fecha_validado',
+        'aprobado',
+        'fecha_aprobado',
         'convenio',
         'fecha_convenio',
         'acuse_prodim',

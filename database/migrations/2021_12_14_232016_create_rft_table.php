@@ -1,10 +1,10 @@
- <?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMidsTable extends Migration
+class CreateRftTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateMidsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mids', function (Blueprint $table) {
-            $table->id('id_mids');
+        Schema::create('rft', function (Blueprint $table) {
+            $table->id('id_rft');
             $table->unsignedBiginteger('obra_id')->nullable();
             $table->foreign('obra_id')
                     ->references('id_obra')
                     ->on('obras');
-            $table->integer('planeado')->nullable();
-            $table->date('fecha_planeado')->nullable();
-            $table->integer('firmado')->nullable();
-            $table->date('fecha_firmado')->nullable();
-            $table->integer('validado')->nullable(); 
-            $table->date('fecha_validado')->nullable();
+            $table->integer('primer_trimestre')->nullable();
+            $table->integer('segundo_trimestre')->nullable();
+            $table->integer('tercer_trimestre')->nullable();
+            $table->integer('cuarto_trimestre')->nullable(); 
             $table->timestamps();
         });
     }
@@ -36,6 +34,6 @@ class CreateMidsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mids');
+        Schema::dropIfExists('rft');
     }
 }

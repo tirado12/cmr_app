@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\AnexosFondoIII;
+use App\Models\FuentesCliente;
+use App\Models\GastosIndirectosFuentes;
+use App\Models\Prodim;
+use App\Models\ProdimComprometido;
 use Illuminate\Http\Request;
+
+use function Symfony\Component\VarDumper\Dumper\esc;
 
 class AnexosFondoIIIController extends Controller
 {
@@ -52,7 +58,7 @@ class AnexosFondoIIIController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
      /**
      * Show the form for editing the specified resource.
@@ -81,18 +87,71 @@ class AnexosFondoIIIController extends Controller
      */
     public function update(Request $request, AnexosFondoIII $anexo)
     {
-       if($request['prodim']==null){
-            $request['prodim']=false;
-       }else{
-            $request['prodim']=true;
-       }
-       if($request['gastos_indirectos']==null){
-        $request['gastos_indirectos']=false;
-        }else{
-                $request['gastos_indirectos']=true;
+
+        $prodim= Prodim::where('fuente_id',$anexo->fuente_financiamiento_cliente_id)->first();
+        
+        
+        
+        
+        $anexo->acta_integracion_consejo = $request->acta_integracion_consejo;
+        $anexo->acta_priorizacion = $request->acta_priorizacion;
+        $anexo->adendum_priorizacion = $request->adendum_priorizacion;
+        $error='';
+        
+        if($request['prodim'] == null){ //check vacio
+            if($prodim != null){// tiene prodim
+                $comprometidoProdim = ProdimComprometido::where('prodim_id',$prodim->id_prodim)->exists();
+                if($comprometidoProdim != null){ //tiene prodim comprometido
+                    $error = 'prodim';
+                }else{
+                    $anexo->prodim = false;
+                    $anexo->porcentaje_prodim = null;
+                    $prodim->monto_prodim = 0;
+                    $prodim->delete();
+                }
+            }
+        }else{ //check seleccionado
+            if($prodim == null){ //si no tiene prodim
+                $prodim = Prodim::create([ 
+                    'fuente_id' => $anexo->fuente_financiamiento_cliente_id
+                ]);
+             }
+             $comprometidoProdim = ProdimComprometido::where('prodim_id',$prodim->id_prodim)->exists();
+             $anexo->prodim = true;
+             if($comprometidoProdim == null){
+                 $fuenteCliente = FuentesCliente::find($anexo->fuente_financiamiento_cliente_id); //obtenemos fuentecliente relacionado
+                 $anexo->porcentaje_prodim = $request->porcentaje_prodim; //nuevo porcentaje
+                 $anexo->monto_prodim = str_replace(",", '', $fuenteCliente->monto_proyectado) * ($request->porcentaje_prodim * 0.01); //recalculamos el porcentaje
+             }
         }
-        $anexo->update($request->all());
-       return redirect()->route('anexos.index');
+        $gastoFuente= GastosIndirectosFuentes::where('fuente_cliente_id',$anexo->fuente_financiamiento_cliente_id)->exists();
+        if($request['gastos_indirectos'] == null){ //check vacio
+            if($gastoFuente != null){
+                $error = 'gastos';
+            }else{
+                $anexo->gastos_indirectos = false; //borra registro de prodim y lo quita de anexos
+                $anexo->porcentaje_gastos = null;
+                $anexo->monto_gastos = 0;
+            }
+        }else{// check seleccionado
+            $anexo->gastos_indirectos = true;
+            if($gastoFuente == null){
+                $fuenteCliente = FuentesCliente::find($anexo->fuente_financiamiento_cliente_id); //obtenemos fuentecliente relacionado
+                $anexo->porcentaje_gastos = $request->porcentaje_gastos;
+                $anexo->monto_gastos = str_replace(",", '', $fuenteCliente->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
+            }else{
+                $error = 'gastos';
+            }
+            
+            
+        }
+
+        if($gastoFuente != null && $comprometidoProdim != null){
+            $error = 'error';
+        }
+
+        $anexo->update();
+        return redirect()->route('anexos.index')->with('actualizar',$error);
     }
 
     /**

@@ -51,7 +51,7 @@
     @endif
     <!-- fin tabla tailwind, inicio data table -->
 
-    <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
+  <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
       <table id="example" class="table table-striped bg-white" style="width:100%;">
           <thead>
               <tr>
@@ -91,7 +91,7 @@
                         <div class="text-sm leading-5 font-medium text-gray-900">
                         <p>
                         {{$obra_1->groupBy('id_obra')->get("$obra->id_obra")->implode('nombre', ' - ')}}
-</p>
+                        </p>
                         </div>
                       </td>
                       <td>
@@ -127,7 +127,7 @@
             </tr>
         </tfoot>-->
       </table>
-    </div>
+   </div>
 
 <!-- inicio modal -->
 <div class="hidden overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none justify-center items-center" id="modal-id">
@@ -252,7 +252,7 @@
         </button>
       </div>
       <!--body-->
-      <form action="{{ route('obra.store', $obra->id) }}" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" id="form-ajax">
+      <form action="{{ route('obra.store') }}" method="POST" accept-charset="UTF-8" enctype="multipart/form-data" id="form-ajax">
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">

@@ -73,8 +73,8 @@
 
                 <div class="col-span-2 p-4">
                   <div class="flex flex-row p-2">
-                      <label id="label_firma_electronica" for="firma_electronica" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
-                      <input type="checkbox" name="firma_electronica" id="firma_electronica" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->firma_electronica)? 'checked' : ''}}>
+                      <label id="label_presentado" for="presentado" class="ml-6 text-sm font-medium text-gray-700 ">Presentado </label>
+                      <input type="checkbox" name="presentado" id="presentado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->presentado)? 'checked' : ''}}>
                   </div>
               </div>
 
@@ -84,19 +84,20 @@
                     <div class="grid grid-cols-2 " >
                     <label for="acuse_prodim" class="text-blue-800 font-xs hover:text-blue-800 cursor-pointer hover:underline border border-blue-800 p-1 rounded-md ">Examinar archivos...</label>
                     <input type="file" name="acuse_prodim" id="acuse_prodim" accept=".pdf" onchange='uploadFile(this)' class="hidden focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border-gray-300">              
+                    @if($prodim->acuse_prodim != null)
                     <a type="button" onclick='window.open("{{$prodim->acuse_prodim}}","_blank", "width=900, height=800");' class="cursor-pointer bg-green-300 border rounded h-8 w-8 ml-2">
+                      
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7  " fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
                     </a>
+                    @endif
                   </div>
                     <span id="file-name" class="block file-box mt-2 text-sm text-green-600"></span>
                     <label id="error_acuse" name="error_acuse" class="hidden block text-base font-normal text-red-500" >Este archivo es requerido</label>
                     
                 </div>
-
-               
             </div>
 
             <div class="flex flex-nowrap w-full p-2" >
@@ -110,8 +111,8 @@
 
                 <div class="flex flex-col justify-center w-full">
                     <div class="flex flex-row  p-2">
-                        <label id="label_validado" for="validado" class="ml-6 text-sm font-medium text-gray-700 ">Aprobado</label>
-                        <input type="checkbox" name="validado" id="validado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->validado == 1)? 'checked' : ''}} >
+                        <label id="label_aprobado" for="aprobado" class="ml-6 text-sm font-medium text-gray-700 ">Aprobado</label>
+                        <input type="checkbox" name="aprobado" id="aprobado" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6" {{ ($prodim->aprobado == 1)? 'checked' : ''}} >
                     </div>
                 </div>
 
@@ -131,9 +132,9 @@
               </div>
             
               <div class="col-span-2 p-2">
-                <label id="label_fecha_validado" for="fecha_validado" class="block text-sm font-medium text-gray-700">Fecha validado *</label>
-                <input type="date" name="fecha_validado" id="fecha_validado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_validado }}" {{($prodim->validado == 1)? '' : 'disabled'}}>
-                <label id="error_fecha_validado" class="hidden block text-md text-red-500">Se require de una fecha</label>
+                <label id="label_fecha_aprobado" for="fecha_aprobado" class="block text-sm font-medium text-gray-700">Fecha aprobado *</label>
+                <input type="date" name="fecha_aprobado" id="fecha_aprobado" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodim->fecha_validado }}" {{($prodim->validado == 1)? '' : 'disabled'}}>
+                <label id="error_fecha_aprobado" class="hidden block text-md text-red-500">Se require de una fecha</label>
               </div>
 
               <div class="col-span-2 p-2">
@@ -168,9 +169,9 @@
     if($('#revisado').prop("checked")){
       $('#fecha_revisado').removeClass("bg-gray-100");
       //$('#fecha_revisado').prop("required",true);
-      $('#validado').removeAttr('disabled');
-      $('#fecha_validado').attr('min', $('#fecha_revisado').val());
-      $('#fecha_validado').attr('max', $('#ejercicio').val()+'-12-31');
+      $('#aprobado').removeAttr('disabled');
+      $('#fecha_aprobado').attr('min', $('#fecha_revisado').val());
+      $('#fecha_aprobado').attr('max', $('#ejercicio').val()+'-12-31');
     }else{
       $('#fecha_revisado').addClass("bg-gray-100");
       $('#validado').prop('disabled',true);
@@ -179,12 +180,12 @@
     porcentaje = $('#porcentaje_prodim').val();
     $('#porcentaje_prodim').val(parseFloat(porcentaje).toFixed(2));
 
-    if($('#validado').prop("checked")){
-      $('#fecha_validado').removeClass("bg-gray-100");
+    if($('#aprobado').prop("checked")){
+      $('#fecha_aprobado').removeClass("bg-gray-100");
       //$('#fecha_validado').prop("required",true);
       $('#convenio').removeAttr('disabled');
     }else{
-      $('#fecha_validado').addClass("bg-gray-100");
+      $('#fecha_aprobado').addClass("bg-gray-100");
       
       $('#convenio').prop('disabled',true);
     }
@@ -210,31 +211,31 @@
           $('#fecha_revisado').removeClass("bg-gray-100");
           $('#fecha_revisado').prop("disabled",false);
           //$('#fecha_revisado').prop("required",true);
-          $('#validado').removeAttr('disabled');
+          $('#aprobado').removeAttr('disabled');
         }else{
           $('#fecha_revisado').addClass("bg-gray-100");
           $('#fecha_revisado').prop("disabled",true);
           //$('#fecha_revisado').prop("required",false);
           $('#fecha_revisado').val("");
-          $('#validado').prop('disabled',true);
+          $('#aprobado').prop('disabled',true);
         }
       });
 
       $('#fecha_revisado').on('change',function(){ //cambia fecha revisado
-        $('#fecha_validado').attr('min', $('#fecha_revisado').val());
+        $('#fecha_aprobado').attr('min', $('#fecha_revisado').val());
       });
 
-      $('#validado').on('click',function(){ //checklist validado
+      $('#aprobado').on('click',function(){ //checklist validado
         if($(this).prop("checked")){
-          $('#fecha_validado').removeClass("bg-gray-100");
-          $('#fecha_validado').prop("disabled",false);
+          $('#fecha_aprobado').removeClass("bg-gray-100");
+          $('#fecha_aprobado').prop("disabled",false);
           //$('#fecha_validado').prop("required",true);
           $('#convenio').removeAttr('disabled');
         }else{
-          $('#fecha_validado').addClass("bg-gray-100");
-          $('#fecha_validado').prop("disabled",true);
+          $('#fecha_aprobado').addClass("bg-gray-100");
+          $('#fecha_aprobado').prop("disabled",true);
           //$('#fecha_validado').prop("required",false);
-          $('#fecha_validado').val("");
+          $('#fecha_aprobado').val("");
           $('#convenio').prop('disabled',true);
         }
       });
@@ -285,17 +286,17 @@
         }else{
           $('#error_fecha_revisado').addClass('hidden');
         }
-        validado = document.getElementById("validado").checked;
-        fecha_validado = document.forms["formulario"]["fecha_validado"].value;
-        if(validado){
-          if(fecha_validado == ''){
-            $('#error_fecha_validado').removeClass('hidden');
+        aprobado = document.getElementById("aprobado").checked;
+        fecha_aprobado = document.forms["formulario"]["fecha_aprobado"].value;
+        if(aprobado){
+          if(fecha_aprobado == ''){
+            $('#error_fecha_aprobado').removeClass('hidden');
             band= false;
           }else{
-            $('#error_fecha_validado').addClass('hidden');
+            $('#error_fecha_aprobado').addClass('hidden');
           }
         }else{
-          $('#error_fecha_validado').addClass('hidden');
+          $('#error_fecha_aprobado').addClass('hidden');
         }
         convenio = document.getElementById("convenio").checked;
         fecha_convenio = document.forms["formulario"]["fecha_convenio"].value;

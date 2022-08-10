@@ -111,11 +111,16 @@
   }
 </style>
 <script>
+function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+
   //Formato de cantidades
     let x = document.querySelectorAll(".myDIV");
     for (let i = 0, len = x.length; i < len; i++) {
-        let num = Number(x[i].innerHTML)
-                  .toLocaleString('es-MX');
+        // let num = Number(x[i].innerHTML)
+        //           .toLocaleString('es-MX');
+        let num = moneda(parseFloat(x[i].innerHTML).toFixed(2));
         x[i].innerHTML = num;
         x[i].classList.add("currSign"); 
     }

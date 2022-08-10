@@ -136,6 +136,7 @@
     }
 
     function consultarSumaComprometido(prodim){
+      sumaComprometido=0;
              if(prodim != ''){var link = '{{ url("/montoTotalCliente")}}/'+prodim; //consulta ajax
                $.ajax({
                         url: link,
@@ -173,11 +174,13 @@
                         $('#error_monto').removeClass('hidden');  
                         band= false;
             }else{
-                        monto = parseFloat(monto.replace(",","")).toFixed(2);
+                        montoNuevo = parseFloat(monto.replace(",","")).toFixed(2);
+                        montoRegistrado = '{{$prodimComprometido->monto}}';
                         monto_disponible = document.forms["formulario"]["monto_disponible"].value;
                         monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
-                        //console.log(monto_disponible)
-                        if(monto>monto_disponible){
+                        
+                        diferencia = parseFloat(montoNuevo)-parseFloat(montoRegistrado);
+                        if(diferencia>monto_disponible){
                           band = false;
                           $('#error_monto_disponible').removeClass('hidden');
                         }else{

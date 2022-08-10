@@ -351,7 +351,7 @@
                     <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
                   </div>
                   <label id="error_porcentaje_prodim" class="hidden block text-md text-red-500">Se require de un porcentaje (max %2)</label>
-                  <label for="" id="proyectado_prodim" class="hidden block text-md"></label>
+                  <label for="" id="proyectado_prodim" class="hidden block text-sm"></label>
                 </div>
               </div>
               
@@ -367,7 +367,7 @@
                     <input type="text" name="porcentaje_gastos" id="porcentaje_gastos" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
                   </div>
                   <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
-                  <label for="" id="proyectado_gastos" class="hidden block text-md"></label>
+                  <label for="" id="proyectado_gastos" class="hidden block text-sm"></label>
                 </div>
               </div>
 
@@ -482,11 +482,15 @@
   }
 </style>
 <script>
+  function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
   //Formato de cantidades
     let x = document.querySelectorAll(".myDIV");
     for (let i = 0, len = x.length; i < len; i++) {
-        let num = Number(x[i].innerHTML)
-                  .toLocaleString('es-MX');
+        // let num = Number(x[i].innerHTML)
+        //           .toLocaleString('es-MX');
+        let num = moneda(parseFloat(x[i].innerHTML).toFixed(2));
         x[i].innerHTML = num;
         x[i].classList.add("currSign"); 
     }
@@ -579,7 +583,7 @@ function validarForm(){ //validacion del formulario
     if(prodim == true){
       porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
       
-      if(porcentaje_prodim == "" || porcentaje_prodim < 0.1 || porcentaje_prodim > 2){
+      if(porcentaje_prodim == "" || parseFloat(porcentaje_prodim) < 0.1 || parseFloat(porcentaje_prodim) > 2){
         $('#error_porcentaje_prodim').removeClass('hidden');  
         band = false;
       }else{
@@ -591,7 +595,7 @@ function validarForm(){ //validacion del formulario
     
     if(gastos_indirectos == true){
       porcentaje_gastos= document.forms["formulario"]["porcentaje_gastos"].value;
-      if(porcentaje_gastos == "" || porcentaje_prodim == 0 || porcentaje_gastos < 0.1 || porcentaje_gastos > 3){
+      if(porcentaje_gastos == "" || parseFloat(porcentaje_prodim) == 0 || parseFloat(porcentaje_gastos) < 0.1 || parseFloat(porcentaje_gastos) > 3){
         $('#error_porcentaje_gastos').removeClass('hidden');  
         band = false;
       }else{
@@ -699,7 +703,7 @@ monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       $('#monto_proyectado').val();
       porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
-      resultado = parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2);
+      resultado = moneda(parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2));
         $('#proyectado_prodim').removeClass('hidden');
         $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
         //resultado = parseFloat(resultado);
@@ -717,7 +721,7 @@ monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
       monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
       
       porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
-      resul = parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2);
+      resul = moneda(parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2));
         $('#proyectado_gastos').removeClass('hidden');
         $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
         // resultado = parseFloat(resultado);
@@ -751,12 +755,18 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
                 //console.log(data)
                 myArray= data;
                 $.each(data,function(key, item) { //llenado del select ejercicio
+                  
                   if(key == 0){
-                    $("#periodo").append('<option value='+item.id_cliente+' selected>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                    var fecha_inicio = item.anio_inicio.split("-");
+                    var fecha_fin = item.anio_fin.split("-");
+                    $("#periodo").append('<option value='+item.id_cliente+' selected>'+fecha_inicio[0]+' - '+fecha_fin[0]+'</option>');
                     $('#cliente_id').val(item.id_cliente);
-                    $('#ejercicio').attr({ min: item.anio_inicio, max: item.anio_fin});
+                    $('#ejercicio').attr({ min: fecha_inicio[0], max: fecha_fin[0]});
                   }else{
-                    $("#periodo").append('<option value='+item.id_cliente+'>'+item.anio_inicio+' - '+item.anio_fin+'</option>');
+                    var fecha_inicio = item.anio_inicio.split("-");
+                    var fecha_fin = item.anio_fin.split("-");
+                    $("#periodo").append('<option value='+item.id_cliente+'>'+fecha_inicio[0]+' - '+fecha_fin[0]+'</option>');
+                    
                   }
                 });
                 
@@ -774,9 +784,11 @@ $('#municipio').on('keyup change', function(){ //ejercicio select
   $('#cliente_id').val($('#periodo').val());
 
   for(index in myArray){
+
     if(parseInt(myArray[index].id_cliente) == parseInt($('#cliente_id').val())){
-      //console.log('hola')
-      $('#ejercicio').attr({ min: myArray[index].anio_inicio, max: myArray[index].anio_fin}); //si el periodo cambia, tambien el rango de ejercicio
+      var fecha_inicio = myArray[index].anio_inicio.split("-");
+      var fecha_fin = myArray[index].anio_fin.split("-");
+      $('#ejercicio').attr({ min: fecha_inicio[0], max: fecha_fin[0]}); //si el periodo cambia, tambien el rango de ejercicio
     }
   }
   
@@ -958,9 +970,7 @@ $(".btn-AddDate").on("click",function() {
   document.getElementById('modal-id' + "-backdrop").classList.toggle("hidden");
     
 });
-function moneda(valor){//formato montos
-      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-    }
+
 
   function toggleModal(modalID, index, cliente, fuente, key){ //modal detalles 
       //console.log(index)

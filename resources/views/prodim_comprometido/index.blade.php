@@ -242,7 +242,7 @@
                           {{-- <input type="text" name="monto_prodim" id="monto_prodim" class="mt-1 bg-gray-100 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" readonly placeholder="0.00"> --}}
                           <label id="error_monto_disponible" class="hidden block text-md text-red-500">La cantidad ingresada supera el monto disponible</label>
                         </div>
-
+                        
                         <div class="col-span-6 ">
                           <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto *</label>
                           <div class="relative ">
@@ -256,9 +256,9 @@
                           {{-- <input type="text" name="monto" id="monto" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"> --}}
                           <label id="error_monto" class="hidden block text-md text-red-500">Se require de un monto</label>
                         </div>
-
+                        
                     </div>
-
+                    <label id="error_monto_ceros" class="hidden block text-md text-red-500">No queda monto disponible para comprometer</label>
                   </div>
                 
           </div>
@@ -491,8 +491,12 @@ $(".form-eliminar").submit(function(e){
                 monto = parseFloat(monto.replace(",","")).toFixed(2);
                 monto_disponible = document.forms["formulario"]["monto_disponible"].value;
                 monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
-                 console.log(parseFloat(monto))
+                 //console.log(parseFloat(monto))
                 // console.log(monto_disponible)
+                if(parseFloat(monto_disponible) == 0){
+                  band = false;
+                  $('#error_monto_ceros').removeClass('hidden');
+                }
                 
                 if(parseFloat(monto)>parseFloat(monto_disponible)){
                   band = false;
@@ -500,7 +504,7 @@ $(".form-eliminar").submit(function(e){
                 }else{
                   $('#error_monto_disponible').addClass('hidden');
                 }
-                $('#error_monto').addClass('hidden'); 
+            $('#error_monto').addClass('hidden'); 
                 
       }
 

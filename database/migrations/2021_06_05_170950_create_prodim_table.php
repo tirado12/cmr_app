@@ -19,8 +19,8 @@ class CreateProdimTable extends Migration
             $table->date('fecha_presentado')->nullable();
             $table->integer('revisado')->nullable();
             $table->date('fecha_revisado')->nullable();
-            $table->integer('aprovado')->nullable();
-            $table->date('fecha_aprovado')->nullable();
+            $table->integer('aprobado')->nullable();
+            $table->date('fecha_aprobado')->nullable();
             $table->integer('convenio')->nullable();
             $table->date('fecha_convenio')->nullable();
             $table->text('acuse_prodim')->nullable();

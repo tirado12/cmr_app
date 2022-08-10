@@ -55,7 +55,7 @@ class GastosIndirectosFuentesController extends Controller
         ->select('cliente_id','nombre','municipio_id')
         ->get(); //tabla fuenteClientes segun existentes           
         $clientes = $fuenteCliente->unique('municipio_id');
-
+       // return $fuenteCliente;
         $indirectos = GastosIndirectos::all();
 
          //return $fuenteCliente;
@@ -103,12 +103,13 @@ class GastosIndirectosFuentesController extends Controller
         $gastoIndirecto = GastosIndirectosFuentes::join('fuentes_clientes','fuente_cliente_id','id_fuente_financ_cliente')
         ->join('gastos_indirectos','indirectos_id','id_indirectos')
         ->join('fuentes_financiamientos','fuente_financiamiento_id','id_fuente_financiamiento')
+        ->join('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
         ->join('clientes','cliente_id','id_cliente')
         ->join('municipios','municipio_id','id_municipio')
-        ->select('fuentes_gastos_indirectos.*','fuentes_clientes.ejercicio','gastos_indirectos.nombre as nombre_indirectos','clientes.anio_inicio','clientes.anio_fin','municipios.nombre','fuentes_financiamientos.nombre_corto')
+        ->select('fuentes_gastos_indirectos.*','anexos_fondo3.*','fuentes_clientes.ejercicio','gastos_indirectos.nombre as nombre_indirectos','clientes.anio_inicio','clientes.anio_fin','municipios.nombre','fuentes_financiamientos.nombre_corto')
         ->where('id_fuentes_gastos_indirectos', $id)
         ->first();
-
+        //return $gastoIndirecto;
         $indirectos = GastosIndirectos::all();
         //return $gastoIndirecto;
        return view('fuentes_gastos.edit',compact('gastoIndirecto','indirectos'));
@@ -157,12 +158,18 @@ class GastosIndirectosFuentesController extends Controller
     }
     public function obtenerEjercicios($municipio){
         $consulta= FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('anexos_fondo3','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
         ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
         ->where('fuente_financiamiento_id', 2)
+        ->where('anexos_fondo3.gastos_indirectos',1)
         ->where('municipio_id',$municipio)
-        ->select('cliente_id','nombre','ejercicio','id_fuente_financ_cliente')
+        ->select('cliente_id','nombre','ejercicio','id_fuente_financ_cliente','anexos_fondo3.*')
         ->get(); //tabla fuenteClientes segun existentes  
         return $consulta;
+    }
+
+    public function montoGastosComprometido($fuente_cliente){
+        return GastosIndirectosFuentes::where('fuente_cliente_id',$fuente_cliente)->sum('monto');
     }
     // ================= Funciones API ====================== //
     public function getDesgloseGI($cliente_id, $anio){
