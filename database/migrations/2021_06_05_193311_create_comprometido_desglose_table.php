@@ -20,7 +20,7 @@ class CreateComprometidoDesgloseTable extends Migration
                     ->references('id_comprometido')
                     ->on('prodim_comprometido');
             $table->string('concepto')->nullable();
-            $table->double('monto')->nullable();
+            $table->double('monto_desglose')->nullable();
             $table->timestamps();
         });
     }

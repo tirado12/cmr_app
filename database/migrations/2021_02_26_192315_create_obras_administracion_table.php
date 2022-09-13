@@ -15,12 +15,13 @@ class CreateObrasAdministracionTable extends Migration
     {
         Schema::create('obras_administracion', function (Blueprint $table) {
             $table->id('id_obra_administracion');
-            $table->integer('inventario_maquinaria_construccion');
-            $table->integer('indentificacion_oficial_trabajadores');
-            $table->integer('reporte_fotografico');
-            $table->integer('notas_bitacora');
-            $table->integer('acta_entrega_municipio');
-            $table->integer('cedula_detallada_facturacion');
+            $table->integer('inventario_maquinaria_construccion')->default('2');
+            $table->integer('plantilla_personal')->default('2');
+            $table->integer('indentificacion_oficial_trabajadores')->default('2');
+            $table->integer('reporte_fotografico')->default('2');
+            $table->integer('notas_bitacora')->default('2');
+            $table->integer('acta_entrega_municipio')->default('2');
+            $table->integer('cedula_detallada_facturacion')->default('2');
             $table->timestamps();
         });
     }

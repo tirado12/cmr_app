@@ -15,10 +15,12 @@ class CreateContratosArrendamientosTable extends Migration
     {
         Schema::create('contratos_arrendamientos', function (Blueprint $table) {
             $table->id('id_contrato_arrendamiento');
+            $table->string('numero_contrato');
             $table->date('fecha_inicio');
             $table->date('fecha_fin');
             $table->date('fecha_contrato');
             $table->double('monto_contratado');
+            $table->integer('agregado_expediente')->nullable();
             $table->unsignedBigInteger('obra_administracion_id');
             $table->foreign('obra_administracion_id')->references('id_obra_administracion')->on('obras_administracion');
             $table->unsignedBigInteger('proveedor_id');

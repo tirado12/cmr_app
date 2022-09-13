@@ -19,9 +19,9 @@ class CreateSispladeTable extends Migration
             $table->foreign('fuentes_clientes_id')
                     ->references('id_fuente_financ_cliente')
                     ->on('fuentes_clientes');
-            $table->integer('capturado')->nullable();
+            $table->integer('capturado')->default('2');
             $table->date('fecha_capturado')->nullable();
-            $table->integer('validado')->nullable();
+            $table->integer('validado')->default('2');
             $table->date('fecha_validado')->nullable();
             $table->timestamps();
         });

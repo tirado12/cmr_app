@@ -13,6 +13,7 @@ class ContratosArrendamiento extends Model
 
     protected $fillable = [
         'id_contrato_arrendamiento',
+        'numero_contrato',
         'fecha_inicio',
         'fecha_fin',
         'fecha_contrato',

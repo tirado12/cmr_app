@@ -17,6 +17,8 @@ class CreateProveedoresTable extends Migration
             $table->id('id_proveedor');
             $table->string('rfc',13);
             $table->text('razon_social');
+            $table->unsignedBigInteger('municipio_id');
+            $table->foreign('municipio_id')->references('id_municipio')->on('municipios');
             $table->timestamps();
         });
     }

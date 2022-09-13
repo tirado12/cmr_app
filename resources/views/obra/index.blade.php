@@ -91,7 +91,7 @@
                         <div class="text-sm leading-5 font-medium text-gray-900">
                         <p>
                         {{$obra_1->groupBy('id_obra')->get("$obra->id_obra")->implode('nombre', ' - ')}}
-</p>
+                        </p>
                         </div>
                       </td>
                       <td>

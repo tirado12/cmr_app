@@ -22,6 +22,8 @@ class CreateContratistasTable extends Migration
             $table->string('telefono',10)->nullable();
             $table->string('correo',255)->nullable();
             $table->string('numero_padron_contratista')->nullable();
+            $table->unsignedBigInteger('municipio_id');
+            $table->foreign('municipio_id')->references('id_municipio')->on('municipios');
             $table->timestamps();
         });
     }

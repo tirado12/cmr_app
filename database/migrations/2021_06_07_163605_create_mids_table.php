@@ -15,15 +15,15 @@ class CreateMidsTable extends Migration
     {
         Schema::create('mids', function (Blueprint $table) {
             $table->id('id_mids');
-            $table->unsignedBiginteger('obras_id')->nullable();
-            $table->foreign('obras_id')
+            $table->unsignedBiginteger('obra_id')->nullable();
+            $table->foreign('obra_id')
                     ->references('id_obra')
                     ->on('obras');
-            $table->integer('planeado')->nullable();
+            $table->integer('planeado')->default('2');
             $table->date('fecha_planeado')->nullable();
-            $table->integer('firmado')->nullable();
+            $table->integer('firmado')->default('2');
             $table->date('fecha_firmado')->nullable();
-            $table->integer('validado')->nullable(); 
+            $table->integer('validado')->default('2');
             $table->date('fecha_validado')->nullable();
             $table->timestamps();
         });

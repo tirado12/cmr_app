@@ -13,7 +13,7 @@ class ParteSocialTecnica extends Model
     protected $table = "parte_social_tecnica";
 
     protected $fillable = [
-        'acta_integreacion_consejo',
+        'acta_integracion_consejo',
         'acta_seleccion_obras',
         'acta_priorizacion_obras',
         'convenio_mezcla',

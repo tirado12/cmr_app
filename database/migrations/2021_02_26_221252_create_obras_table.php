@@ -30,12 +30,13 @@ class CreateObrasTable extends Migration
             $table->date('fecha_actualizacion')->nullable();
             $table->boolean('modalidad_ejecucion')->nullable();
             $table->string('situacion')->nullable();
-            $table->integer('avance_fisico')->nullable();
-            $table->integer('avance_tecnico')->nullable();
-            $table->integer('avance_economico')->nullable();
+            $table->double('avance_fisico')->nullable();
+            $table->double('avance_tecnico')->nullable();
+            $table->double('avance_economico')->nullable();
             $table->integer('anticipo_porcentaje')->nullable();
+            $table->double('anticipo_monto')->nullable();
             $table->date('acta_seleccion_obras')->nullable();
-            $table->date('convenio_colaboracion_intancias')->nullable();
+            $table->date('convenio_colaboracion_instancias')->nullable();
             $table->date('acta_intregracion_comite')->nullable();
             $table->date('convenio_concertacion')->nullable();
             $table->date('acta_aprobacion_autorizacion')->nullable();

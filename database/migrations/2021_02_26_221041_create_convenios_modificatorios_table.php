@@ -14,9 +14,10 @@ class CreateConveniosModificatoriosTable extends Migration
     public function up()
     {
         Schema::create('convenios_modificatorios', function (Blueprint $table) {
+            $table->id('id_convenio_modificatorio');
             $table->string('numero_convenio_modificatorio')->nullable();
             $table->date('fecha_convenio')->nullable();
-            $table->integer('tipo')->nullable();
+            $table->string('tipo')->nullable();
             $table->double('monto_modificado')->nullable();
             $table->date('fecha_fin_modificada')->nullable();
             $table->integer('agregado_expediente')->nullable();

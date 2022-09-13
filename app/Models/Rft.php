@@ -11,4 +11,12 @@ class Rft extends Model
     protected $primaryKey = 'id_rft';
 
     protected $table = "rft";
+
+    protected $fillable = [
+        'obra_id',
+        'primer_trimestre',
+        'segundo_trimestre',
+        'tercer_trimestre',
+        'cuarto_trimestre'
+    ];
 }

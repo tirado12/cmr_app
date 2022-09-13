@@ -15,21 +15,18 @@ class CreateLicitacionInvitacionTable extends Migration
     {
         Schema::create('licitacion_invitacion', function (Blueprint $table) {
             $table->id('id_licitacion_invitacion');
-            $table->integer('padron_contratistas')->nullable(); 
-            $table->integer('invitacion_acuse_recepcion')->nullable(); 
-            $table->integer('aceptacion_invitacion')->nullable(); 
-            $table->integer('bases_licitacion')->nullable();
-            $table->integer('constancia_visita')->nullable();
-            $table->integer('acta_junta_aclaraciones')->nullable();
-            $table->integer('acta_apertura_tecnica')->nullable();
-            $table->integer('dictamen_tecnico')->nullable();
-            $table->integer('acta_apertura_economica')->nullable();
-            $table->integer('dictamen_economico')->nullable();
-            $table->integer('dictamen')->nullable();
-            $table->integer('acta_fallo')->nullable();
-            $table->integer('propuesta_licitantes_economica')->nullable();
-            $table->integer('propuesta_licitantes_tecnica')->nullable();
-            $table->unsignedBigInteger('obra_contrato_id')->nullable();
+            $table->integer('bases_licitacion')->default('2');
+            $table->integer('constancia_visita')->default('2');
+            $table->integer('acta_junta_aclaraciones')->default('2');
+            $table->integer('acta_apertura_tecnica')->default('2');
+            $table->integer('dictamen_tecnico')->default('2');
+            $table->integer('acta_apertura_economica')->default('2');
+            $table->integer('dictamen_economico')->default('2');
+            $table->integer('dictamen')->default('2');
+            $table->integer('acta_fallo')->default('2');
+            $table->integer('propuesta_licitantes_economica')->default('2');
+            $table->integer('propuesta_licitantes_tecnica')->default('2');
+            $table->unsignedBigInteger('obra_contrato_id');
             $table->foreign('obra_contrato_id')->references('id_obra_contrato')->on('obras_contrato');
             $table->timestamps();
         });

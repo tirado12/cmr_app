@@ -20,6 +20,10 @@ class CreateAnexosFondo3Table extends Migration
             $table->date('adendum_priorizacion')->nullable();
             $table->boolean('prodim')->nullable();
             $table->boolean('gastos_indirectos')->nullable();
+            $table->double('porcentaje_prodim')->nullable();
+            $table->double('porcentaje_gastos')->nullable();
+            $table->double('monto_prodim')->nullable();
+            $table->double('monto_gastos')->nullable();
             $table->unsignedBigInteger('fuente_financiamiento_cliente_id')->nullable();
             $table->foreign('fuente_financiamiento_cliente_id')->references('id_fuente_financ_cliente')->on('fuentes_clientes');
             $table->timestamps();

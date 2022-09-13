@@ -7,6 +7,8 @@ use App\Models\FuentesCliente;
 use App\Models\AnexosFondoIII;
 use App\Models\FuentesFinanciamiento;
 use App\Models\Municipio;
+use App\Models\Prodim;
+use App\Models\Sisplade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -47,10 +49,9 @@ class FuenteClienteController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //return $request;
+    {   
         
-
+        
         $request->validate([
             'monto_proyectado' => 'required',
             'monto_comprometido' => 'required',
@@ -66,22 +67,33 @@ class FuenteClienteController extends Controller
             'fuente_financiamiento_id' => $request->fuente_financiamiento_id
         ]);
         if($request->fuente_financiamiento_id == 2){
-            if($request->prodim == null){
-                $request->prodim = false;
-            }else{
-                $request->prodim = true;
+            $request->prodim = $request->prodim == null? false:true;
+            $request->gastos_indirectos = $request->gastos_indirectos == null? false:true;
+
+            $monto_prodim = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_prodim * 0.01);
+            $monto_gastos = str_replace(",", '', $request->monto_proyectado) * ($request->porcentaje_gastos * 0.01);
+
+            if($request->prodim != null){ //agregar a tabla prodim
+                Prodim::create([
+                    'fuente_id' => $fuenteCliente->id_fuente_financ_cliente
+                ]);
+
+                Sisplade::create([
+                    'fuentes_clientes_id' => $fuenteCliente->id_fuente_financ_cliente
+                ]);
             }
-            if($request->gastos_indirectos == null){
-                $request->gastos_indirectos = false;
-            }else{
-                $request->gastos_indirectos = true;
-            }
+            
+
             AnexosFondoIII::create([
                 'acta_integracion_consejo' => $request->acta_integracion_consejo,
                 'acta_priorizacion' => $request->acta_priorizacion,
                 'adendum_priorizacion' => $request->adendum_priorizacion,
                 'prodim' => $request->prodim,
                 'gastos_indirectos' => $request->gastos_indirectos,
+                'porcentaje_prodim' => $request->porcentaje_prodim,
+                'monto_prodim' => round($monto_prodim,2),
+                'porcentaje_gastos' => $request->porcentaje_gastos,
+                'monto_gastos' => round($monto_gastos,2),
                 'fuente_financiamiento_cliente_id' => $fuenteCliente->id_fuente_financ_cliente,
             ]);
         }

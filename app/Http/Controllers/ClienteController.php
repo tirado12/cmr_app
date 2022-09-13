@@ -7,6 +7,7 @@ use App\Models\FuentesCliente;
 use App\Models\Municipio;
 use App\Models\IntegrantesCabildo;
 use App\Models\User;
+use App\Models\Registro;
 use Facade\FlareClient\Http\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -249,6 +250,8 @@ class ClienteController extends Controller
         ->first();
 
         $cabildo = IntegrantesCabildo::where('cliente_id', $id)->get();
+
+        
 
         //return $cabildo;
         

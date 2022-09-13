@@ -94,8 +94,34 @@ Route::resource('sisplade', SispladeController::class)->names('sisplade');
 Route::get('inicio', [GeneralController::class, 'inicio'])->name('inicio');
 Route::get('cliente/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
 Route::get('cliente/ejercicio/{id},{anio}', [GeneralController::class, 'ejercicio'])->name('cliente.ejercicio');
-Route::get('obra/ver/{id}', [ClienteController::class, 'ver'])->name('cliente.ver');
+Route::get('obra/ver/{id}', [GeneralController::class, 'ver'])->name('obra.ver');
+Route::get('obra/create/{id},{anio}', [GeneralController::class, 'create_obra'])->name('create_obra');
+Route::post('obra/store_obra', [GeneralController::class, 'store_obra'])->name('store_obra');
+Route::post('obra/update', [GeneralController::class, 'update_obra'])->name('update_obra');
+Route::get('obra/edit/expediente/{id}', [GeneralController::class, 'edit_expediente'])->name('edit_expediente');
+Route::post('obra/update/expediente', [GeneralController::class, 'update_expediente'])->name('update_expediente');
+Route::post('obra/create/convenio', [GeneralController::class, 'store_convenio_modificatorio'])->name('create_convenio');
+Route::post('obra/update/convenio', [GeneralController::class, 'update_convenio_modificatorio'])->name('update_convenio');
+Route::post('obra/create/estimacion', [GeneralController::class, 'store_estimacion'])->name('create_estimacion');
+Route::get('obra/show/pagos_obra/{id}', [GeneralController::class, 'show_pagos'])->name('show_pagos');
+Route::post('obra/update/observaciones_pagos', [GeneralController::class, 'update_observaciones'])->name('update_observacion');
+Route::post('obra/update/pagos_obra', [GeneralController::class, 'update_pagos'])->name('update_pagos');
+Route::post('obra/update/estimacion', [GeneralController::class, 'update_estimacion'])->name('update_estimacion');
+Route::post('obra/store/lista', [GeneralController::class, 'store_lista'])->name('store_lista');
+Route::post('obra/update/lista', [GeneralController::class, 'update_lista'])->name('update_lista');
+Route::post('obra/store/factura', [GeneralController::class, 'store_factura'])->name('store_factura');
+Route::post('obra/update/factura', [GeneralController::class, 'update_factura'])->name('update_factura');
+Route::post('obra/store/contrato', [GeneralController::class, 'store_contrato'])->name('store_contrato');
+Route::get('obra/show/contrato/{id},{id_obra}', [GeneralController::class, 'show_contrato'])->name('show_contrato');
+Route::post('obra/update/fuenteCliente', [GeneralController::class, 'update_fuente'])->name('update_fuente');
+Route::post('obra/store/prodim', [GeneralController::class, 'store_prodim'])->name('store_prodim');
+Route::post('obra/store/concepto', [GeneralController::class, 'store_concepto'])->name('store_concepto');
+Route::post('obra/update/prodim', [GeneralController::class, 'update_prodim'])->name('update_prodim');
+Route::post('obra/store/gi', [GeneralController::class, 'store_gi'])->name('store_gi');
+Route::post('obra/update/sisplade', [GeneralController::class, 'update_sisplade'])->name('update_sisplade');
+Route::post('obra/update/mids', [GeneralController::class, 'update_mids'])->name('update_mids');
 
+Route::get('/imprimir/{id}', [GeneralController::class, 'imprimir'])->name('print');
 
 
 Route::resource('sisplade', SispladeController::class)->except(['selectSearch'])->names('sisplade');

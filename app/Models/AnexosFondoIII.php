@@ -18,6 +18,10 @@ class AnexosFondoIII extends Model
         'prodim',
         'gastos_indirectos',
         'fuente_financiamiento_cliente_id',
+        'porcentaje_prodim',
+        'monto_prodim',
+        'porcentaje_gastos',
+        'monto_gastos',
     ];
 
 }

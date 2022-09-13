@@ -24690,6 +24690,11 @@ select {
   color: rgba(239, 108, 0, var(--tw-bg-opacity));
 }
 
+.text-blue-cmr1 {
+  --tw-bg-opacity: 1;
+  color: rgba(4, 26, 60, var(--tw-bg-opacity));
+}
+
 .text-blue-50 {
   --tw-text-opacity: 1;
   color: rgba(239, 246, 255, var(--tw-text-opacity));

@@ -15,7 +15,9 @@ class Factura extends Model
         'folio_fiscal',
         'concepto',
         'fecha',
+        'total',
         'proveedor_id',
-        'obra_administracion_id'
+        'obra_administracion_id',
+        'agregado_expediente'
     ];
 }

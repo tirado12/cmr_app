@@ -48,6 +48,7 @@ class SispladeController extends Controller
        $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //$cli = Cliente::has('municipio')->get();
        //return $clientes->find($fuenteClientes[0]->cliente_id)->nombre;
+       
         return view('sisplade.add_sisplade',compact('clientes','fuenteClientes','fuentes'));
     }
 
@@ -153,6 +154,8 @@ class SispladeController extends Controller
             $query->where('ejercicio', $ejercicio)->where('cliente_id',$cliente);
         })
         ->get();        
+
+        return fuentesClientes::with("fuentes");
         return response()->json($fuenteCli);
     }
 

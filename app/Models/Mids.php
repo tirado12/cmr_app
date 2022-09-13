@@ -11,4 +11,14 @@ class Mids extends Model
     protected $primaryKey = 'id_mids';
     
     protected $table = "mids";
+
+    protected $fillable = [
+        'obra_id',
+        'planeado',
+        'fecha_planeado',
+        'firmado',
+        'fecha_firmado',
+        'validado',
+        'fecha_validado'
+    ];
 }

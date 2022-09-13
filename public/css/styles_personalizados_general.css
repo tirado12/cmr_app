@@ -1,0 +1,95 @@
+.table-modificada th, .table-simple th {
+	padding-top: 0.5rem!important;
+	padding-bottom: 0.5rem!important;
+}
+
+.table-modificada th, .table-simple th {
+	line-height: 1;
+    font-size: 0.875rem;
+    font-weight: 700;
+    --tw-text-opacity: 1;
+    color: rgba(17, 24, 39, var(--tw-text-opacity));
+}
+
+.table-simple th {
+    background-color: #edf2f7;
+    border-bottom-width: 2px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: #d2d6dc;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.table-simple td, .table-simple-second td {
+    font-size: 0.875rem;
+    font-weight: 500;
+    --tw-text-opacity: 1;
+    color: rgba(17, 24, 39, var(--tw-text-opacity));
+    line-height: 1;
+    border: solid 1px #d2d6dc;
+    padding:0.25rem 0.5rem;
+}
+
+.btn_detalles:focus {
+    outline: 1px dotted;
+    outline: 5px auto transparent;
+}
+
+.td-titulo {
+    border-bottom-color: transparent!important;
+}
+
+.table-simple-second th {
+    background-color: #edf3f7;
+    border-bottom-width: 2px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: #d2d6dc;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+.table-simple-second td {
+    font-size: 0.875rem;
+    font-weight: 500;
+    --tw-text-opacity: 1;
+    color: rgba(17, 24, 39, var(--tw-text-opacity));
+    line-height: 1;
+    border: solid 1px #d2d6dc;
+    padding:0.25rem 0.5rem;
+}
+
+
+.up-simbolo, .down-simbolo {
+    height: 20px;
+}
+
+.icon-acordeon {
+	right: 0px;
+	position: absolute;
+	width: 10%;
+	margin-top: -22px;
+}
+
+.icon-acordeon-1 {
+	right: 0px;
+	position: absolute;
+	width: 20%;
+	margin-top: -22px;
+}
+
+.p-2-i {
+    padding: 0.5rem!important;
+}
+
+.barra-porcentaje {
+    width: 80%;
+    height: 1.25rem;
+}
+
+.div-barra-porc {
+    min-height: 3rem;
+}

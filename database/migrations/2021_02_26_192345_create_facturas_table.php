@@ -20,6 +20,7 @@ class CreateFacturasTable extends Migration
             $table->date('fecha');
             $table->double('total');
             $table->unsignedBigInteger('proveedor_id');
+            $table->integer('agregado_expediente')->nullable();
             $table->foreign('proveedor_id')->references('id_proveedor')->on('proveedores');
             $table->unsignedBigInteger('obra_administracion_id');
             $table->foreign('obra_administracion_id')->references('id_obra_administracion')->on('obras_administracion');

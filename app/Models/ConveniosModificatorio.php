@@ -10,6 +10,7 @@ class ConveniosModificatorio extends Model
     use HasFactory;
     
     protected $table = "convenios_modificatorios";
+    protected $primaryKey = 'id_convenio_modificatorio';
 
     protected $fillable = [
         'numero_convenio_modificatorio',
@@ -17,6 +18,7 @@ class ConveniosModificatorio extends Model
         'tipo',
         'monto_modificado',
         'fecha_fin_modificada',
-        'obra_contrato_id'
+        'obra_contrato_id',
+        'agregado_expediente'
     ];
 }

@@ -1,0 +1,275 @@
+.up-simbolo, .down-simbolo {
+    height: 20px;
+}
+
+.select2-selection {
+    height: auto!important;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    --tw-border-opacity: 1;
+    border: 1px solid rgba(209, 213, 219, var(--tw-border-opacity))!important;
+    border-radius: 0.375rem!important;
+}
+.select2-selection .select2-selection__rendered{
+    color: #000!important;
+    height: auto!important;
+    line-height: 1.5rem!important;
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+    font-size: 0.875rem;
+}
+
+.select2-results__option {
+    color: #000!important;
+    font-size: 0.875rem;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    --tw-bg-opacity: 1;
+    background-color: rgba(191, 219, 254, var(--tw-bg-opacity))!important;
+
+}
+
+.select2-selection__arrow {
+    margin-top: 0.5rem;
+}
+
+.js-example-basic-single {
+    width: 100%!important;
+}
+
+/*Pestañas nueva */
+/*----- Tabs -----*/
+.tabs {
+	width:100%;
+	display:inline-block;
+}
+
+/*----- Tab Links -----*/
+/* Clearfix */
+	.tab-links:after {
+	display:block;
+	clear:both;
+	content:'';
+}
+
+.tab-links li {
+	margin:0px 5px;
+	float:left;
+	list-style:none;
+}
+
+.tab-links a {
+	padding:9px 15px;
+	display:inline-block;
+	border-radius:3px 3px 0px 0px;
+	background:#7FB5DA;
+	font-size:16px;
+	font-weight:600;
+	color:#4c4c4c;
+	transition:all linear 0.15s;
+}
+
+.tab-links a:hover {
+	background:#a7cce5;
+	text-decoration:none;
+}
+
+li.active a, li.active a:hover {
+	background:#fff;
+	color:#4c4c4c;
+}
+
+/*----- Content of Tabs -----*/
+.tab-content {
+	padding:15px;
+	border-radius:3px;
+	box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+	background:#fff;
+}
+
+.tab {
+	display:none;
+}
+
+.tab.active {
+	display:block;
+}
+/*Fin pestañas*/
+
+
+
+.tab_container {
+	border: 1px solid #c5c5c5;
+	/*border-top: none;*/
+	overflow: hidden;
+	clear: both;
+	/*float: left; */
+	width: 100%;
+	background: #fff;
+}
+.tab_content {
+	padding: 20px;
+}
+
+ul.tabs {
+	margin: 0;
+	padding: 0;
+	float: left;
+	list-style: none;
+	height: 32px; /*--Set height of tabs--*/
+	/*border-bottom: 1px solid #dddddd;*/
+	width: 750px;
+}
+ul.tabs li a {
+	float: left;
+	height: 31px;
+	line-height: 31px;
+	border: 1px solid #c5c5c5;
+	margin: 1px .2em 0 0;
+	overflow: hidden;
+	position: relative;
+	background: #f6f6f6;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	text-decoration: none;
+	display: block;
+	padding: 0 20px;
+	outline: none;color: #000;
+}
+
+ul.tabs li a:hover {
+	background: #ccc;
+}
+html ul.tabs li.active a, html ul.tabs li.active a:hover  {
+	background: #007fff;
+	border: 1px solid #003eff;
+	color: #fff;
+}
+
+.icon-acordeon {
+	right: 0px;
+	position: absolute;
+	width: 10%;
+	margin-top: -22px;
+}
+
+.icon-acordeon-1 {
+	right: 0px;
+	position: absolute;
+	width: 20%;
+	margin-top: -22px;
+}
+
+.dos-lineas{
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.line-height-1 {
+    line-height: 1;
+}
+
+.img-google {
+    height: 50px;
+}
+
+.div-input {
+    width: 200px;
+}
+
+.th-modificado {
+    font-weight: 600!important;
+    font-size: 1rem;
+}
+
+.td-modificado {
+    font-size: 1rem;
+}
+
+#div-tabs::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+#div-tabs::-webkit-scrollbar:vertical {
+    width:0px;
+}
+
+#div-tabs::-webkit-scrollbar-button:increment,#div-tabs::-webkit-scrollbar-button {
+    display: none;
+} 
+
+#div-tabs::-webkit-scrollbar:horizontal {
+    height: 0px;
+}
+
+#div-tabs::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border: none;
+}
+
+#div-tabs::-webkit-scrollbar-track {
+    border-radius: 0px;  
+}
+
+
+
+#flecha-scroll-left{
+	position: absolute;
+	z-index: 1000;
+    left: 0;
+    opacity: .6;
+    background-color: red;
+    width: 20px;
+    min-height: 32px;
+}
+
+#flecha-scroll-right{
+	position: absolute;
+	z-index: 1000;
+    right: 0;
+    opacity: .6;
+    background-color: red;
+    width: 20px;
+    min-height: 32px;
+}
+
+#flecha-scroll:hover{
+    cursor: pointer;
+}
+
+/*@media (min-width: 851px) {
+	#flecha-scroll-left, #flecha-scroll-right{
+		display: none;
+	}
+}
+
+@media (max-width: 850px) {
+	#div-tabs {
+		margin-left: 20px!important;
+		margin-right: 20px!important;
+	}
+}*/
+
+.col-nombre {
+	width: 80%;
+}
+
+  .col-estado {
+	  width: 20%;
+  }
+
+  .col-estado div {
+	  height: 25px;
+  }
+
+  
+
+  	.div-estado-proceso div img{
+		height: 25px;
+	}

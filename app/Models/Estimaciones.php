@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Estimacione extends Model
+class Estimaciones extends Model
 {
     use HasFactory;
     
     protected $table = "estimaciones";
+    protected $primaryKey = 'id_estimacion';
 
     protected $fillable = [
         'numero_estimacion',
@@ -18,10 +19,12 @@ class Estimacione extends Model
         'mano_obra',
         'cinco_millar',
         'dos_millar',
+        'amortizacion_anticipo',
         'fecha_inicio',
         'fecha_final',
         'fecha_estimacion',
         'folio_factura',
+        'finiquito',
         'caratula_estimacion',
         'presupuesto_estimacion',
         'cuerpo_estimacion',
@@ -30,6 +33,6 @@ class Estimacione extends Model
         'estado_cuenta_estimacion',
         'croquis_ilustrativo_estimacion',
         'reporte_fotografico_estimacion',
-        'obra_contrato_id'
+        'desglose_pagos_id'
     ];
 }

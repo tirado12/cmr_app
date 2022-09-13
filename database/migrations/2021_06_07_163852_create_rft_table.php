@@ -15,14 +15,14 @@ class CreateRftTable extends Migration
     {
         Schema::create('rft', function (Blueprint $table) {
             $table->id('id_rft');
-            $table->unsignedBiginteger('obras_id')->nullable();
-            $table->foreign('obras_id')
+            $table->unsignedBiginteger('obra_id')->nullable();
+            $table->foreign('obra_id')
                     ->references('id_obra')
                     ->on('obras');
-            $table->integer('primer_trimestre')->nullable();
-            $table->integer('segundo_trimestre')->nullable();
-            $table->integer('tercer_trimestre')->nullable();
-            $table->integer('cuarto_trimestre')->nullable(); 
+            $table->integer('primer_trimestre')->default('0');
+            $table->integer('segundo_trimestre')->default('0');
+            $table->integer('tercer_trimestre')->default('0');
+            $table->integer('cuarto_trimestre')->default('0');
             $table->timestamps();
         });
     }
