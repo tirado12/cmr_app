@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\FuentesCliente;
 use App\Models\Municipio;
-use App\Models\IntegrantesCabildo;
 use App\Models\User;
 use App\Models\Registro;
 use Facade\FlareClient\Http\Client;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ClienteController extends Controller
 {
@@ -21,7 +24,6 @@ class ClienteController extends Controller
      */
     public function index()
     {
-
         $clientes = Cliente::with('municipio')->get();
         
         $municipios = Municipio::all();
@@ -34,7 +36,7 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
         //
     }
@@ -47,42 +49,68 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        //obtenemos el campo file definido en el formulario
-        if (!empty($request->file('file'))) {
-            $file = $request->file('file');
-            //Move Uploaded File
-            $destinationPath = './uploads';
-            $file->move($destinationPath, $file->getClientOriginalName());
-            $destinationPath = 'http://127.0.0.1:8000/uploads/' . $file->getClientOriginalName();
-            $request['logo'] = $destinationPath;
-        }
+        //validacion de fechas (periodo)   
+        $existefecha = Cliente::where(function ($q) use ($request) {
+            $q->where('anio_inicio', '>=', $request->anio_inicio) //fecha ini es mayor igual a inicio que ingresa
+                ->where('anio_inicio', '<=', $request->anio_fin)//fecha ini es menor igual a fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->orWhere(function ($q) use ($request) {
+            $q->where('anio_fin', '>=', $request->anio_inicio) //fecha fin es mayor igual a inicio que ingresa
+                ->where('anio_fin', '<=', $request->anio_fin)//fecha fin es menor igual a fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->orWhere(function ($q) use ($request) {
+            $q->where('anio_inicio', '<', $request->anio_inicio) //fecha ini es menor que inicio que ingresa
+                ->where('anio_fin', '>', $request->anio_fin)//fecha fin es mayor que fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->get();
         
-        
-        $valido= $request->validate([
-            'user' => 'required',
-            'email' => 'required',
-            'anio_inicio' => 'required',
-            'anio_fin' => 'required',
-            'logo' => 'required',
-            'municipio_id' => 'required',
-            'password' => ['required', 'min:8', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/', 'confirmed']
-        ]);
-        
-        
-        Cliente::create([
-            'user' => $request->user,
-            'email' => $request->email,
-            'anio_inicio' => $request->anio_inicio,
-            'anio_fin' => $request->anio_fin,
-            'logo' => $request->logo,
-            'municipio_id' => $request->municipio_id,
-            'password' => bcrypt($request->password)
-        ]);
-       // return $valido;
-        if($valido==false){
-            return redirect()->route('clientes.index')->withInput();
+        $error = '';
+        $valido= '';
+        if(count($existefecha) == 0){
+            $cliente = new Cliente;
+            $cliente->user = $request->user;
+            $cliente->email = $request->email;
+            $cliente->anio_inicio = $request->anio_inicio;
+            $cliente->anio_fin = $request->anio_fin;
+            $cliente->municipio_id = $request->municipio_id;
+            $cliente->password = bcrypt($request->password);
+            $valido= $request->validate([
+             'user' => 'required',
+             'email' => 'required',
+             'anio_inicio' => 'required',
+             'anio_fin' => 'required',
+             'municipio_id' => 'required',
+             'password' => ['required', 'min:8', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!$#%]).*$/', 'confirmed']
+             ]);
+             $cliente->save();
+             $file = new Filesystem();
+            if( $file->isDirectory(public_path("municipios\\").$request->municipio_id.'\\'.$cliente->id_cliente) ){
+
+            }else{
+                $file->makeDirectory(public_path("municipios\\").$request->municipio_id.'\\'.$cliente->id_cliente,0777, true); //creamos las carpetas con ruta dinamica
+            }
+            if (!empty($request->file('file'))) {
+                $file = $request->file('file');
+                //Move Uploaded File
+                $destinationPath = public_path("municipios\\").$request->municipio_id.'\\'.$cliente->id_cliente;
+                $file->move($destinationPath, $file->getClientOriginalName());
+                $destinationPath = "municipios\\".$request->municipio_id.'\\'.$cliente->id_cliente.'\\'. $file->getClientOriginalName();
+                $logo = $destinationPath;
+            }
+            $cliente->logo = $logo;           
+            $cliente->url= '\\'.$request->municipio_id.'\\'.$cliente->id_cliente;
+            $cliente->update();
         }else{
-            return redirect()->route('clientes.index');
+            $error = 'repeat';
+        }
+       
+        if($valido==false || $error == 'repeat'){
+            return redirect()->route('clientes.index')->withInput()->with('error', $error);
+        }else{
+            return redirect()->route('clientes.index')->with('error', $error);
         }
     }
     /**
@@ -93,7 +121,7 @@ class ClienteController extends Controller
      */
     public function show($id)
     {
-        return view('cliente.ver');
+        //return view('cliente.ver');
     }
     /**
      * Show the form for editing the specified resource.
@@ -116,47 +144,75 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        if (empty($request['password'])) {
-            $request['password'] = $cliente->password;
-        } else {
-            $request['password'] = bcrypt($request['password']);
-        }
-        //obtenemos el campo file definido en el formulario
-        if (!empty($request->file('file'))) {
-            $file = $request->file('file');
-            //Move Uploaded File
-            $destinationPath = './uploads';
-            $file->move($destinationPath, $file->getClientOriginalName());
-            $destinationPath = 'http://127.0.0.1:8000/uploads/' . $file->getClientOriginalName();
-            $request['logo'] = $destinationPath;
+        
+        // $anioIni = Cliente::where('id_cliente', '!=', $cliente->id_cliente)->where('municipio_id',$request->municipio_id)->whereYear('anio_inicio',$request->anio_inicio)->first();
+        // $anioFin = Cliente::where('id_cliente', '!=', $cliente->id_cliente)->where('municipio_id',$request->municipio_id)->whereYear('anio_fin',$request->anio_fin)->first();
+        // $finInicio = Cliente::where('id_cliente', '!=', $cliente->id_cliente)->where('municipio_id',$request->municipio_id)->whereYear('anio_inicio',$request->anio_fin)->first();
+        // $inicioFin = Cliente::where('id_cliente', '!=', $cliente->id_cliente)->where('municipio_id',$request->municipio_id)->whereYear('anio_fin', $request->anio_inicio)->first();
+        $existefecha = Cliente::where(function ($q) use ($request) {
+            $q->where('anio_inicio', '>=', $request->anio_inicio) //fecha ini es mayor igual a inicio que ingresa
+                ->where('anio_inicio', '<=', $request->anio_fin)//fecha ini es menor igual a fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->orWhere(function ($q) use ($request) {
+            $q->where('anio_fin', '>=', $request->anio_inicio) //fecha fin es mayor igual a inicio que ingresa
+                ->where('anio_fin', '<=', $request->anio_fin)//fecha fin es menor igual a fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->orWhere(function ($q) use ($request) {
+            $q->where('anio_inicio', '<', $request->anio_inicio) //fecha ini es menor que inicio que ingresa
+                ->where('anio_fin', '>', $request->anio_fin)//fecha fin es mayor que fin que ingresa
+                ->where('municipio_id', $request->municipio_id); 
+        })
+        ->get();
+
+        $error='';
+        if(count($existefecha) == 0){
+            if (empty($request['password'])) {
+                $request['password'] = $cliente->password;
+            } else {
+                $request['password'] = bcrypt($request['password']);
+            }
+            $request->validate([
+                'user' => 'required',
+                'email' => 'required|email',
+                'anio_inicio' => 'required',
+                'anio_fin' => 'required',
+                
+                'municipio_id' => 'required',
+                'password' => 'required',
+            ]);
+
+            $cliente->user = $request['user'];
+            $cliente->email = $request['email'];
+            $cliente->anio_inicio = $request['anio_inicio'];
+            $cliente->anio_fin = $request['anio_fin'];
+            $cliente->municipio_id = $request['municipio_id'];
+            $cliente->password = $request['password'];
+
+            if (!empty($request->file('file'))) {
+                $file = $request->file('file');
+                //Move Uploaded File
+                File::delete(public_path($cliente->logo));
+                $destinationPath = public_path("municipios\\").$request->municipio_id.'\\'.$cliente->id_cliente;
+                $file->move($destinationPath, $file->getClientOriginalName());
+                $destinationPath = "municipios\\".$request->municipio_id.'\\'.$cliente->id_cliente.'\\'. $file->getClientOriginalName();
+                $logo = $destinationPath;
+            }else{
+                $logo = $cliente->logo;
+            }
+            $cliente->logo = $logo;
+            $cliente->update();
+
         }else{
-            $request['logo'] = $cliente->logo;
+            $error = 'repeat';
         }
-        
-        $request->validate([
-            'user' => 'required',
-            'email' => 'required|email',
-            'anio_inicio' => 'required',
-            'anio_fin' => 'required',
-            'logo' => 'required',
-            'municipio_id' => 'required',
-            'password' => 'required',
-        ]);
-
-        $cliente->user = $request['user'];
-        $cliente->email = $request['email'];
-        $cliente->anio_inicio = $request['anio_inicio'];
-        $cliente->anio_fin = $request['anio_fin'];
-        $cliente->logo = $request['logo'];
-        $cliente->municipio_id = $request['municipio_id'];
-        $cliente->password = $request['password'];
-
-        $cliente->update();
-        
-        if(auth()->user()->getRoleNames()[0] == 'Administrador')
+       
+        if($error == 'repeat'){
+            return redirect()->route('clientes.index')->with('error', $error);
+        }else{
             return redirect()->route('clientes.index');
-        else
-            return redirect()->route('cliente.ver', ['id' => $cliente->id_cliente]);
+        }
 
     }
 
@@ -180,7 +236,6 @@ class ClienteController extends Controller
     public function userCliente(Request $request)
     {
         $cliente = Cliente::where('user', $request->user)->count();  
-        
         return $cliente;
     }
 
@@ -188,6 +243,13 @@ class ClienteController extends Controller
     {
         $cliente = Cliente::where('email', $request->email)->count();  
         return $cliente;
+    }
+
+    //============================= funciones ajax ============================
+
+    public function clienteXejercicio($id_municipio){
+        $disponibles = Cliente::where('municipio_id',$id_municipio)->select('id_cliente','anio_inicio','anio_fin','municipio_id')->get();
+        return $disponibles;
     }
 
 

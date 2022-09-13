@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\GastosIndirectos;
+use App\Models\GastosIndirectosFuentes;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class GastosIndirectosController extends Controller
 {
@@ -37,8 +39,8 @@ class GastosIndirectosController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'clave' => 'required',
+        $valido= $request->validate([
+            'clave' => 'required|unique:gastos_indirectos,clave',
             'nombre' => 'required',            
         ]);
         GastosIndirectos::create([
@@ -46,7 +48,12 @@ class GastosIndirectosController extends Controller
             'nombre' => $request->nombre  
         ]);
 
-        return redirect()->route('gastosIndirectos.index');
+        if($valido==false){
+            return redirect()->route('gastosIndirectos.index')->withInput();
+        }else{
+            return redirect()->route('gastosIndirectos.index');
+        }
+        
     }
     /**
      * Display the specified resource.
@@ -79,7 +86,7 @@ class GastosIndirectosController extends Controller
     public function update(Request $request, GastosIndirectos $gastosIndirecto)
     {
         $request->validate([
-            'clave' => 'required',
+            'clave' => ['required',Rule::unique('gastos_indirectos')->ignore($gastosIndirecto)],
             'nombre' => 'required',
         ]);
         $gastosIndirecto->update($request->all());
@@ -94,7 +101,12 @@ class GastosIndirectosController extends Controller
      */
     public function destroy(GastosIndirectos $gastosIndirecto)
     {
-        $gastosIndirecto->delete();
-        return redirect()->route('gastosIndirectos.index')->with('eliminar','ok');
+        $existeEnFuentesGastos= GastosIndirectosFuentes::where('indirectos_id',$gastosIndirecto->id_indirectos)->exists();
+        if($existeEnFuentesGastos == null){ //si no hay existe
+            $gastosIndirecto->delete();
+             return redirect()->route('gastosIndirectos.index')->with('eliminar','ok');
+        }else{
+             return redirect()->route('gastosIndirectos.index')->with('eliminar','error');
+        }
     }
 }

@@ -13,22 +13,47 @@
   <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
   </svg>
-<h1 class="text-xl font-bold ml-2">Lista de Fuentes de financiamiento</h1>
+<h1 class="text-xl font-bold ml-2">Lista de fuentes de financiamiento - Clientes</h1>
 </div>
-@php
-  $aux = 1;
-@endphp
+
 
 <div class="flex flex-col mt-6">
   <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-  <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal', {{$fuenteClientes}})">
-  Agregar
+  <button class="bg-orange-800 mb-4 text-white active:bg-orange-800 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal')">
+    Agregar
   </button>
   
       <!-- div de tabla -->
   </div>
 </div>
-<!-- fin tabla tailwind, inicio data table -->
+
+
+
+@if ($errors->any())
+        <div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+          <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+            <span class="text-yellow-500">
+              <svg fill="currentColor"
+                viewBox="0 0 20 20"
+                class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+              </svg>
+            </span>
+          </div>
+          <div class="alert-content ml-4">
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+          </div>
+        </div>
+    @endif
+<!-- inicio data table -->
 <div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
 
 <table id="example" class="table table-striped bg-white" style="width:100%;">
@@ -37,6 +62,7 @@
           <th>Municipio</th>
           <th>Monto proyectado</th>
           <th>Monto comprometido</th>
+          
           <th>Ejercicio</th>
           <th>Fuente de financiamiento</th>
           <th class="flex justify-center">Acción</th>
@@ -48,22 +74,23 @@
       <tr>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
-              {{  $cliente->find($index->cliente_id)->nombre }}
+              {{ $nombre_cliente= $listaClientes->find($index->cliente_id)->nombre }}
             </div>
           
           </td>
          <td>
             <div class="text-sm leading-5 font-medium text-gray-900 myDIV">
-              {{ $index->monto_proyectado}}
+              {{ $index->monto_proyectado }}
             </div>
             
           </td>
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900 myDIV">
-              {{$index->monto_comprometido}}
+              {{$index->monto_comprometido }}
             </div>
             
           </td>
+          
           <td>
             <div class="text-sm leading-5 font-medium text-gray-900">
                 {{$index->ejercicio}}
@@ -71,37 +98,38 @@
             
           </td>
           <td>
-            <div class="text-sm leading-5 font-medium text-gray-900">
+            <div class="grid text-sm leading-5 font-medium text-gray-900 justify-items-center">
                 {{$fuentes->find($index->fuente_financiamiento_id)->nombre_corto}}
             </div>
             
           </td>
           <td>
             <div class="flex justify-center">
+              
             <form action="{{ route('fuenteCliente.destroy', $index->id_fuente_financ_cliente) }}" method="POST" class="form-eliminar" >
               <div>
-              <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Editar</a> 
+              <a type="button"  href="{{ route('fuenteCliente.edit', $index->id_fuente_financ_cliente)}}" class="bg-white text-sm p-1 text-blue-500 font-normal text-ms rounded rounded-lg">Editar</a> 
+              <!--<button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
+                Detalles
+              </button> -->
+              @if($index->fuente_financiamiento_id == 2)
+              
               <button class="bg-transparent text-blue-500 active:bg-transparent font-normal  text-sm p-2  rounded outline-none focus:outline-none  ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id', {{$index}}, {{$cliente}}, '{{ $fuentes->find($index->fuente_financiamiento_id)->nombre_corto }}', {{$key}})">
                 Detalles
               </button>
+              @endif
               @csrf
               @method('DELETE')
-              <button type="submit" class="bg-white text-red-500 p-2 rounded rounded-lg">Eliminar</button>
+                <button type="submit" class="bg-white p-1 text-sm text-red-500 rounded rounded-lg">Eliminar</button>
               </div>
               
               </form>
             </div>
           </td>
       </tr>
+      
       @endforeach
   </tbody>
-  <!--<tfoot>
-      <tr>
-        <th>Usuario</th>
-        <th>Rol</th>
-        <th></th>
-      </tr>
-  </tfoot>-->
 </table>
 
 </div>
@@ -114,7 +142,7 @@
       <!--header-->
       <div class="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
         <h4 class="text-xl font-semibold">
-          Fuente de financiamiento
+          Fuente de financiamiento - Clientes
         </h4>
         <button class="p-1 ml-auto bg-transparent border-0 text-red-500 float-right text-3xl leading-none font-semibold outline-none focus:outline-none" onclick="toggleModal_1('modal-id')">
           <span class="bg-transparent text-red-500 h-6 w-6 text-2xl block outline-none focus:outline-none">
@@ -140,19 +168,6 @@
               <label id="ver_monto_comprometido" class="text-base font-bold text-gray-900 myDIV"></label>
             </div>
             <div class="col-span-8">
-              <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
-              <label id="ver_acta_integracion_consejo" class="text-base font-bold text-gray-900"></label>
-            </div>
-
-            <div class="col-span-8">
-              <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta priorización: </label>
-              <label id="ver_acta_priorizacion" class="text-base font-bold text-gray-900"></label>
-            </div>
-            <div class="col-span-8">
-                <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
-                <label id="ver_adendum_priorizacion" class="text-base font-bold text-gray-900"></label>
-              </div>
-            <div class="col-span-8">
                 <label for="ver_ejercicio" class="text-base font-medium text-gray-700">Ejercicio: </label>
                 <label id="ver_ejercicio" class="text-base font-bold text-gray-900"></label>
               </div>
@@ -161,12 +176,40 @@
                 <label id="ver_fuente_financiamiento" class="text-base font-bold text-gray-900"></label>
               </div>
               <div class="col-span-8">
-                <label for="prodim" class="text-base font-medium text-gray-700">Prodim: </label>
-                <span id="ver_prodim" class=" "></span>
+                <label for="ver_prodim" class="text-base font-medium text-gray-700">PRODIMDF: </label>
+                <span id="ver_prodim" class=""></span>
               </div>
               <div class="col-span-8">
-                <label for="gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
-                <span id="ver_gastos_indirectos" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">Pendiente</span>
+                <label for="ver_porcentaje_prodim" class=" text-base font-medium text-gray-700">Porcentaje PRODIMDF: </label>
+                <label id="ver_porcentaje_prodim" class="text-base font-bold text-gray-900 "></label>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_monto_prodim" class="text-base font-medium text-gray-700">Monto PRODIMDF: </label>
+                <span id="ver_monto_prodim" class=" text-base font-bold text-gray-900 myDIV"></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_gastos_indirectos" class="text-base font-medium text-gray-700">Gastos indirectos: </label>
+                <span id="ver_gastos_indirectos" class=""></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_porcentaje_gastos" class=" text-base font-medium text-gray-700">Porcentaje Gastos Indirectos: </label>
+                <label id="ver_porcentaje_gastos" class="text-base font-bold text-gray-900 "></label>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_monto_gastos" class="text-base font-medium text-gray-700">Monto Gastos Indirectos: </label>
+                <span id="ver_monto_gastos" class=" text-base font-bold text-gray-900 myDIV"></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_acta_integracion_consejo" class="text-base font-medium text-gray-700">Acta de integración: </label>
+                <span id="ver_acta_integracion_consejo" class="text-base font-bold text-gray-900"></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_acta_priorizacion" class="text-base font-medium text-gray-700">Acta de priorización: </label>
+                <span id="ver_acta_priorizacion" class="text-base font-bold text-gray-900"></span>
+              </div>
+              <div class="col-span-8">
+                <label for="ver_adendum_priorizacion" class="text-base font-medium text-gray-700">Adendum priorización: </label>
+                <span id="ver_adendum_priorizacion" class="text-base font-bold text-gray-900"></span>
               </div>
              
           </div>
@@ -194,26 +237,61 @@
         </button>
       </div>
       <!--body-->
-      <form action="{{ route('fuenteCliente.store') }}" method="POST" id="formulario" name="formulario">
+      <form action="{{ route('fuenteCliente.store') }}" onsubmit="return validarForm();" method="POST" id="formulario" name="formulario">
         @csrf
         @method('POST')
       <div class="relative p-6 flex-auto">
+        
+        <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-blue-900">
+            <span class="text-xl inline-block mr-5 align-middle">
+              <i class="fas fa-bell"></i>
+            </span>
+            <span class="inline-block align-middle mr-8">
+              <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por periodo antes 
+              <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
+            </span>
+            <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
+              <span>×</span>
+            </button>
+        </div>
+
           <div class="grid grid-cols-8 gap-4">
             <div class="col-span-4 ">
-              <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
-              <select id="cliente_id" name="cliente_id" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+              <label  id="label_municipio" for="municipio" class="block text-sm font-medium text-gray-700">Cliente *</label>
+              <select id="municipio" name="municipio" onchange="validarCliente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
                 <option value=""> Elija una opción </option>
                 @foreach($cliente as $index)
-                <option value="{{ $index->id_cliente }}"> {{ $index->nombre }} </option>
+                <option value="{{ $index->id_municipio }}"> {{ $index->nombre }} </option>
                 @endforeach
               </select>
-              <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+              <label id="error_municipio" name="error_municipio" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
             </div>
+            <div class="col-span-4 ">
+              <label  id="label_periodo" for="periodo" class="block text-sm font-medium text-gray-700">Periodo *</label>
+              <select id="periodo" name="periodo"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value=""> Elija un cliente primero</option>
+                
+              </select>
+              <label id="error_periodo" name="error_periodo" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+            </div>
+
+            <div class="col-span-4 mb-4">
+              <label for="fuente_financiamiento_id" id="label_fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
+              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" onchange="validarFuente()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                <option value="" selected> Elija una opción </option>
+                @foreach($fuentes as $fuente)
+                <option value="{{ $fuente->id_fuente_financiamiento }}"> {{ $fuente->nombre_corto }} </option>
+                @endforeach
+              </select>
+              <input type="text" id="cliente_id" name="cliente_id" class="hidden">
+              <label id="error_fuente_financiamiento_id" name="error_fuente_financiamiento_id" class="hidden text-base font-normal text-red-500" >Por favor elija una opción</label>  
+            </div> 
+
             <div class="col-span-4">
               <label id="label_ejercicio" for="label_ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
-              <input type="number" name="ejercicio" id="ejercicio" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
-              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Porfavor ingresar un año de ejercicio</label>  
-          </div>
+              <input type="number" name="ejercicio" id="ejercicio" minlength="4" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="(2020)">
+              <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Ingresa un año de ejercicio dentro del periodo</label>  
+            </div>
             <div class="col-span-4">
               <label id="label_monto_proyectado" for="label_monto_proyectado" class="block text-sm font-medium text-gray-700">Monto proyectado *</label>
               <div class="relative ">
@@ -222,9 +300,10 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0">
+                <input type="text" name="monto_proyectado" id="monto_proyectado" class="pl-7  mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="" placeholder="0.00">
               </div>
-                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>
+                <label id="error_monto_proyectado" name="error_monto_proyectado" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad.</label><br>
+                <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado.</label>
             </div>
             <div class="col-span-4">
               <label id="label_monto_comprometido" for="label_monto_comprometido" class="block text-sm font-medium text-gray-700">Monto comprometido *</label>
@@ -234,57 +313,111 @@
                     $
                   </span>
                 </div>
-                <input type="number" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.0" >
+                <input type="text" name="monto_comprometido" id="monto_comprometido" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block bg-gray-100 w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly >
               </div>
-              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una cantidad</label>  
-              <label id="error_monto_menor" name="error_monto_menor" class="hidden text-base font-normal text-red-500" >El monto comprometido no puede ser mayor que el proyectado</label>  
+              <label id="error_monto_comprometido" name="error_monto_comprometido" class="hidden text-base font-normal text-red-500" >Por favor ingresar una cantidad</label>
+              <label for="" id="anterior_comprometido" class="hidden block text-md text-green-500"></label>
             </div>
-            <div class="col-span-4">
-                <label id="label_acta_integracion_consejo" for="acta_integracion_consejo" class="block text-sm font-medium text-gray-700">Acta integracion *</label>
-                <input type="date" name="acta_integracion_consejo" id="acta_integracion_consejo" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_acta_integracion_consejo" name="error_acta_integracion_consejo" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
+            
+         </div>
+         <div class="hidden relative p-6 flex-auto" id="anexos">
+            <div class=" alert flex flex-row items-center justify-center bg-gray-100 p-2 mt-4 mb-4 shadow " id="titulo_anexo">
+              <div class="alert-content ml-4">
+              <p class="font-bold sm:text-sm">Anexos</p>
+              </div>
             </div>
-            <div class="col-span-4">
+          
+            <div class="flex flex-col-2 justify-center mb-2" >
+              <div class="flex flex-row  p-2">
+                  <label id="label_ejercicio" for="label_ejercicio" class="ml-6 text-sm font-medium text-gray-700 ">PRODIMDF </label>
+                  <input type="checkbox" name="prodim" id="prodim" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+              </div>
+              <div class="flex flex-row  p-2">
+                <label id="label_gastos_indirectos" for="label_gastos_indirectos" class="ml-6 text-sm font-medium text-gray-700 ">Gastos indirectos</label>
+                <input type="checkbox" name="gastos_indirectos" id="gastos_indirectos" class="ml-2 shadow-sm sm:text-sm border-gray-300 rounded h-6 w-6">
+              </div>
+            </div>
+
+            <div class=" grid grid-cols-6 gap-4 mb-4" id="div_porcentajes">
+              <div class="col-span-3">
+                <div class="hidden" id="div_porcentaje_prodim">
+                  <label id="label_porcentaje_prodim" for="porcentaje_prodim" class="block text-sm font-medium text-gray-700">Porcentaje PRODIMDF *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        %
+                      </span>
+                    </div>
+                    <input type="text" name="porcentaje_prodim" id="porcentaje_prodim" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_porcentaje_prodim" class="hidden block text-md text-red-500">Se require de un porcentaje (max %2)</label>
+                  <label for="" id="proyectado_prodim" class="hidden block text-sm"></label>
+                </div>
+              </div>
+              
+              <div class="col-span-3">
+                <div class="hidden" id="div_porcentaje_gastos">
+                  <label id="label_porcentaje_gastos" for="porcentaje_gastos" class="block text-sm font-medium text-gray-700">Porcentaje gastos indirectos *</label>
+                  <div class="relative ">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <span class="text-gray-500 sm:text-sm">
+                        %
+                      </span>
+                    </div>
+                    <input type="text" name="porcentaje_gastos" id="porcentaje_gastos" maxlength="3" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00">
+                  </div>
+                  <label id="error_porcentaje_gastos" class="hidden block text-md text-red-500">Se require de un porcentaje (max %3)</label>
+                  <label for="" id="proyectado_gastos" class="hidden block text-sm"></label>
+                </div>
+              </div>
+
+            </div>
+         
+            <div class="grid grid-cols-6 gap-4">
+              <div class="col-span-2">
+                <label id="label_acta_integracion" for="acta_integracion" class="block text-sm font-medium text-gray-700">Acta integración *</label>
+                <input type="date" name="acta_integracion" id="acta_integracion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+                <label id="error_acta_integracion" class="hidden block text-md text-red-500">Se require de una fecha</label>
+              </div>
+            
+              <div class="col-span-2">
                 <label id="label_acta_priorizacion" for="acta_priorizacion" class="block text-sm font-medium text-gray-700">Acta priorización *</label>
                 <input type="date" name="acta_priorizacion" id="acta_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_acta_priorizacion" name="error_acta_priorizacion" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
-            </div>
-            <div class="col-span-4">
-                <label for="adendum_priorizacion" class="block text-sm font-medium text-gray-700">Adendum priorización *</label>
-                <input type="date" name="adendum_priorizacion" id="adendum_priorizacion" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
-                <label id="error_adendum_priorizacion" name="error_adendum_priorizacion" class="hidden text-base font-normal text-red-500" >Porfavor ingresar una Fecha</label>  
-            </div>
-            <div class="col-span-4">
-              <label for="fuente_financiamiento_id" class="block text-sm font-medium text-gray-700">Fuente de financiamiento *</label>
-              <select id="fuente_financiamiento_id" name="fuente_financiamiento_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                <option value="0" selected> Elija una opción </option>
-                @foreach($fuentes as $fuente)
-                <option value="{{ $fuente->id_fuente_financiamiento }}"> {{ $fuente->nombre_corto }} </option>
-                @endforeach
-              </select>
-          </div>
+                <label id="error_acta_priorizacion" class="hidden block text-md text-red-500">Se require de una fecha</label>
+              </div>
 
-            <div class="col-span-4">
-                <label for="prodim" class="block text-sm font-medium text-gray-700">Prodim *</label>
-                <select id="prodim" name="prodim" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                  <option value="0"> Elija una opción </option>
-                  <option value="1"> Terminado </option>
-                  <option value="2"> Pendiente </option>
-                </select>
+              <div class="col-span-2">
+                <label id="label_adendum" for="adendum" class="block text-sm font-medium text-gray-700">Adendum priorización </label>
+                <input type="date" name="adendum" id="adendum" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" >
+              </div>
             </div>
-            <div class="col-span-4">
-              <label for="gastos_indirectos" class="block text-sm font-medium text-gray-700">Gastos indirectos *</label>
-              <select id="gastos_indirectos" name="gastos_indirectos" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
-                <option value="0"> Elija una opción </option>
-                      <option value="1"> Terminado </option>
-                      <option value="2"> Pendiente </option>
-                      <option value="3"> No aplica </option>
-              </select>
+         </div>
+
+        <div id="error_existe" class="hidden alert flex flex-row items-center bg-red-200 p-2 rounded-lg border-b-2 border-red-300 mb-4 shadow">
+           <div class="alert-icon flex items-center bg-red-100 border-2 border-red-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+            <span class="text-red-500">
+              <svg fill="currentColor"
+                 viewBox="0 0 20 20"
+                 class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+              </svg>
+            </span>
+          </div>
+        
+          <div class="alert-content ml-4">
+            <div class="alert-title font-semibold text-lg text-red-800">
+              Aviso
+            </div>
+            <div class="alert-description text-sm text-red-600">
+              <strong>YA</strong> existe un registro con el mismo cliente, fuente y ejercicio.
+            </div>
           </div>
           
         </div>
-        
-      </div>
+
+    </div>
       <!--footer-->
       <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
         
@@ -293,7 +426,7 @@
         <button class="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" onclick="toggleMod('modal')">
           Cancelar
         </button>
-        <button type="submit" id="guardar" class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
+        <button type="submit" id="guardar" class="bg-green-400 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" >
           Guardar
         </button>
         </div>
@@ -307,7 +440,7 @@
 <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-backdrop"></div>
 <div class="hidden opacity-25 fixed inset-0 z-40 bg-black" id="modal-id-backdrop"></div>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>  
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
@@ -322,20 +455,54 @@
     )
   </script>
 @endif
+<!--Alerta de error-->
+@if(session('eliminar')=='error')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'Este registro tiene relación con otro.<br> No es posible eliminarlo.'
+    });
+  </script>
+@endif
+<!--Alerta de error-->
+@if(session('eliminar')=='errorProdim')
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: '¡Oops... !',
+      html: 'No es posible actualizar la fuente de financiamiento,<br> verifique que no existan gastos indirectos o PRODIMDF relacionados.'
+    });
+  </script>
+@endif
+
 <style>
   .currSign:before {
       content: '$';
   }
 </style>
 <script>
+  function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
   //Formato de cantidades
     let x = document.querySelectorAll(".myDIV");
     for (let i = 0, len = x.length; i < len; i++) {
-        let num = Number(x[i].innerHTML)
-                  .toLocaleString('es-MX');
+        // let num = Number(x[i].innerHTML)
+        //           .toLocaleString('es-MX');
+        let num = moneda(parseFloat(x[i].innerHTML).toFixed(2));
         x[i].innerHTML = num;
         x[i].classList.add("currSign"); 
     }
+</script>
+<script>
+  function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
+    let element = event.target;
+    while(element.nodeName !== "BUTTON"){
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
 </script>
 <script>
   //Mensaje de advertencia
@@ -363,99 +530,490 @@ $(".form-eliminar").submit(function(e){
  /* */
 </script>
 
-
 <script type="text/javascript">
 function toggleMod(modal, fuente){
     document.getElementById(modal).classList.toggle("hidden");
     document.getElementById(modal + "-backdrop").classList.toggle("hidden");    
 }
-
-//validar selected del cliente
-function validarCliente() {
-  var valor = document.getElementById("cliente_id").value;
-  if(valor != ''){
-    $('#error_cliente_id').fadeOut();
-    $("#label_cliente_id").removeClass('text-red-500');
-    $("#label_cliente_id").addClass('text-gray-700');
+//================================================
+function validarForm(){ //validacion del formulario
+ band = true;
+  cliente =document.forms["formulario"]["municipio"].value;
+  periodo =document.forms["formulario"]["periodo"].value;
+  fuente= document.forms["formulario"]["fuente_financiamiento_id"].value;
+  ejercicio= document.forms["formulario"]["ejercicio"].value;
+  monto_proyectado = document.forms["formulario"]["monto_proyectado"].value;
+  if(cliente == ""){
+    $('#error_municipio').removeClass('hidden');  
+    band= false;
   }else{
-    $('#error_cliente_id').fadeIn();
-    $("#label_cliente_id").addClass('text-red-500');
-    $("#label_cliente_id").removeClass('text-gray-700');
+    $('#error_municipio').addClass('hidden');
+  }
+  if(periodo == ""){
+    $('#error_periodo').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_periodo').addClass('hidden');
+  }
+  if(fuente == ""){
+    $('#error_fuente_financiamiento_id').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_fuente_financiamiento_id').addClass('hidden');
+  }
+
+  if(ejercicio == ""){
+    $('#error_ejercicio').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_ejercicio').addClass('hidden');
+  }
+
+  if(monto_proyectado == ""){
+    $('#error_monto_proyectado').removeClass('hidden');  
+    band= false;
+  }else{
+    $('#error_monto_proyectado').addClass('hidden');
+  }
+
+  if(fuente == 2){
+    
+    prodim = document.getElementById("prodim").checked;
+    
+    if(prodim == true){
+      porcentaje_prodim= document.forms["formulario"]["porcentaje_prodim"].value;
+      
+      if(porcentaje_prodim == "" || parseFloat(porcentaje_prodim) < 0.1 || parseFloat(porcentaje_prodim) > 2){
+        $('#error_porcentaje_prodim').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_prodim').addClass('hidden');
+      }
+     
+    }
+    gastos_indirectos = document.getElementById("gastos_indirectos").checked;
+    
+    if(gastos_indirectos == true){
+      porcentaje_gastos= document.forms["formulario"]["porcentaje_gastos"].value;
+      if(porcentaje_gastos == "" || parseFloat(porcentaje_prodim) == 0 || parseFloat(porcentaje_gastos) < 0.1 || parseFloat(porcentaje_gastos) > 3){
+        $('#error_porcentaje_gastos').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_porcentaje_gastos').addClass('hidden');
+      }
+    }
+
+    acta_integracion= document.forms["formulario"]["acta_integracion"].value;
+  acta_priorizacion= document.forms["formulario"]["acta_priorizacion"].value;
+  
+  if(acta_integracion == ""){
+    $('#error_acta_integracion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_integracion').addClass('hidden');
+      }
+  if(acta_priorizacion == ""){
+    $('#error_acta_priorizacion').removeClass('hidden');  
+        band = false;
+      }else{
+        $('#error_acta_priorizacion').addClass('hidden');
+      }
+  }
+    return band;
+}
+
+//================================================
+//validar selected del cliente
+function validarFuente() {
+  var valor = document.getElementById("fuente_financiamiento_id").value;
+  if(valor != ''){
+    $('#error_fuente_financiamiento_id').fadeOut();
+    $("#label_fuente_financiamiento_id").removeClass('text-red-500');
+    $("#label_fuente_financiamiento_id").addClass('text-gray-700');
+  }else{
+    $('#error_fuente_financiamiento_id').fadeIn();
+    $("#label_fuente_financiamiento_id").addClass('text-red-500');
+    $("#label_fuente_financiamiento_id").removeClass('text-gray-700');
+  }
+
+  if($('#fuente_financiamiento_id').val() == '2'){
+    $('#titulo_anexo').removeClass('hidden');
+    $('#anexos').removeClass('hidden');
+    // $('#acta_integracion').attr('required',true);
+    // $('#acta_priorizacion').attr('required',true);
+  }else{
+    $('#titulo_anexo').addClass('hidden');
+    $('#anexos').addClass('hidden');
+    // $('#acta_integracion').removeAttr('required');
+    // $('#acta_priorizacion').removeAttr('required');
+  }
+}
+//================================================
+//validar selected del fuente
+function validarCliente() {
+  var valor = document.getElementById("municipio").value;
+  if(valor != ''){
+    $('#error_municipio').fadeOut();
+    $("#label_municipio").removeClass('text-red-500');
+    $("#label_municipio").addClass('text-gray-700');
+  }else{
+    $('#error_municipio').fadeIn();
+    $("#label_municipio").addClass('text-red-500');
+    $("#label_municipio").removeClass('text-gray-700');
   }
 }
 
+//================================================
 //validacion de campos del modal
 $(document).ready(function() {
+  //$('#ejercicio').attr('maxlength','4');
+  $('#prodim').on('change', function(){
+    //console.log($(this).val())
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_prodim').removeClass('hidden');
+      //$('#porcentaje_prodim').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_prodim').addClass('hidden');
+      //$('#porcentaje_prodim').prop('required',false);
+    }
+  });
+  $('#gastos_indirectos').on('change', function(){
+    if(this.checked == true){
+      //$('#div_porcentajes').removeClass('hidden');
+      $('#div_porcentaje_gastos').removeClass('hidden');
+      //$('#porcentaje_gastos').prop('required',true);
+    }else{
+      //$('#div_porcentajes').addClass('hidden');
+      $('#div_porcentaje_gastos').addClass('hidden');
+      //$('#porcentaje_gastos').prop('required',false);
+    }
+  });
+// ==========================================
+montoComprometido = $('#monto_comprometido').val();
+monto_comprometido = parseFloat(montoComprometido.replaceAll(',',''));
+ $('#porcentaje_prodim, #monto_proyectado, #porcentaje_gastos').on('keyup',function(e){
+  setTimeout(function() {
+    $('#proyectado_prodim').text('');
+    $('#anterior_comprometido').val(montoComprometido); //monto comprometido actual
+
+    if($('#porcentaje_prodim').val()!='' && $('#monto_proyectado').val()!=''){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      $('#monto_proyectado').val();
+      porcentaje_prodim = parseFloat($('#porcentaje_prodim').val());
+      resultado = moneda(parseFloat(monto_proyectado * (porcentaje_prodim/100)).toFixed(2));
+        $('#proyectado_prodim').removeClass('hidden');
+        $('#proyectado_prodim').text('monto correspondiente al '+porcentaje_prodim+ '%: $'+resultado);
+        //resultado = parseFloat(resultado);
+          //nuevoComprometido = resultado+monto_comprometido;
+          //nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+          //$('#monto_comprometido').val(moneda(nuevoComprometido));
+      
+    }else{
+         $('#proyectado_prodim').addClass('hidden');
+         $('#monto_comprometido').val(montoComprometido);
+    }
+
+    if($('#porcentaje_gastos').val()!='' && $('#monto_proyectado').val()!='' ){
+      monto_proyectado = $('#monto_proyectado').val();
+      monto_proyectado = parseFloat(monto_proyectado.replaceAll(',',''));
+      
+      porcentaje_gastos = parseFloat($('#porcentaje_gastos').val());
+      resul = moneda(parseFloat(monto_proyectado * (porcentaje_gastos/100)).toFixed(2));
+        $('#proyectado_gastos').removeClass('hidden');
+        $('#proyectado_gastos').text('monto correspondiente al '+porcentaje_gastos+ '%: $'+resul);
+        // resultado = parseFloat(resultado);
+        //   nuevoComprometido = resultado+monto_comprometido;
+        //   nuevoComprometido = parseFloat(nuevoComprometido).toFixed(2);
+        //   $('#monto_comprometido').val(nuevoComprometido)
+      
+    }else{
+         $('#proyectado_gastos').addClass('hidden');
+         //$('#monto_comprometido').val(montoComprometido);
+    }
+
+
+  },1);
+ });
+
+ 
+//================================================
+var myArray;
+$('#municipio').on('keyup change', function(){ //ejercicio select
+      municipio = $('#municipio').val();
+      if(municipio.length!=0){
+      $("#periodo").empty(); //valida si no se ha seleccionado una opc
+      //$("#ejercicio").append('<option value="">Elija un ejercicio</option>');
+        var link = '{{ url("/clienteEjercicio")}}/'+municipio;
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data)
+                myArray= data;
+                $.each(data,function(key, item) { //llenado del select ejercicio
+                  
+                  if(key == 0){
+                    var fecha_inicio = item.anio_inicio.split("-");
+                    var fecha_fin = item.anio_fin.split("-");
+                    $("#periodo").append('<option value='+item.id_cliente+' selected>'+fecha_inicio[0]+' - '+fecha_fin[0]+'</option>');
+                    $('#cliente_id').val(item.id_cliente);
+                    $('#ejercicio').attr({ min: fecha_inicio[0], max: fecha_fin[0]});
+                  }else{
+                    var fecha_inicio = item.anio_inicio.split("-");
+                    var fecha_fin = item.anio_fin.split("-");
+                    $("#periodo").append('<option value='+item.id_cliente+'>'+fecha_inicio[0]+' - '+fecha_fin[0]+'</option>');
+                    
+                  }
+                });
+                
+              },
+              cache: false
+            });
+      }else{
+        $("#periodo").empty(); //valida si no se ha seleccionado una opc
+        $("#periodo").append('<option value="">Elija un cliente</option>');
+      }
+
+  });
+//====================================================
+  $('#periodo').on('change', function(){ //evento del select periodo
+  $('#cliente_id').val($('#periodo').val());
+
+  for(index in myArray){
+
+    if(parseInt(myArray[index].id_cliente) == parseInt($('#cliente_id').val())){
+      var fecha_inicio = myArray[index].anio_inicio.split("-");
+      var fecha_fin = myArray[index].anio_fin.split("-");
+      $('#ejercicio').attr({ min: fecha_inicio[0], max: fecha_fin[0]}); //si el periodo cambia, tambien el rango de ejercicio
+    }
+  }
+  
+});
+//====================================================
+  $('#fuente_financiamiento_id, #ejercicio').on('keyup change',function(){
+   $('#ejercicio').val($('#ejercicio').val().slice(0,4));//copia de array de caracteres
+    var anio = $('#ejercicio').val();
+    var fechaMin = anio+'-01'+'-01';
+    var fechaMax = anio+'-12'+'-31';
+    $('#acta_integracion').val('');
+    //$('#acta_priorizacion').val();
+    //$('#adendum').val();
+    $('#acta_integracion').attr('min',fechaMin);
+    $('#acta_integracion').attr('max',fechaMax);
+    // $('#acta_priorizacion').attr('min',fechaMin);
+    // $('#acta_priorizacion').attr('max',fechaMax);
+    // $('#adendum').attr('min',fechaMin);
+    // $('#adendum').attr('max',fechaMax);
+    cliente = $('#cliente_id').val();
+    fuente= $('#fuente_financiamiento_id').val();
+    ejercicio= $('#ejercicio').val();
+    
+    var link = '{{ url("/ejercicioDisponible")}}/'+cliente+','+ejercicio+','+fuente;
+   // console.log(link)
+    if(cliente.length > 0 && fuente.length > 0 && ejercicio.length >= 3){
+        $.ajax({
+              url: link,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                if(data.length != 0){
+                  $('#error_existe').removeClass('hidden');
+                  $('#guardar').attr("disabled", true);
+                  $("#guardar").removeClass('bg-green-400');
+                  $("#guardar").addClass('bg-gray-600');
+                }else{
+                  $('#error_existe').addClass('hidden');
+                  $('#guardar').removeAttr("disabled");
+                  $("#guardar").removeClass('bg-gray-600');
+                  $("#guardar").addClass('bg-green-400');
+                }
+              },
+              cache: false
+            });
+    }
+    
+  });
+  $('#acta_integracion').on('change', function(){
+      fechaMin = $('#acta_integracion').val();
+      var anio = $('#ejercicio').val();
+      var fechaMax = anio+'-12'+'-31';
+      $('#acta_priorizacion').val('');
+      $('#adendum').val('');
+      $('#acta_priorizacion').attr('min',fechaMin);
+      $('#acta_priorizacion').attr('max',fechaMax);
+  });
+  $('#acta_priorizacion').on('change', function(){
+      fechaMin = $('#acta_priorizacion').val();
+      var anio = $('#ejercicio').val();
+      var fechaMax = anio+'-12'+'-31';
+      $('#adendum').val('');
+      $('#adendum').attr('min',fechaMin);
+      $('#adendum').attr('max',fechaMax);
+  });
+//================================================
    $("#modal input").keyup(function() {
-  //console.log($(this).attr('id'));
+       $("#ejercicio").on({ //validacion de solo numeros
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'');
+                        //.replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                });
+            }
+        });
+        $("#porcentaje_prodim, #porcentaje_gastos").on({ //validacion de solo numeros
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/[^\d]/,'')
+                        .replace(/\B(?=(\d{2})+(?!\d)?)/g, ".");
+                });
+                
+            }
+        });
+//================================================
+        var proyectado;
+        var comprometido;
+        $("#monto_proyectado, #monto_prodim, #monto_gastos").on({
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                  //
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                        
+                });
+                // $(event.target).val(function(index, value) { //formato montos
+                //     return parseFloat(value).toFixed(2);
+                // }); 
+                
+            }
+        });
+//editar adm el ejercicio 
+      $("#monto_proyectado").on('keyup', function(){ //validar montos
+                //obtener el monto para eliminar formato y pasar a float
+                proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+                proyectado = parseFloat(proyectado) || 0;
+                
+                comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+                comprometido = parseFloat(comprometido) || 0;
+                
+                if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
+                  $('#error_monto_menor').removeClass('hidden');                  
+                }else{
+                  $('#error_monto_menor').addClass('hidden');
+                 
+                }
+      });
+//================================================
+        //validacion de campo vacio
       var monto = $(this).val();
       
       if(monto != ''){
-      $('#error_'+$(this).attr('id')).fadeOut();
-      $("#label_"+$(this).attr('id')).removeClass('text-red-500');
-      $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).addClass('hidden');
+        $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+        $("#label_"+$(this).attr('id')).addClass('text-gray-700');
       //$('#guardar').removeAttr("disabled");
       }
       else{
       //$("#guardar").attr("disabled", true);
-      $('#error_'+$(this).attr('id')).fadeIn();
-      $("#label_"+$(this).attr('id')).addClass('text-red-500');
-      $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+        $('#error_'+$(this).attr('id')).removeClass('hidden');
+        $("#label_"+$(this).attr('id')).addClass('text-red-500');
+        $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
       }
     
     });
 });
-
+//================================================
 //validacion del formulario con el btn guardar
-$().ready(function() {
-  $("#formulario").validate({
-    onfocusout: false,
-    onclick: false,
-		rules: {
-      cliente_id: { required: true},
-			ejercicio: { required: true},
-			monto_proyectado: { required:true},
-			monto_comprometido: { required: true},
-			acta_integracion_consejo: { required:true},
-			acta_priorizacion: { required:true},
-      adendum_priorizacion: { required:true},
-      fuente_financiamiento_id: { required:true}
-		},
-    errorPlacement: function(error, element) {
-      if(error != null){
-      $('#error_'+element.attr('id')).fadeIn();
-      }else{
-        $('#error_'+element.attr('id')).fadeOut();
-      }
-     // console.log(element.attr('id'));
-    },
-	}); 
-  
-});
 
+// $().ready(function($) {
+//   $('#formulario').validate({
+//     onfocusout: false,
+//     onclick: false,
+//     rules: {
+//       cliente_id: { required: true },
+//       ejercicio: { required: true },
+//       monto_proyectado: { required: true },
+//       //monto_comprometido: { required: true},
+//       fuente_financiamiento_id: { required: true },
+//     },
+//     errorPlacement: function(error, element) {
+//       if(error != null){
+//       $('#error_'+element.attr('id')).fadeIn();
+//       }else{
+//         $('#error_'+element.attr('id')).fadeOut();
+//       }
+     
+//     },
+//   });
 
+// });
+//================================================
 //Codigo de Modal detalles
 $(".btn-AddDate").on("click",function() {
-  alert("Modal Mostrada");
   document.getElementById('modal-id').classList.toggle("hidden");
   document.getElementById('modal-id' + "-backdrop").classList.toggle("hidden");
     
 });
-  function toggleModal(modalID, index, cliente, fuente, key){
-      cliente.forEach(function(municipio) {
-        if(index.cliente_id == municipio.id_cliente){
-        //console.log( municipio.id_cliente + " " +  municipio.nombre);
-        $('#nombre_municipio').html(municipio.nombre); 
+
+
+  function toggleModal(modalID, index, cliente, fuente, key){ //modal detalles 
+      //console.log(index)
+        for(item in cliente){
+          if(index.cliente_id == cliente[item].id_cliente){
+            // console.log(cliente[index].nombre)
+            $('#nombre_municipio').html(cliente[item].nombre); 
+          }
         }
-        });
         
-    $('#ver_monto_proyectado').html(index.monto_proyectado); 
-    $('#ver_monto_comprometido').html(index.monto_comprometido); 
-    $('#ver_acta_integracion_consejo').html(index.acta_integracion_consejo); 
-    $('#ver_acta_priorizacion').html(index.acta_priorizacion); 
-    $('#ver_adendum_priorizacion').html(index.adendum_priorizacion);
+    $('#ver_monto_proyectado').html(moneda(parseFloat(index.monto_proyectado).toFixed(2))); 
+    $('#ver_monto_comprometido').html(moneda(parseFloat(index.monto_comprometido).toFixed(2)));
+    if(index.porcentaje_prodim == null) 
+    {$('#ver_porcentaje_prodim').html('-');}
+    else
+    {$('#ver_porcentaje_prodim').html('% '+index.porcentaje_prodim);}
+    if(index.porcentaje_gastos == null) 
+    {$('#ver_porcentaje_gastos').html('-');}
+    else
+    {$('#ver_porcentaje_gastos').html('% '+index.porcentaje_gastos);}
+    if(index.acta_integracion_consejo == null)
+    { $('#ver_acta_integracion_consejo').html('-');}
+    else
+    {$('#ver_acta_integracion_consejo').html(index.acta_integracion_consejo);} 
+    if(index.acta_priorizacion == null)
+    {$('#ver_acta_priorizacion').html('-');} 
+    else
+    {$('#ver_acta_priorizacion').html(index.acta_priorizacion);}
+    if(index.adendum_priorizacion == null)
+    {$('#ver_adendum_priorizacion').html('-');}
+    else
+    {$('#ver_adendum_priorizacion').html(index.adendum_priorizacion); }
     $('#ver_ejercicio').html(index.ejercicio);
     $('#ver_fuente_financiamiento').html(fuente);
+
+    if(index.monto_prodim == null)
+    {$('#ver_monto_prodim').html('-');}
+    else
+    {$('#ver_monto_prodim').html(moneda(parseFloat(index.monto_prodim).toFixed(2))); }
+    if(index.monto_gastos == null)
+    {$('#ver_monto_gastos').html('-');}
+    else
+    {$('#ver_monto_gastos').html(moneda(parseFloat(index.monto_gastos).toFixed(2))); }
     
     styleValue('#ver_prodim', index.prodim);
     styleValue('#ver_gastos_indirectos', index.gastos_indirectos);
@@ -465,20 +1023,25 @@ $(".btn-AddDate").on("click",function() {
   }
   function styleValue(id,valor){ //funcion para determinar status de prodim y gastos indirectos
     if(valor == 1){
-      $(id).html('Terminado');
+      html='<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-green-200 text-green-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class=" h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+                    </span>';
+      $(id).html(html);
       $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800');
-      //console.log(valor);
-    }else if(valor == 2){
-      $(id).html('Pendiente');
+      //$(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800');
+     // console.log(valor);
+    }else if(valor == 0){
+      html='<span class=" inline-flex text-xs leading-6 font-semibold rounded-full bg-red-200 text-red-800 ">\
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />\
+                        </svg>\
+                    </span>';
+      $(id).html(html);
       $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800');
+      //$(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800');
       
-    }else if(valor == 3){
-      $(id).html('No Aplica');
-      $(id).removeClass();
-      $(id).addClass('px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800');
-     
     }
   }
 
@@ -492,20 +1055,31 @@ $(".btn-AddDate").on("click",function() {
 </style>
 
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
-
-
+<script>
+  function validar(){
+      proyectado= $('#monto_proyectado').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+      proyectado = parseFloat(proyectado) || 0;
+              
+      comprometido= $('#monto_comprometido').val().replace(/[&\/\\#,+()$~%'":*?<>{}]/g, '');
+      comprometido = parseFloat(comprometido) || 0;
+      if(proyectado < comprometido){ //validacion entre monto proyectado y comprometido
+              $('#error_monto_menor').removeClass('hidden');
+              return false;
+      }else{ 
+              return true;
+        }
+    }
+</script>
 
 <script>
-  //ejecucion del datatable
+  //ejecucion del datatable  
 $(document).ready(function() {
     $('#example').DataTable({
+        "oSearch": {"sSearch": "" },
         "autoWidth" : true,
         "responsive" : true,
-        columnDefs: [
-            { responsivePriority: 1, targets: 4 },
-            { responsivePriority: 1, targets: 1 },
-            { responsivePriority: 10001, targets: 4 },
-            { responsivePriority: 2, targets: -2 }
+        "columnDefs": [
+          { "width": "10%", "targets": 0 }
         ],
         language: {
           url: 'https://cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'

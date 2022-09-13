@@ -32,6 +32,30 @@
   </div>
   
 </div>
+@if ($errors->any())
+        <div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+          <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+            <span class="text-yellow-500">
+              <svg fill="currentColor"
+                viewBox="0 0 20 20"
+                class="h-5 w-5">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clip-rule="evenodd"></path>
+              </svg>
+            </span>
+          </div>
+          <div class="alert-content ml-4">
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+          </div>
+        </div>
+    @endif
 
 <div class="mt-10 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
@@ -43,15 +67,31 @@
             <div class="px-4 py-5 bg-white sm:p-6"> 
               <div class="grid grid-cols-6 gap-6">
                 <div class="col-span-6 sm:col-span-3">
-                  <label for="first_name" class="block text-sm font-medium text-gray-700">Usuario *</label>
+                  <label for="first_name" class="block text-sm font-medium text-gray-700">Nombre *</label>
                   <input type="text" name="name" id="name" autocomplete="given-name" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $user->name }}">
-                  <label id="error_name" name="error_name" class="hidden text-base font-normal text-red-500" >Porfavor ingrese un usuario</label>
+                  <label id="error_name" name="error_name" class="hidden text-base font-normal text-red-500" >Porfavor ingrese su nombre</label>
+                </div>
+
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="lasname" class="block text-sm font-medium text-gray-700">Apellidos *</label>
+                  <input type="text" name="lastname" id="lastname" autocomplete="apellido" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $user->lastname }}">
+                  <label id="error_lastname" name="error_lastname" class="hidden text-base font-normal text-red-500" >Porfavor ingrese sus apellidos</label>
                 </div>
   
                 <div class="col-span-6 sm:col-span-3">
                   <label for="email_address" class="block text-sm font-medium text-gray-700">Correo *</label>
                   <input type="text" name="email" id="email" autocomplete="email" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $user->email }}">
                   <label id="error_email" name="error_email" class="hidden text-base font-normal text-red-500" >Porfavor ingrese un correo</label>
+                </div>
+
+                <div class="col-span-6 sm:col-span-3">
+                  <label for="area" class="block text-sm font-medium text-gray-700">Area *</label>
+                  <select id="area" name="area"  class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+                    <option value="Infraestructura" {{($user->area == 'Infraestructura') ? 'selected' : ''}}> Infraestructura </option>
+                    <option value="Gubernamental" {{($user->area == 'Gubernamental') ? 'selected' : ''}}> Gubernamental </option>
+                    <option value="Dirección General" {{($user->area == 'Dirección General') ? 'selected' : ''}}> Dirección General </option>
+                  </select>
+                  <label id="error_area" name="error_area" class="hidden text-base font-normal text-red-500" >Porfavor elija un rol</label>
                 </div>
                 
                   
@@ -60,7 +100,7 @@
                   <select id="roles" name="roles" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                      
                     @foreach($roles as $rol)
-                      <option value="{{ $rol->id }}"> {{ $rol->name }}</option>
+                      <option value="{{ $rol->id }}" {{($user->getRoleNames()[0] == $rol->name) ? 'selected' : ''}}> {{ $rol->name }}</option>
                     @endforeach
                   </select>
                   <label id="error_roles" name="error_roles" class="hidden text-base font-normal text-red-500" >Porfavor elija un rol</label>
@@ -77,6 +117,9 @@
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
               <span class="block text-xs">Porfavor verifique que todos los campos marcados con ( * ) esten rellenados</span>
               <div class="text-right">
+                <a type="button" href="{{route('admin.users.index')}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  Regresar
+                </a>
               <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Guardar
               </button>
@@ -104,7 +147,7 @@
         name: { required: true },
         email: { required: true, email: true},
         roles: { required: true},
-        password: { required: true},
+        
         
       },
       errorPlacement: function(error, element) {

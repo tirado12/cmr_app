@@ -47,6 +47,8 @@ class CreateObrasContratoTable extends Migration
             $table->integer('invitacion_acuse_recepcion')->default('2'); 
             $table->integer('aceptacion_invitacion')->default('2'); 
             $table->integer('modalidad_asignacion')->nullable();
+            $table->text('nombre_localidad')->nullable();
+            $table->text('tipo_localidad')->nullable();
             $table->unsignedBigInteger('contratista_id')->nullable();
             $table->foreign('contratista_id')->references('id_contratista')->on('contratistas');
             $table->timestamps();

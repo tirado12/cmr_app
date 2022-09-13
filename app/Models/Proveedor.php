@@ -14,6 +14,9 @@ class Proveedor extends Model
 
     protected $fillable = [
         'rfc',
-        'razon_social'
+        'tipo_rfc',
+        'razon_social',
+        'representante_legal',
+        'municipio_id'
     ];
 }

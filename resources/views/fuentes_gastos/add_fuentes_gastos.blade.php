@@ -1,0 +1,379 @@
+@extends('layouts.plantilla')
+@section('title','Fuentes Gastos Indirectos')
+@section('contenido')
+{{
+  header('Access-Control-Allow-Origin: *')
+  }}
+
+        <link rel="stylesheet" href="{{ asset('css/datatable.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/jquery.dataTables.min.css') }}">
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+        
+
+<div class="flex flex-row">
+    <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+  <h1 class="text-xl font-bold ml-2">Agregar Gasto indirecto a cliente</h1>
+</div>
+
+<div class="mt-6 contenedor p-8 shadow-2xl bg-white rounded-lg">
+      <div class="text-white px-6 py-4 border-0 rounded relative mb-4 bg-blue-900">
+        <span class="text-xl inline-block mr-5 align-middle">
+          <i class="fas fa-bell"></i>
+        </span>
+        <span class="inline-block align-middle mr-8">
+          <b class="capitalize">Nota:</b> <br> Debe agregar un cliente por periodo antes 
+          <a href="{{route('clientes.index')}}" class="ml-2 rounded bg-orange-800 shadow-md text-white text-sm font-semibold p-1" target="_blank">Agregar nuevo cliente</a>
+           asi como al menos un cliente con fondo III disponible
+        </span>
+        <button class="absolute bg-transparent text-2xl font-semibold leading-none right-0 top-0 mt-4 mr-6 outline-none focus:outline-none" onclick="closeAlert(event)">
+          <span>×</span>
+        </button>
+      </div>
+
+    <div class="relative p-6 flex-auto">
+        <div class="alert flex flex-row items-center justify-center bg-gray-100 p-2 mb-4 shadow">
+            <div class="alert-content ml-4">
+              <p class="font-bold sm:text-sm">Gastos indirectos - fuentes</p>
+            </div>
+          </div>
+    </div>
+    <form id="formulario" name="formulario" action="{{ route('gastosIndirectosFuentes.store') }}" method="POST" onsubmit="return validar();">
+      @csrf
+      @method('POST')
+
+    <div class="grid grid-cols-8 gap-4">
+      <div class="col-span-4 ">
+        <label  id="label_cliente_id" for="cliente_id" class="block text-sm font-medium text-gray-700">Cliente *</label>
+        <select id="cliente_id" name="cliente_id"  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+            <option value=""> Elija una opción </option>
+            @foreach ($clientes as $item)
+            <option value="{{$item->municipio_id}}"> {{$item->nombre}} </option>
+            @endforeach
+        </select>
+        <label id="error_cliente_id" name="error_cliente_id" class="hidden text-base font-normal text-red-500" >Seleccione una opción</label>
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_ejercicio" for="label_ejercicio" class="block text-sm font-medium text-gray-700">Ejercicio *</label>
+          <select id="ejercicio" name="ejercicio" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+            <option value=""> Elija un cliente </option>
+          </select>
+        <label id="error_ejercicio" name="error_ejercicio" class="hidden text-base font-normal text-red-500" >Por favor ingresar un año de ejercicio</label>  
+      </div>
+
+      <div class="col-span-4 ">
+        <label id="label_gasto_indirecto" for="gasto_indirecto" class="block text-sm font-medium text-gray-700">Gasto indirecto *</label>
+          <select id="gasto_indirecto" name="gasto_indirecto" onchange="validarSelect()" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">                
+            <option value=""> Elija una opción </option>
+            @foreach ($indirectos as $gasto)
+            <option value="{{$gasto->id_indirectos}}"> {{$gasto->nombre}} </option>
+            @endforeach
+          </select>
+        <label id="error_gasto_indirecto" name="error_gasto_indirecto" class="hidden text-base font-normal text-red-500" >Por favor ingresar un gasto indirecto al registro</label>  
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_monto_gastos" for="monto_gastos" class="block text-sm font-medium text-gray-700">Monto total gastos indirectos*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto_gastos" id="monto_gastos" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly>
+        </div>
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_monto_disponible" for="monto_disponible" class="block text-sm font-medium text-gray-700">Monto disponible*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto_disponible" id="monto_disponible" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" readonly>
+        </div>
+      </div>
+
+      <div class="col-span-4">
+        <label id="label_monto" for="monto" class="block text-sm font-medium text-gray-700">Monto*</label>
+        <div class="relative ">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span class="text-gray-500 sm:text-sm">
+              $
+            </span>
+          </div>
+          <input type="text" name="monto" id="monto" class="pl-7 mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="0.00" >
+        </div>
+        <label id="error_monto" name="error_monto" class="hidden text-base font-normal text-red-500" >Por favor ingresar un monto</label>  
+        <label id="error_monto_disponible" class="hidden block text-md text-red-500">La cantidad ingresada supera el monto disponible</label>
+        <input id="fuenteCliente_id" name="fuenteCliente_id" type="text" hidden>
+      </div>
+
+      
+    
+  </div>
+  
+  <label id="error_existe" name="error_existe" class="hidden text-base font-normal text-red-500" >Ya existe un registro con este cliente, ejercicio y gasto indirecto asignado.</label>
+  <label id="error_monto_ceros" class="hidden block text-md text-red-500">No queda monto disponible para comprometer</label>  
+  <div class="px-4 py-3 bg-gray-50 text-right sm:px-6 mt-4">
+    <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      Regresar
+    </a>
+    <button type="submit" id="guardar" name="guardar" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-800">
+      Guardar
+    </button>
+  </div>
+</form>
+</div>
+
+<script>
+  function moneda(valor){//formato montos
+      return valor.toString().replace(/\D/g, "").replace(/([0-9])([0-9]{2})$/, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+    }
+
+function closeAlert(event){ //div de alerta - aviso dentro del modal agregar
+    let element = event.target;
+    while(element.nodeName !== "BUTTON"){
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
+  }
+//=================================================================================
+ $(document).ready(function() {
+  disponible = '';
+  //select muestra ejercicios disponibles por cliente
+  $("#cliente_id").on('change', function () {
+  cliente=$(this).val();
+  $("#ejercicio").empty(); //valida si no se ha seleccionado una opc
+  $("#ejercicio").append('<option value="">Elija un cliente</option>');
+
+  var link = '{{ url("/obtenerEjerciciosPorCliente")}}/'+cliente; //consulta ajax
+    $.ajax({
+      url: link,
+      dataType:'json',
+      type:'get',
+        success: function(data){
+          //console.log(data)
+          disponible = data;
+          $.each(data,function(key, item) {
+            $("#ejercicio").append('<option value='+item.id_fuente_financ_cliente+'>'+item.ejercicio+'</option>');
+          });
+        },
+      cache: false
+    });
+
+  });
+//=================================================================================
+  $("#monto").on({
+            "focus": function(event) {
+                $(event.target).select();
+            },
+            "keyup": function(event) {
+                $(event.target).val(function(index, value) { //formato montos
+                    return value.replace(/\D/g, "")
+                        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+                        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+                });
+            }
+  });
+//======================================================================================
+ //llenado de select ejercicios disponibles de ese cliente
+ $("#ejercicio").on('change', function () {   
+  $('#fuenteCliente_id').val($('#ejercicio').val());
+          $.each(disponible,function(key, item) { //colocar el monto 
+            if($('#ejercicio option:selected').val() == item.fuente_financiamiento_cliente_id){
+              $('#monto_gastos').val(moneda(parseFloat(item.monto_prodim).toFixed(2)));
+            }
+          });    
+          consultarSumaComprometido($(this).val());
+          // ejercicio = $('#ejercicio option:selected').text();
+          // cliente= $('#ejercicio').val();
+        // if(cliente.length>0 && ejercicio.length>0){  
+        //   var direccion = '{{ url("/obtClienteFuente")}}/'+ejercicio+','+cliente;
+        //   consulta(direccion);
+        // }
+});
+//======================================================================================
+$('#gasto_indirecto').on('change', function(){ //valida si existe registro similar al seleccionar una opc en gast
+        //console.log($('#fuenteCliente_id').val());
+        gasto = $('#gasto_indirecto').val();
+        fuente_id = $('#fuenteCliente_id').val();
+        if(gasto.length>0 && fuente_id.length>0){
+          existe();
+        }
+});
+//======================================================================================
+function existe(){  //metodo para consultar si existe el registro
+        gasto = $('#gasto_indirecto').val();
+        fuente_id = $('#fuenteCliente_id').val();
+        var direccion = '{{ url("/existeGastoFuente")}}/'+fuente_id+','+gasto;
+        $.ajax({
+              url: direccion,
+              dataType:'json',
+              type:'get',
+              success: function(data){
+                //console.log(data);
+                  if(data == 1){
+                    $('#error_existe').removeClass('hidden');
+                    $('#guardar').attr('disabled', true);
+                    $('#guardar').removeClass('bg-orange-800');
+                    $('#guardar').addClass('bg-gray-700');
+                 } else{
+                    $('#error_existe').addClass('hidden');
+                    $('#guardar').removeAttr('disabled');
+                    $('#guardar').removeClass('bg-gray-700');
+                    $('#guardar').addClass('bg-orange-800');
+                }
+              },
+              cache: false
+        });
+}  
+//======================================================================================
+function consultarSumaComprometido(fuente){
+             if(fuente != ''){var link = '{{ url("/montoGastosComprometido")}}/'+fuente; //consulta ajax
+               $.ajax({
+                        url: link,
+                        dataType:'json',
+                        type:'get',
+                        success: function(data){
+                            //console.log(data)
+                            sumaComprometido = parseFloat(data).toFixed(2);
+                            montoTotalGastos = parseFloat($('#monto_gastos').val().replace(",","")).toFixed(2);
+                            montoDisponible = montoTotalGastos - sumaComprometido;
+                            
+                            $('#monto_disponible').val(moneda(parseFloat(montoDisponible).toFixed(2)));
+                            // $.each(data,function(key, item) {
+                            // $("#ejercicio").append('<option value='+item.id_prodim+'>'+item.ejercicio+'</option>');
+                                
+                            // });
+                        },
+                        cache: false
+              });}
+    }
+//======================================================================================
+      // function consulta(direccion){  //metodo para consulta fuente - cliente obtiene el registro exacto para relacionar y agregar
+      //   $.ajax({
+      //         url: direccion,
+      //         dataType:'json',
+      //         type:'get',
+      //         success: function(data){
+      //           //console.log(data);
+      //           $.each(data,function(key, item) {
+      //             $('#fuenteCliente_id').val(item.id_fuente_financ_cliente);
+      //             if($('#gasto_indirecto').val().length>0)
+      //               existe();
+      //           });
+      //         },
+      //         cache: false
+      //   });
+      // }  
+//======================================================================================
+      //validacion del formulario con el btn guardar
+    //  $().ready(function() {
+    //       $("#formulario").validate({
+    //         onfocusout: false,
+    //         onclick: false,
+    //         rules: {
+    //           cliente_id: {required: true },
+    //           ejercicio: {required: true },
+    //           monto: { required: true },
+    //           gasto_indirecto: { required: true},
+    //         },
+    //         errorPlacement: function(error, element) {
+    //           if(error != null){
+    //           $('#error_'+element.attr('id')).fadeIn();
+    //           }else{
+    //             $('#error_'+element.attr('id')).fadeOut();
+    //           }
+    //         },
+    //       }); 
+    //});
+
+    
+//======================================================================================
+$().ready(function() {
+      //validacion de input 
+      $("input").keyup(function() {
+          var cadena = $(this).val();
+          if(cadena != ''){
+            $('#error_'+$(this).attr('id')).fadeOut();
+            $("#label_"+$(this).attr('id')).removeClass('text-red-500');
+            $("#label_"+$(this).attr('id')).addClass('text-gray-700');
+          }
+          else{
+            $('#error_'+$(this).attr('id')).fadeIn();
+            $("#label_"+$(this).attr('id')).addClass('text-red-500');
+            $("#label_"+$(this).attr('id')).removeClass('text-gray-700');
+          }
+        });
+    });
+});
+//======================================================================================
+//validar selected del cliente
+function validarSelect() {
+    var valor = document.getElementById("gasto_indirecto").value;
+    if(valor != ''){
+      $('#error_gasto_indirecto').fadeOut();
+      $("#label_gasto_indirecto").removeClass('text-red-500');
+      $("#label_gasto_indirecto").addClass('text-gray-700');
+    }else{
+      $('#error_gasto_indirecto').fadeIn();
+      $("#label_gasto_indirecto").addClass('text-red-500');
+      $("#label_gasto_indirecto").removeClass('text-gray-700');
+    }
+}
+
+function validar(){
+      band = true;
+      cliente= document.forms["formulario"]["cliente_id"].value;
+      if(cliente == ""){
+        $('#error_cliente_id').removeClass('hidden');  
+        band= false;
+      }else{
+        $('#error_cliente_id').addClass('hidden');
+      }
+      ejercicio = document.forms["formulario"]["ejercicio"].value;
+      if(ejercicio == ""){
+        $('#error_ejercicio').removeClass('hidden');
+        band = false;
+      }else{
+        $('#error_ejercicio').addClass('hidden');
+      }
+      gastos_indirecto = document.forms['formulario']['gasto_indirecto'].value;
+      if(gastos_indirecto == ""){
+        $('#error_gasto_indirecto').removeClass('hidden');
+        band = false;
+      }else{
+        $('#error_gasto_indirecto').addClass('hidden');
+      }
+      monto = document.forms['formulario']['monto'].value;
+      if(monto == ""){
+        $('#error_monto').removeClass('hidden');
+        band = false;
+      }else{
+                monto = parseFloat(monto.replace(",","")).toFixed(2);
+                monto_disponible = document.forms["formulario"]["monto_disponible"].value;
+                monto_disponible = parseFloat(monto_disponible.replace(",","")).toFixed(2);
+                if(parseFloat(monto_disponible) == 0){
+                  band = false;
+                  $('#error_monto_ceros').removeClass('hidden');
+                }
+
+                if(parseFloat(monto)>parseFloat(monto_disponible)){
+                  band = false;
+                  $('#error_monto_disponible').removeClass('hidden');
+                }else{
+                  $('#error_monto_disponible').addClass('hidden');
+                }
+        $('#error_monto').addClass('hidden');
+      }
+      return band;
+    }
+</script>
+
+@endsection

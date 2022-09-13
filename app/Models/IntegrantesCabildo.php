@@ -20,8 +20,4 @@ class IntegrantesCabildo extends Model
         'rfc',
         'cliente_id'
     ];
-
-    public function cliente(){
-        return $this->belongsTo(Cliente::class, 'cliente_id'); //arg1 - Model, arg2 - foreign key
-    }
 }

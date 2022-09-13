@@ -15,7 +15,7 @@ class CreateProdimCatalogoTable extends Migration
     {
         Schema::create('prodim_catalogo', function (Blueprint $table) {
             $table->id('id_prodim_catalogo');
-            $table->integer('clave');
+            $table->integer('clave')->unique();
             $table->string('nombre');
             $table->timestamps();
         });

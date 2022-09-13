@@ -11,154 +11,59 @@
     <link rel="stylesheet"
         href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
 <div class="flex flex-row items-center ">
-    <img class="block ml-8 h-24 w-24 rounded-full shadow-2xl" src="{{$cliente->logo}}" alt="cmr">
+    <img class="block ml-8 h-24 w-auto rounded-full shadow-2xl" src="{{asset('image/logo.png')}}" alt="cmr">
     <div class="ml-4 grid grid-col-1">
-        <p class="block font-black text-xl">{{$cliente->id_municipio}} - {{$cliente->nombre_municipio}}</p>
-        <p class="text-gray-600">{{$cliente->id_distrito}} {{$cliente->nombre_distrito}} - {{$cliente->id_region}} {{$cliente->nombre_region}}</p>
-        <p class="text-gray-600"></p>
+        <p class="block font-bold text-xl">El Barrio de la Soledad</p>
+        <p class="text-gray-600">Istmo de tehuantepec</p>
     </div>
 </div>
 
 
-    <div class="grid sm:grid-cols-4 sm:gap-4">
-        
+    <div class="grid grid-rows-1 grid-flow-col gap-4">
 
-        <div class="mt-6 sm:col-span-3 shadow-xl bg-white rounded-lg">
+        <div class="mt-6 col-span-3 shadow-xl bg-white rounded-lg">
             <div class="border-b p-4">
-                <label for="first_name" class="text-xl font-medium font-semibold">Información general</label>
+                <label for="first_name" class="text-base font-medium font-bold">Información General</label>
             </div>
-            <div class="p-4 grid grid-cols-8 ">
+            <div class="p-4 grid grid-cols-8 gap-8">
 
-                <div class="col-span-8 sm:col-span-4 ">
-                    <label for="first_name" class="block text-normal font-base text-gray-500">Dirección: </label>
-                    <label for="first_name" class="text-base font-semibold">{{$cliente->direccion}}</label>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">Dirección: </label>
+                    <label for="first_name" class="text-base font-medium">Calle jardines #23 col. centro</label>
                 </div>
-                <div class="col-span-8 sm:col-span-4 mt-3 sm:mt-0">
-                    <label for="first_name" class="block text-normal font-base text-gray-500">RFC: </label>
-                    <label for="first_name" class="text-base font-semibold">{{$cliente->rfc}}</label>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">RFC: </label>
+                    <label for="first_name" class="text-base font-medium">BLS23534XXXXXXXX</label>
                 </div>
-                <div class="col-span-8 sm:col-span-4 mt-3">
-                    <label for="first_name" class="block text-normal font-base text-gray-500">Correo: </label>
-                    <label for="first_name" class="text-base font-semibold">{{$cliente->email}}</label>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">Correo: </label>
+                    <label for="first_name" class="text-base font-medium">barrio.soledad@gmail.com</label>
                 </div>
-                
-                <div class="col-span-8 sm:col-span-4 mt-3">
-                    <label for="first_name" class="block text-normal font-base text-gray-500">Periodo: </label>
-                    <label for="first_name" class="text-base font-semibold">{{ $cliente->anio_inicio }}@if ($cliente->anio_fin != $cliente->anio_inicio) - {{ $cliente->anio_fin }}@endif</label>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">Presidente: </label>
+                    <label for="first_name" class="text-base font-medium">Juan Garcia Quiroz</label>
+                </div>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">Usuario: </label>
+                    <label for="first_name" class="text-base font-medium">Barrio2020</label>
+                </div>
+                <div class="col-span-4">
+                    <label for="first_name" class="block text-base font-medium text-gray-500">Periodo en curso: </label>
+                    <label for="first_name" class="text-base font-medium">2020 - 2021</label>
                 </div>                 
             </div>
             <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
-                <div class="text-right">
-                    <a type="button"  href="{{ route('clientes.edit', $cliente->id_cliente) }}" class="text-base text-white bg-blue-500 p-2 rounded-lg px-6">Editar</a>
-                </div>
-            </div>
-        </div>
         
-        <div class="mt-6 sm:col-span-1 bg-white rounded-lg">
-            <div class="border-b p-4">
-                <label for="first_name" class="text-xl font-medium font-semibold">Ejercicios</label>
-            </div>
-            <div class="p-4">
-                <div class="">
-                    <select name="cliente_id" id="cliente_id" class="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-800 focus:border-blue-800 sm:text-sm">
-                        @for ($i = $cliente->anio_inicio; $i <= $cliente->anio_fin; $i++)
-                            @if($i <= date("Y"))
-                                <option value="{{$i}}">{{$i}}</option>
-                            @endif
-                        @endfor
-                    </select>
-
-                </div>
-                <div class="mt-4 flex justify-center">
-                    <a href="{{route('cliente.ejercicio', [$cliente->id_cliente, $cliente->anio_inicio])}}" id="btn_acceder" type="button" class="text-base text-white bg-green-500 p-2 rounded-lg px-6">Acceder</a>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="">
-
-        <div class="text-base mt-6 shadow-xl bg-white rounded-lg">
-            <div class="border-b p-4 flex justify-between items-center">
-                <span class="inline-block text-xl font-medium font-semibold">Datos del cabildo</span>
-
-                <button href="#" class="bg-green-500 text-white active:bg-white text-base px-6 py-2 rounded-lg outline-none focus:outline-none ml-1 ease-linear transition-all duration-150" type="button" onclick="toggleModal('modal-id')">
-                    Agregar
+            
+                <div class="text-right">
+                <button class="text-white bg-gray-500 rounded font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" >
+                  Regresar
                 </button>
-            </div>
-            
-            <div class="p-4 ">
-                <div class="">
-                    <table id="example" class="table table-striped bg-white" style="width:100%;">
-                        <thead>
-                            <tr>
-                                <th>Cargo</th>
-                                <th>Nombre</th>
-                                <th>RFC</th>
-                                <th>Teléfono</th>
-                                <th>Correo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                    <tbody>
-                        @foreach ($cabildo as $key => $integrante)
-                            <tr>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        {{ $integrante->cargo }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        {{ $integrante->nombre }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        {{ $integrante->rfc }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        {{ $integrante->telefono}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        {{ $integrante->correo}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-base leading-5 font-medium text-gray-900">
-                                        <a type="button"
-                                            href="{{ route('cabildo.edit', $integrante->id_integrante) }}"
-                                            class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Editar</a>
-                                    </div>
-                                </td>
-                                
-                            </tr>
-                        @endforeach
-                                </tbody>
-                                <!--<tfoot>
-                                                            <tr>
-                                                            <th>Usuario</th>
-                                                            <th>Rol</th>
-                                                            <th></th>
-                                                            </tr>
-                                                        </tfoot>-->
-                                </table>
+                <button type="submit" class="bg-blue-700 text-white active:bg-blu-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150">
+                  Editar
+                </button>
                 </div>
-                
-            </div>
-            
-            <div class=" p-4 border-t border-solid border-blueGray-200 rounded-b">
-        
-            
-                <div class="text-right">
-                    <a type="button"  href="{{ route('inicio')}}" class="text-base bg-white text-red-500 p-2 rounded-lg px-6">Regresar</a>
-                    
-                </div>
-            </div>
+              </div>
             
         </div>
     
@@ -364,7 +269,5 @@
       },
       }); 
     
-  });
-  </script>
 
 @endsection

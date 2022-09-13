@@ -36,7 +36,6 @@ class ConfirmablePasswordController extends Controller
                 'password' => __('auth.password'),
             ]);
         }
-        print("hola entro en esta sección");
 
         $request->session()->put('auth.password_confirmed_at', time());
 

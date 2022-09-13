@@ -15,14 +15,15 @@ class CreateObrasTable extends Migration
     {
         Schema::create('obras', function (Blueprint $table) {
             $table->id('id_obra');
-            $table->string('numero_obra')->nullable();
+            $table->integer('numero_obra')->nullable();
             $table->text('nombre_obra')->nullable();
             $table->text('nombre_corto')->nullable();
             $table->text('nombre_archivo')->nullable();
+            $table->string('numero_contrato')->nullable();
             $table->string('oficio_notificacion')->nullable();
-            $table->date('fecha_oficio_notificacion')->nullable();
             $table->double('monto_contratado')->nullable();
             $table->double('monto_modificado')->nullable();
+            $table->date('fecha_contrato')->nullable();
             $table->date('fecha_inicio_programada')->nullable();
             $table->date('fecha_final_programada')->nullable();
             $table->date('fecha_inicio_real')->nullable();
@@ -41,8 +42,6 @@ class CreateObrasTable extends Migration
             $table->date('convenio_concertacion')->nullable();
             $table->date('acta_aprobacion_autorizacion')->nullable();
             $table->date('acta_excepcion_licitacion')->nullable();
-            $table->text('nombre_localidad')->nullable();
-            $table->text('tipo_localidad')->nullable();
             $table->timestamps();
         });
     }

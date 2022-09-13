@@ -14,14 +14,15 @@
     
     </button>
     </div>
-
-    <div class="flex-shrink-0 flex items-center justify-center w-full">
-        <img class="block lg:hidden h-10 w-auto" src="{{asset('image/Icono CMR White.png')}}" alt="Workflow">
-        <img class="hidden lg:block h-14 w-auto" src="{{asset('image/CMR logo blanco.png')}}" alt="Workflow">
+    
+    <div class="flex-1 flex items-center justify-center sm:items-stretch ">
+    <div class="flex-shrink-0 flex items-center">
+        <a href="{{ route('dashboard')}}"><img class="block lg:hidden h-10 w-auto" src="{{asset('image/Icono CMR White.png')}}" alt="Workflow"></a>
+        <a href="{{ route('dashboard')}}"><img class="hidden lg:block h-14 w-auto" src="{{asset('image/CMR logo blanco.png')}}" alt="Workflow"></a>
     </div>
     
-    
-    <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:inset-auto sm:pr-0 w-full justify-end">
+    </div>
+    <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
     <button class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
         <span class="sr-only">Ver notificaciones</span>
         
@@ -40,14 +41,16 @@
         </button>
         </div>
 
-        <div x-show="open" x-on:click.away="open = false"  x-transition:enter="transition ease-out duration-200"
+        <div x-show="open" x-on:click.away="open = false"  
+        x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="transform opacity-0 scale-95"
         x-transition:enter-end="transform opacity-100 scale-100"
         x-transition:leave="transition ease-in duration-75"
         x-transition:leave-start="transform opacity-100 scale-100"
-        x-transition:leave-end="transform opacity-0 scale-95" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
+        x-transition:leave-end="transform opacity-0 scale-95" 
+        class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu">
         <p class="block px-4 py-2 text-sm text-gray-700 border-b-2 ">¡Bienvenid@ !</p>
-        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Perfil</a>
+        <a href="{{route('perfil.index')}}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Perfil</a>
         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Configuracion</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf

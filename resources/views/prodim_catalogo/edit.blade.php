@@ -1,5 +1,5 @@
 @extends('layouts.plantilla')
-@section('title','Cabildo')
+@section('title','Editar Prodim Catalogo')
 @section('contenido')
 <div class="flex flex-row mb-4">
     <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -7,6 +7,31 @@
     </svg>
     <h1 class="text-xl font-bold ml-2">Editar Prodim</h1>
 </div>
+
+@if ($errors->any())
+<div class="alert flex flex-row items-center bg-yellow-200 p-2 rounded-lg border-b-2 border-yellow-300 mb-4 shadow">
+  <div class="alert-icon flex items-center bg-yellow-100 border-2 border-yellow-500 justify-center h-10 w-10 flex-shrink-0 rounded-full">
+    <span class="text-yellow-500">
+      <svg fill="currentColor"
+        viewBox="0 0 20 20"
+        class="h-5 w-5">
+        <path fill-rule="evenodd"
+            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+            clip-rule="evenodd"></path>
+      </svg>
+    </span>
+  </div>
+  <div class="alert-content ml-4">
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  </div>
+</div>
+@endif
 
 <div class="mt-20 sm:mt-0 shadow-2xl bg-white rounded-lg">
       
@@ -19,13 +44,13 @@
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-6 sm:col-span-3">
                 <label for="clave" class="block text-sm font-medium text-gray-700">Clave *</label>
-                <input type="text" name="clave" id="clave" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodimCatalogo->clave }}">
+                <input type="number" name="clave" id="clave" maxlength="20" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodimCatalogo->clave }}">
                 <label id="error_clave" name="error_clave" class="hidden text-base font-normal text-red-500" >Introduzca una clave</label>
               </div>
 
               <div class="col-span-6 sm:col-span-3">
                 <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre *</label>
-                <input type="text" name="nombre" id="nombre" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodimCatalogo->nombre }}">
+                <input type="text" name="nombre" id="nombre" maxlength="80" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $prodimCatalogo->nombre }}">
                 <label id="error_nombre" name="error_nombre" class="hidden text-base font-normal text-red-500" >Introduzca un nombre</label>
               </div>         
               
@@ -69,12 +94,12 @@
         }else{
           $('#error_'+element.attr('id')).fadeOut();
         }
-       // console.log(element.attr('id'));
+       
       },
     }); 
   
-     $("#formulario input").keyup(function() {
-    //console.log($(this).attr('id'));
+     $("#formulario input").keyup(function() { //validacion del formulario para lanzar mensajes
+    
         var dato = $(this).val();
         
         if(dato != ''){

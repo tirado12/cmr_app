@@ -29,7 +29,7 @@ class SispladeController extends Controller
        $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //return $clientes->find($fuentesCliente[1]->cliente_id)->nombre;
         
-       //return $sisplade;
+        //return $clientes;
         return view('sisplade.index',compact('fuentes','sisplade','fuentesCliente','clientes'));
     }
 
@@ -39,13 +39,16 @@ class SispladeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        $clientes = Cliente::join('municipios', 'id_municipio', '=', 'municipio_id') //clientes existentes con sus municipios
-       ->select('clientes.id_cliente', 'municipios.nombre')
-       ->get();
+    {       
+       $clientesDisponibles = FuentesCliente::join('clientes','cliente_id','id_cliente')
+       ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+       ->where('fuente_financiamiento_id', 2)
+       ->select('cliente_id','nombre','id_municipio')
+       ->get(); //tabla fuenteClientes segun existentes 
+
+       $clientes = $clientesDisponibles->unique('id_municipio');
        
-       $fuenteClientes = FuentesCliente::with('clientes','fuente')->get(); //tabla fuenteClientes segun existentes 
-       $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
+      // $fuentes = FuentesFinanciamiento::all(); //todas las fuentes de financiamiento
        //$cli = Cliente::has('municipio')->get();
        //return $clientes->find($fuenteClientes[0]->cliente_id)->nombre;
        
@@ -60,21 +63,38 @@ class SispladeController extends Controller
      */
     public function store(Request $request)
     {
+        if($request->capturado == 'on'){
+            $capturado = 1;
+        }else{
+             $capturado = 0;
+             $request['fecha_capturado']=null;
+        }
+        if($request->validado == 'on'){
+              $validado = 1;
+         }else{
+              $validado = 0;
+              $request['fecha_validacion']=null;
+         }
+         $request->merge([
+             'capturado' => $capturado,
+             'validado' => $validado
+         ]);
         $request->validate([
-            'fuentes_clientes_id' => 'required',
-            'capturado' => 'required',
-            'fecha_capturado' => 'required',
-            'validado' =>'required',
-            'fecha_validado'=> 'required'
+            'fuenteCliente_id' => 'required',
+            'capturado' => 'nullable',
+            'fecha_capturado' => 'nullable',
+            'validado' =>'nullable',
+            'fecha_validado'=> 'nullable'
         ]);
         Sisplade::create([
-            'fuentes_clientes_id' => $request->fuentes_clientes_id,
+            'fuentes_clientes_id' => $request->fuenteCliente_id,
             'capturado' => $request->capturado,
             'fecha_capturado' => $request->fecha_capturado,
             'validado' => $request->validado,
             'fecha_validado'=> $request->fecha_validado
             ]);
-            return response()->json(['url'=>url('/sisplade')]);
+            //return response()->json(['url'=>url('/sisplade')]);
+            return redirect()->route('sisplade.index');
     }
     /**
      * Display the specified resource.
@@ -115,17 +135,17 @@ class SispladeController extends Controller
      */
     public function update(Request $request, Sisplade $sisplade)
     {   
-
-        
        if($request->capturado == 'on'){
-           $capturado = 1;
+            $capturado = 1;
        }else{
             $capturado = 0;
+            $request['fecha_capturado']=null;
        }
        if($request->validado == 'on'){
              $validado = 1;
         }else{
              $validado = 0;
+             $request['fecha_validacion']=null;
         }
         $request->merge([
             'capturado' => $capturado,
@@ -148,31 +168,49 @@ class SispladeController extends Controller
     }
 
     //========== funciones para select dinamico =================
-    public function selectSearch($ejercicio,$cliente){
-        //super explicacion, obtenemos las fuentes de financiamiento de las relacion Fuentesclientes existentes, a su vez filtramos segun el cliente elegido
-        $fuenteCli = FuentesFinanciamiento::whereHas('fuentesClientes', function(Builder $query) use($ejercicio,$cliente){ 
-            $query->where('ejercicio', $ejercicio)->where('cliente_id',$cliente);
-        })
+    public function obtenerFuenteCliente($ejercicio,$cliente){
+        //obtenemos las fuentes de financiamiento de las relacion Fuentesclientes existentes, a su vez filtramos segun el cliente elegido
+        $fuenteCli = FuentesCliente::join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
+        ->where('cliente_id', $cliente)
+        ->where('ejercicio', $ejercicio)
+        ->where('fuente_financiamiento_id', 2)
+        ->select('id_fuente_financ_cliente','nombre_corto')
         ->get();        
 
         return fuentesClientes::with("fuentes");
         return response()->json($fuenteCli);
+        //return $fuenteCli;
     }
 
-    public function selectEjercicio($cliente){
-        $fuenteClie = FuentesCliente::select('ejercicio')->whereHas('clientes', function(Builder $query) use($cliente) { 
-            $query->where('cliente_id', $cliente);
-        })
-        ->get();  
+    public function selectEjercicio($cliente){ //obtiene los ejercicios disponibles del cliente seleccionado
+        // $fuenteClie = FuentesCliente::whereHas('clientes', function(Builder $query) use($cliente) { 
+        //     $query->where('cliente_id', $cliente)->where('fuente_financiamiento_id', 2);
+        // })
+        // ->select('ejercicio','cliente_id')
+        // ->get();  
+        $fuenteClie = FuentesCliente::join('clientes','cliente_id','id_cliente')
+        ->join('municipios', 'clientes.municipio_id','municipios.id_municipio')
+        ->where('fuente_financiamiento_id', 2)
+        ->where('municipio_id',$cliente)
+        ->select('cliente_id','ejercicio','id_fuente_financ_cliente')
+        ->get(); //tabla fuenteClientes segun existentes  
         return $fuenteClie;
     }
 
-    public function fuentesClientes($ejercicio,$cliente,$fuente){
+    public function existeEjercicio($cliente){
+        $existe = Sisplade::where('fuentes_clientes_id', $cliente)->exists();
+        if ($existe == null)
+        return 0;
+        else
+        return $existe;
+    }
+
+    /*public function fuentesClientes($ejercicio,$cliente,$fuente){
         $fuenteClie = FuentesCliente::whereHas('clientes', function(Builder $query) use($ejercicio,$cliente,$fuente) { 
             $query->where('cliente_id', $cliente)->where('ejercicio', $ejercicio)->where('fuente_financiamiento_id', $fuente);
         })
         ->get();  
         return $fuenteClie;
-    }
+    }*/
 
 }

@@ -681,7 +681,11 @@
                         <span class="inline-block text-xl font-medium font-semibold">{{$fuente_cliente->nombre_corto}}</span>
                         <button type="button"
                           href=""
+<<<<<<< HEAD
                           class="text-base text-white bg-blue-500 p-2 rounded-lg px-6" onclick="toggleModal_1('modal-edit', {{$fuente_cliente}}, '{{$service->formatNumber($fuente_cliente->monto_proyectado)}}', '{{$service->formatNumber($fuente_cliente->monto_comprometido)}}')">{{$fuente_cliente->fuente_financiamiento_id == 2?'Editar':'Detalles'}}</button>
+=======
+                          class="text-base text-white bg-blue-500 p-2 rounded-lg px-6" onclick="toggleModal_1('modal-edit', {{$fuente_cliente}}, '{{($fuente_cliente->monto_proyectado)}}', '{{($fuente_cliente->monto_comprometido)}}')">Editar</button>
+>>>>>>> 220674e262733a8ab61b71a30c343a04120d4345
                         
                     </div>
                     
@@ -690,13 +694,13 @@
                     </div>
                     <div class="p-4 grid grid-cols-6 ">
                         <div class="col-span-6 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto recibido: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_proyectado)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto recibido: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_proyectado)}}</span></p>
                         </div>
                         <div class="col-span-8 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto comprometido: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_comprometido)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto comprometido: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_comprometido)}}</span></p>
                         </div>
                         <div class="col-span-8 sm:col-span-2 mt-3 sm:mt-0">
-                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto pendiente: <span class="text-black text-base font-semibold">{{$service->formatNumber($fuente_cliente->monto_proyectado - $fuente_cliente->monto_comprometido)}}</span></p>
+                            <p for="first_name" class="block text-normal font-base text-gray-500">Monto pendiente: <span class="text-black text-base font-semibold">{{($fuente_cliente->monto_proyectado - $fuente_cliente->monto_comprometido)}}</span></p>
                         </div>
                     </div>
                     
@@ -712,6 +716,7 @@
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
+<<<<<<< HEAD
                                 <tbody>
                                   @foreach ($fuente_cliente->obrasFuente as $obra_fuente)
                                       <tr>
@@ -743,6 +748,42 @@
                                           </td>
                                           <td>
                                               <div class="text-base leading-5 font-medium text-gray-900">
+=======
+                            <tbody>
+                                @foreach ($fuente_cliente->obrasFuente as $obra_fuente)
+                                    <tr>
+                                        <td>
+                                            <div class="text-base leading-5 font-medium text-gray-900">
+                                                {{ $obras->where('id_obra', $obra_fuente->obra_id)->first()->nombre_corto }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-base leading-5 font-medium text-gray-900 text-right">
+                                                {{ ($obras->where('fuente_financiamiento_id', $fuente_cliente->fuente_financiamiento_id)->where('id_obra', $obra_fuente->obra_id)->first()->monto)}}
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-base leading-5 font-medium text-gray-900">
+                                                @if ($obras->where('id_obra', $obra_fuente->obra_id)->first()->modalidad_ejecucion == 1)
+                                                    Administración Directa
+                                                @else
+                                                    Contrato
+                                                @endif                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-base leading-5 font-medium text-gray-900 text-right">
+                                                {{ round(($obras->where('id_obra', $obra_fuente->obra_id)->first()->avance_fisico + $obras->where('id_obra', $obra_fuente->obra_id)->first()->avance_tecnico + $obras->where('id_obra', $obra_fuente->obra_id)->first()->avance_economico) / 3) }} %
+                                                
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-base leading-5 font-medium text-gray-900">
+                                              <a type="button"
+                                                    href="{{ route('obra.show', 1) }}"
+                                                    class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Detalles</a>
+>>>>>>> 220674e262733a8ab61b71a30c343a04120d4345
                                                 <a type="button"
                                                       href="{{ route('obra.ver', $obra_fuente->obra_id) }}"
                                                       class="bg-white text-sm text-blue-500 font-normal text-ms p-2 rounded rounded-lg">Detalles</a>

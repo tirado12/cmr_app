@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Custom\Ejemplo as CustomNotification;
+use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ObraModalidadEjecucion;
@@ -27,10 +28,13 @@ class ObraController extends Controller
      */
     public function index()
     {
-        $obras_contrato = ObraModalidadEjecucion::join('obras', 'obras.id_obra', '=', 'obra_id')
-        ->join('obras_contrato', 'obras_contrato.id_obra_contrato', '=', 'obra_contrato_id')
-        ->select('obras.nombre_corto as nombre','numero_obra','modalidad_ejecucion','monto_contratado','id_obra','obra_contrato_id')
-        ->orderBy('numero_obra')
+        $obras = Obra::join('obras_fuentes','id_obra','obra_id')->join('fuentes_clientes','id_fuente_financ_cliente','fuente_financiamiento_cliente_id')
+        ->join('clientes','id_cliente','cliente_id')->join('municipios','id_municipio','municipio_id')->join('fuentes_financiamientos','id_fuente_financiamiento','fuente_financiamiento_id')
+        ->select('obras.*',
+        'fuentes_clientes.*',
+        'fuentes_financiamientos.nombre_corto as nombre_fuente',
+        'municipios.nombre as municipio'
+        )
         ->get();
         $obras_admin = ObraModalidadEjecucion::join('obras', 'obras.id_obra', '=', 'obra_id')
         ->join('obras_administracion', 'obras_administracion.id_obra_administracion', '=', 'obra_administracion_id')
@@ -247,9 +251,6 @@ class ObraController extends Controller
             ->get();
         
         
-        
-        
-        
         $resources = array(
                 'desglose' => $desglose,
                 'obras' => $obras,
@@ -304,4 +305,3 @@ class ObraController extends Controller
         
     }    
 }
-

@@ -50,20 +50,20 @@
 
             <div class="px-4 py-5 bg-white sm:p-6 flex-auto">
             <div class="grid grid-cols-8">
-                <div class="col-span-8 sm:col-span-4 mx-4">
+                <div class="col-span-4 mx-4">
                   <label for="first_name" class="text-base font-bold text-gray-700">Nombre de usuario: </label>
                   <input type="text" name="user" id="user" autocomplete="given-name" class=" mt-1 focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente->user }}">
                 </div>
-                <div class="col-span-8 sm:col-span-4 mx-4">
+                <div class="col-span-4 mx-4">
                   <label for="email_address" class=" text-base font-bold text-gray-700">E-mail: </label>
                   <input type="text" name="email" id="email" autocomplete="email" class="mt-1 focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente -> email }}">
                 </div>
-                <div class="col-span-8 sm:col-span-4 mt-7 mx-4">
+                <div class="col-span-4 mt-7 mx-4">
                   <label for="email_address" class=" text-base font-bold text-gray-700">Contraseña: </label>
                   <input type="password" name="password" id="password" class="mt-1 focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="">
                   <label class="text-base font-bold text-gray-500"><input type="checkbox" onclick="myPassword()" class="focus:ring-blue-800 focus:border-blue-800 shadow-sm sm:text-sm border-gray-300 rounded"> Ver contraseña </label>
                 </div>
-                <div class="col-span-8 sm:col-span-4 mt-7 mx-4">
+                <div class="col-span-4 mt-7 mx-4">
                   <label for="municipio_address" class="text-base font-bold text-gray-700">Municipio: </label>
                   <select id="municipio_id" name="municipio_id" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-800 focus:border-blue-800 sm:text-sm" >
                     @foreach($municipios as $municipio)
@@ -75,7 +75,7 @@
 
                 </div>
 
-                <div class="col-span-8 sm:col-span-4 mt-7 mx-4">
+                <div class="col-span-4 mt-7 mx-4">
                   <label for="email_address" class=" text-base font-bold text-gray-700">Logo: </label>
 
                   <div class="col-span-4">
@@ -84,20 +84,20 @@
                       Examinar archivos
                     </div>
                     <input type="text" name="logo_text" id="logo_text" autocomplete="email" class="hidden focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente -> logo }}">
-                    <img id="preViewImg" src="{{$cliente->logo}}" alt="your image" class="h-32"/>
+                    <img id="preViewImg" src="{{asset($cliente->logo)}}" alt="your image" class="h-32 border border-blue-900 rounded"/>
                   </div>
 
                 </div>
-                <div class="col-span-8 sm:col-span-4 mt-7 mx-4">
+                <div class="col-span-4 mt-7 mx-4">
                   <label for="periodo_address" class=" text-base font-bold text-gray-700">Periodo: * </label>
                   <div class="grid grid-cols-8">
                     <div class="col-span-4 mr-3">
                       <label for="periodo_address" class=" text-xs font-medium text-gray-700">Año inicial: </label>
-                      <input type="number" min="2015" max="2030" name="anio_inicio" id="anio_inicio" autocomplete="direccion" class=" focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_inicio }}">
+                      <input type="date"  name="anio_inicio" id="anio_inicio" autocomplete="direccion" class=" focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_inicio }}">
                     </div>
                     <div class=" col-span-4 ml-3">
                       <label for="periodo_address" class=" text-xs font-medium text-gray-700">Año final: </label>
-                      <input type="number" min="2015" max="2030" name="anio_fin" id="anio_fin" autocomplete="direccion" class="focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_fin }}">
+                      <input type="date"  name="anio_fin" id="anio_fin" autocomplete="direccion" class="focus:ring-blue-800 focus:border-blue-800 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" value="{{ $cliente ->anio_fin }}">
                     </div>
                   </div>
                 </div>
@@ -117,7 +117,7 @@
             <div class="px-4 py-3 bg-gray-100 sm:px-6">
               <span class="block text-xs">Por favor verifique que todos los campos marcados con ( * ) no estén vacios.</span>
               <div class="text-right">
-                <a type="button" href="{{redirect()->getUrlGenerator()->previous()}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <a type="button" href="{{route('clientes.index')}}" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                   Regresar
                 </a>
               <button type="submit" class="ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-800 hover:bg-orange-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
@@ -147,10 +147,17 @@ function myPassword() {
   $(document).ready(function() {
 
     var anio = (new Date).getFullYear();
-    $('#anio_inicio').attr("min", anio -2);
-    $('#anio_inicio').attr("max", anio +1);
-    $('#anio_fin').attr("min", anio);
-    $('#anio_fin').attr("max", anio +3);
+     
+     fechaIniMin = (anio-2)+"-01-01";
+     fechaIniMax = (anio+1)+"-12-31";
+     fechaFinMin = (anio)+"-01-01";
+     fechaFinMax = (anio+3)+"-12-31";
+     
+     //console.log(fechaIniMax)
+     $('#anio_inicio').attr("min", fechaIniMin);
+     $('#anio_inicio').attr("max", fechaIniMax);
+     $('#anio_fin').attr("min", fechaFinMin);
+     $('#anio_fin').attr("max", fechaFinMax);
 
     function readURL(input) {
       if (input.files && input.files[0]) {
@@ -166,7 +173,8 @@ function myPassword() {
 
     $("#file").click(function(){
       if($('#logo_text').val() != ""){
-        $('#preViewImg').attr('src', $("#logo_text").val());
+        // $('#preViewImg').attr('src', '' );
+        // $('#preViewImg').attr('src', '{{asset($cliente->logo)}}' );
       }
       else{
         $('#preViewImg').addClass('hidden');

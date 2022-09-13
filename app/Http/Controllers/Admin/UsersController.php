@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Filesystem\Filesystem;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\DB;
 
@@ -47,15 +48,25 @@ class UsersController extends Controller
     {
        $request->validate([
             'name' => 'required',
+            'lastname' => 'required',
             'email' => 'required',
             'password' => 'required',
             'roles' => 'required'
         ]);
-        User::create([
+        $user = User::create([
         'name' => $request->name,
+        'lastname' => $request->lastname,
         'email' => $request->email,
+        'area' => $request->area,
+        'img' => "/image/anonimo.jpg",
         'password' => bcrypt($request->password)
         ])->assignRole($request->roles);
+        $file = new Filesystem();
+        if($file->isDirectory(public_path("usuarios\\").$user->id) ){
+            //existe ruta
+        }else{
+            $file->makeDirectory(public_path("usuarios\\").$user->id,0777, true); //creamos las carpetas con ruta dinamica
+        }
         
         return redirect()->route('admin.users.index');
         //return $request;
@@ -97,14 +108,18 @@ class UsersController extends Controller
         if(empty($data['password'])){
             $request->validate([
                 'name' => 'required',
-                'email' => 'required'
+                'lastname' => 'required',
+                'email' => 'required',
+                'area' => 'required'
             ]);
             $data['password'] = $user->password;
             $user->update($data);
         }else{
             $request->validate([
                 'name' => 'required',
+                'lastname' => 'required',
                 'email' => 'required',
+                'area' => 'required',
                 'password' => 'required'
             ]);
             $data['password'] = bcrypt($data['password']);

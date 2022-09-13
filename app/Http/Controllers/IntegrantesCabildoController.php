@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cliente;
 use App\Models\IntegrantesCabildo;
 use App\Models\Municipio;
-use App\Models\Cliente;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\In;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class IntegrantesCabildoController extends Controller
 {
@@ -18,15 +19,16 @@ class IntegrantesCabildoController extends Controller
      */
     public function index()
     {
-        $integrantes = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','integrantes_cabildo.cliente_id')
-        ->join('municipios', 'municipios.id_municipio', '=', 'clientes.municipio_id')
-        ->select('integrantes_cabildo.*','municipios.nombre as nombre_municipio')
-        ->orderBy('nombre_municipio')
+        $integrantes = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
+        ->select('integrantes_cabildo.*','clientes.id_cliente','clientes.anio_inicio','clientes.anio_fin','clientes.municipio_id')
         ->get();
-        $municipios = Municipio::all();
-        $clientes = Cliente::with('municipio')->get();
+        //return $integrantes;
+        $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
+        $clientes =  $result->unique('municipio_id');
+        //return $clientes;
+    
         
-       return view('cabildo.index',compact('integrantes','municipios', 'clientes'));
+       return view('cabildo.index',compact('integrantes','clientes'));
     }
 
     /**
@@ -47,12 +49,11 @@ class IntegrantesCabildoController extends Controller
      */
     public function store(Request $request)
     {
+        //return $request;
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            'telefono' => 'required',
-            'correo' => 'required',
-            'rfc' => 'required',
+            'rfc' => 'required|unique:integrantes_cabildo,rfc',
             'cliente' => 'required'
         ]);
         IntegrantesCabildo::create([
@@ -63,11 +64,7 @@ class IntegrantesCabildoController extends Controller
             'rfc' => $request->rfc,
             'cliente_id' => $request->cliente
         ]);
-        if(auth()->user()->getRoleNames()[0] == 'Administrador')
-            return redirect()->route('cabildo.index');
-        else
-            return redirect()->route('cliente.ver', ['id' => $request->cliente]);
-        
+        return redirect()->route('cabildo.index');
     }
     /**
      * Display the specified resource.
@@ -87,20 +84,23 @@ class IntegrantesCabildoController extends Controller
      */
     public function edit(IntegrantesCabildo $integrante)
     {
+       $municipioCliente = IntegrantesCabildo::join('clientes','clientes.id_cliente','=','cliente_id')
+        ->select('clientes.municipio_id','clientes.anio_inicio','clientes.anio_fin')
+        ->where('id_integrante', $integrante->id_integrante)
+        ->first();
         
+        //$municipioCliente= Municipio::find(Cliente::find($integrante->cliente_id)->municipio_id);
 
-        if(auth()->user()->getRoleNames()[0] == 'Administrador'){
-            $clientes = Cliente::with('municipio')->get();
-            return view('cabildo.edit',compact('integrante','clientes'));
-        }
-        else{
-            $cliente = Cliente::find($integrante->cliente_id)
-            ->join('municipios', 'municipios.id_municipio', '=', 'clientes.municipio_id')
-            ->first();
-            return view('cabildo.edit',compact('integrante','cliente'));
-        }
-        
-        
+        //$clientes = Municipio::join('clientes','municipio_id','id_municipio')->select('id_cliente','nombre','municipio_id')->get();
+        $result = Cliente::join('municipios','id_municipio','municipio_id')->select('id_cliente','nombre','municipio_id')->get();
+        $clientes =  $result->unique('municipio_id');
+        //return $clientes;
+        //$disponibles = IntegrantesCabildo::join('clientes','id_cliente','cliente_id')
+        //->where('id_integrante', $integrante->id_integrante)
+        //->select('id_integrante','id_cliente','anio_inicio','anio_fin','municipio_id')
+        //->first();
+        //return $municipioCliente;
+       return view('cabildo.edit',compact('integrante','clientes','municipioCliente'));
         
     }
 
@@ -117,16 +117,11 @@ class IntegrantesCabildoController extends Controller
         $request->validate([
             'nombre' => 'required',
             'cargo' => 'required',
-            'telefono' => 'required',
-            'correo' => 'required',
-            'rfc' => 'required',
-            'cliente' => 'required'
+            'rfc' => ['required',Rule::unique('integrantes_cabildo')->ignore($integrante)],
+            'cliente_id' => 'required'
         ]);
         $integrante->update($request->all());
-        if(auth()->user()->getRoleNames()[0] == 'Administrador')
-            return redirect()->route('cabildo.index');
-        else
-            return redirect()->route('cliente.ver', ['id' => $request->cliente]);
+        return redirect()->route('cabildo.index');
     }
 
     /**
@@ -139,5 +134,14 @@ class IntegrantesCabildoController extends Controller
     {
         $integrante->delete();
         return redirect()->route('cabildo.index')->with('eliminar','ok');
+    }
+
+    //===============================================================
+    public function ejerciciosCabildo($municipio){
+        $result= Cliente::join('municipios', 'id_municipio','municipio_id')->select('id_cliente','municipio_id','anio_inicio','anio_fin')
+        //->join('integrantes_cabildo','id_cliente','cliente_id')}
+        ->where('id_municipio',$municipio)
+        ->get();
+        return $result;
     }
 }
